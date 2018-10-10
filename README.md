@@ -1,2 +1,2 @@
 # P7-Matchmaking
-online matchmaking for games
+Online matchmaking for online multiplayer games
