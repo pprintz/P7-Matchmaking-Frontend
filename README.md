@@ -17,3 +17,4 @@ Online matchmaking platform for online multiplayer games
 
 ```node dist/serve.js```
 
+*To start the request server*
