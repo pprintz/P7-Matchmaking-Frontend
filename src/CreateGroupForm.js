@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import "./services/GroupService";
 import GroupService from './services/GroupService';
 
 export default class CreateGroupForm extends Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = { name: "", game: "", maxSize: 0};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         GroupService.setupDefaults();
