@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MyComponent from './custom.js';
+import CreateGroupForm from './CreateGroupForm.js';
 import './App.css';
 
 class App extends Component {
@@ -16,7 +17,8 @@ class App extends Component {
           <a href="#about">About</a>
         </div>
         </header>
-        <MyComponent hello="Thomsen"/>
+        <CreateGroupForm />
+        {/* <MyComponent hello="Thomsen"/> */}
       </div>
     );
   }
