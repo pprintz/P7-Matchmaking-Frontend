@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import MyComponent from './custom.js';
 import CreateGroupForm from './CreateGroupForm.js';
 import './App.css';
 
 class App extends Component {
   render() {
-    getBooks();
-    
-    
     return (
       <div className="App">
         <header className="App-header">
@@ -22,13 +18,6 @@ class App extends Component {
       </div>
     );
   }
-}
-
-async function getBooks() {
-  const res = await fetch("http://localhost:3000/")
-  const books = await res.json();
-  console.log(books);
-  return books;
 }
 
 export default App;

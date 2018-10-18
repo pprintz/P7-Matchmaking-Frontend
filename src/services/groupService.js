@@ -10,7 +10,6 @@ export default class GroupService {
 
     static setupDefaults() {
         axios.defaults.baseURL = "http://localhost:3000";
-        console.log("aiodjawd");
     }
     updateGroupDB() {
         axios.post()
