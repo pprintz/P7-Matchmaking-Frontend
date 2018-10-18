@@ -4,14 +4,16 @@ import './App.css';
 export default class MyComponent extends Component {
     constructor(props){
         super(props);
-        this.hello = "";
-    }
+        this.state = {hello: props.hello};
+      }
 
   render() {
     return (
       <div>
           <p>Hello World!</p>
-            <button onClick={() => this.hello = "Hello"}>Min Knap {this.hello}</button>
+            <button onClick={() => this.setState({hello: "HEY"})}>
+              Min Knap {this.state.hello}
+            </button>
       </div>
     );
   }
