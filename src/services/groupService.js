@@ -1,14 +1,16 @@
-import React from 'react'
 import axios from 'axios'
 
-class groupService {
-    constructor(props) {
-        //setup somekind of connection i guess?
-    }
+export default class GroupService {
 
     //TODO: Implement these CRUD methods
-    addGroupDB() {
-        axios.post()
+    static createGroup(group) {
+        console.log(group);
+        axios.post("/groups", group);
+    }
+
+    static setupDefaults() {
+        axios.defaults.baseURL = "http://localhost:3000";
+        console.log("aiodjawd");
     }
     updateGroupDB() {
         axios.post()
@@ -19,4 +21,5 @@ class groupService {
     getGroupDB() {
         axios.get()
     }
+
 }

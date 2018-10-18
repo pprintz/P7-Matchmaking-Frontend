@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
+import "./services/GroupService";
+import GroupService from './services/GroupService';
 
 export default class CreateGroupForm extends Component {
     constructor(props){
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        GroupService.setupDefaults();
       }
 
   render() {
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
             <p>Group name: 
               <input
                 name="name" 
@@ -28,11 +32,12 @@ export default class CreateGroupForm extends Component {
             <p> Max size:
                 <input 
                     name="maxSize"
+                    type="number"
                     placeholder="Max size" 
                     value={this.state.maxSize} 
                     onChange={this.handleChange} />
             </p>
-          <input type="submit" value="Create" onClick={this.submitForm} />
+          <input type="submit" value="Create" />
       </form>
     );
   }
@@ -45,5 +50,10 @@ export default class CreateGroupForm extends Component {
     this.setState({
       [name]: value
     });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    GroupService.createGroup(this.state);
   }
 }
