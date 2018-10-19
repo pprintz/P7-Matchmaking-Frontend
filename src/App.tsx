@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.css';
 import logo from './logo.svg';
 
-import GroupPageContainer from './GroupPageContainer';
+import GroupPageContainer from './Group/GroupPageContainer';
 
 
 class App extends React.Component {
