@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import {ITeam} from './Teamlist'; 
 
-export default class Teampage extends React.Component {
+export default class GroupPageContainer extends React.Component {
   
   public render() {
     return (
