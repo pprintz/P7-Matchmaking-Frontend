@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Card, AutoComplete, Row, Col } from 'antd'
+import { Form, Icon, Input, Button, Card, Row, Col } from 'antd'
 import './App.css';
 import GroupService from './services/GroupService';
 
@@ -16,8 +16,7 @@ export default class CreateGroupForm extends Component {
 
   render() {
     return (
-
-      <Row style={{ paddingTop: 100 }}>
+      <Row style={{ paddingTop: '5em' }}>
         <Col span={8}></Col>
         <Col span={8}>
           <Card style={{ width: 400 }}
@@ -41,8 +40,8 @@ export default class CreateGroupForm extends Component {
                 <Input prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="number"
                   placeholder="Group size"
-                  name="groupSize"
-                  value={this.state.groupSize}
+                  name="maxSize"
+                  value={this.state.maxSize}
                   onChange={this.handleChange}></Input>
               </FormItem>
               <FormItem>
@@ -55,7 +54,6 @@ export default class CreateGroupForm extends Component {
         </Col>
         <Col span={8}></Col>
       </Row>
-
     );
   }
 
