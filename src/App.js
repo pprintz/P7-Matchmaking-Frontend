@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import CreateGroupForm from './CreateGroupForm.js';
+import { Card } from 'antd'
+import axios from 'axios'
 import './App.css';
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
-
 
 class App extends Component {
   render() {
@@ -15,11 +16,16 @@ class App extends Component {
           <a href="#about">About</a>
         </div>
         </header>
-        <CreateGroupForm />
-        {/* <MyComponent hello="Thomsen"/> */}
+        <Card style={{
+          maxWidth: 500, 
+          margin: '0 auto'}}>
+          <CreateGroupForm />
+        </Card>
       </div>
     );
   }
 }
+
+axios.defaults.baseURL = "http://localhost:3000";
 
 export default App;
