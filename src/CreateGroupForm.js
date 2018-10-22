@@ -12,10 +12,10 @@ class CreateGroupForm extends React.Component {
   
   handleSubmit(event) {
     event.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        // values is a group object
-        GroupService.createGroup(values);
+    this.props.form.validateFields((validationErrors, formGroup) => {
+      if (!validationErrors) {
+        const createdGroup = GroupService.createGroup(formGroup);
+        // TODO: Redirect to group
       }
     });
   }
