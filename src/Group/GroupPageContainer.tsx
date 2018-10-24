@@ -12,15 +12,15 @@ import axios, { AxiosResponse } from 'axios';
 // interface IProps extends RouteComponentProps<IMatchParams>{}
 
 export default class GroupPageContainer extends React.Component<
-  RouteComponentProps<{group_id : string}>/*RouteComponentProps<IMatchParams>/*IProps*/, 
-  Response<GroupResponse>
+    RouteComponentProps<{group_id : string, invite_id : string}> /*RouteComponentProps<IMatchParams>*/ /*IProps*/, 
+    Response<GroupResponse>
   > {
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public componentDidMount(){
       axios.get('http://localhost:3000/groups/' + this.props.match.params.group_id)
       .then((res : AxiosResponse) => {
         this.setState(res.data);
-      })
+      });
     }
 
     public render() {
@@ -29,27 +29,23 @@ export default class GroupPageContainer extends React.Component<
       // 2) We have gotten a response and it is valid (statuscode === 0)
       // 3) Response from backend has errors (statuscode !== 0)
 
-      // 2+3)
-      if (this.state !== null){
-        // 2)
+      // Case 1)
+      if(this.state === null){
+        return (<div><h3>LOADING</h3></div>);
+      }
+      else{
+        // Case 2)
         if(this.state.statuscode === 0){
           return this.ShowGroup();
         }
-        // 3)
-        else{
+        // Case 3)
+        else {
           return this.InvalidIDModal();
         }
       }
-      // 1
-      else {
-        return (
-          <div>
-            <h1>Url ID: {this.props.match.params.group_id}</h1>
-          </div>
-        );
-      }
     }
 
+    // HTML to be shown when the :group_id does not correspond to a group
     private InvalidIDModal = () => (
       <div>
       <p>Error string: {this.state.error} -- Status code: {this.state.statuscode}</p>
@@ -57,16 +53,14 @@ export default class GroupPageContainer extends React.Component<
       </div>
     );
 
+    // HTML to be shown when the :group_id is valid and corresponds to a group
     private ShowGroup = () => (
       <div>
         <h3>{this.state.data.name}</h3>
         <p>Game: {this.state.data.game} (ID: {this.state.data._id})</p>
         <p>Max size: {this.state.data.maxSize}</p>
         <p>Invite ID: {this.state.data.invite_id}</p>
-        <p>---------------------</p>
-        <p>{this.InvalidIDModal()}</p>
       </div>
     );
-
 }
 
