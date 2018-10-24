@@ -31,7 +31,7 @@ export default class GroupList extends React.Component<{group : GroupResponse}, 
         <ul>
           {this.members.map((member)=> {
             return <li  key={member.id}>
-                  {member.name}></li>
+                  {member.name}</li>
           })}
         </ul>
         </div> 
