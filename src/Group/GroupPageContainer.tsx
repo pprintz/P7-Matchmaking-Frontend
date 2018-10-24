@@ -5,6 +5,7 @@ import GroupResponse from './GroupResponse';
 import Response from '../Response/Response';
 import axios, { AxiosResponse } from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';
+import GroupList from './GroupList';
 
 // IMatchParams and IProps are used for Route/Routing
 // in order to encapsulate the match data we get from routing groups/:group_id
@@ -57,10 +58,7 @@ export default class GroupPageContainer extends React.Component<
     // HTML to be shown when the :group_id is valid and corresponds to a group
     private ShowGroup = () => (
       <div>
-        <h3>{this.state.data.name}</h3>
-        <p>Game: {this.state.data.game} (ID: {this.state.data._id})</p>
-        <p>Max size: {this.state.data.maxSize}</p>
-        <p>Invite ID: {this.state.data.invite_id}</p>
+        <GroupList group={this.state.data}/>
         <InviteUrlComponent invite_id={this.state.data.invite_id}/>
       </div>
     );
