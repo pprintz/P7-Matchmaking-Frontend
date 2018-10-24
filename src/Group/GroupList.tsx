@@ -1,6 +1,6 @@
 import * as React from 'react';
 import GroupResponse from './GroupResponse';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 interface IMember{
     id: number,
