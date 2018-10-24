@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route} from "react-router-dom";
 import './App.css';
 import GroupPageContainer from './Group/GroupPageContainer';
 import logo from './logo.svg';
@@ -16,7 +16,13 @@ class App extends React.Component {
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>
         <Router>
-          <Route path="/groups/:group_id" component={GroupPageContainer} />
+          {/* <Switch>           */}
+            {/* The commented routes below should be un-commented and modified to point to the correct component
+            once the components are implemented. */}
+            {/* <Route path="/groups/:group_id/:invite_id" component={GroupPageContainer} /> */}
+            {/* <Route path="/groups/" component={GroupPageContainer} /> */}
+            <Route path="/groups/:group_id" component={GroupPageContainer} />
+          {/* </Switch> */}
         </Router>
       </div>
     );
