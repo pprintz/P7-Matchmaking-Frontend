@@ -4,6 +4,7 @@ import {RouteComponentProps} from 'react-router-dom';
 import GroupResponse from './GroupResponse';
 import Response from '../Response/Response';
 import axios, { AxiosResponse } from 'axios';
+import InviteUrlComponent from './InviteUrlComponent';
 
 // IMatchParams and IProps are used for Route/Routing
 // in order to encapsulate the match data we get from routing groups/:group_id
@@ -60,6 +61,7 @@ export default class GroupPageContainer extends React.Component<
         <p>Game: {this.state.data.game} (ID: {this.state.data._id})</p>
         <p>Max size: {this.state.data.maxSize}</p>
         <p>Invite ID: {this.state.data.invite_id}</p>
+        <InviteUrlComponent invite_id={this.state.data.invite_id}/>
       </div>
     );
 }

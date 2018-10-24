@@ -15,19 +15,19 @@ export default class GroupList extends React.Component<IGroup> {
   constructor(props: IGroup){
     super(props)
 
-    let members: IMember[] = [
-      {id: 1, name: "Teitur"},
-      {id: 2, name: "Peter"},
-      {id: 3, name: "Casper"},
-      {id: 4, name: "Dennis"},
-      {id: 5, name: "Christian"},
-      {id: 6, name: "Lau"}
-    ]
+    // let members: IMember[] = [
+    //   {id: 1, name: "Teitur"},
+    //   {id: 2, name: "Peter"},
+    //   {id: 3, name: "Casper"},
+    //   {id: 4, name: "Dennis"},
+    //   {id: 5, name: "Christian"},
+    //   {id: 6, name: "Lau"}
+    // ]
       
-    let group: IGroup = {
-      id: 1,
-      name: "Peterogco",
-      members: members} 
+    // let group: IGroup = {
+    //   id: 1,
+    //   name: "Peterogco",
+    //   members: members} 
   }
 
     public render() {
