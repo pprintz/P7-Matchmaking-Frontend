@@ -13,19 +13,14 @@ export default class InviteUrlComponent extends React.Component<
             <Popover
               style={{ width: 500 }}
               content={this.props.invite_id}
-              title="Invite URL"
+              title="Click to copy invite URL to clipboard"
               trigger="hover"
               visible={this.state.hovered}
               onVisibleChange={this.handleHoverChange}
             >
               <Popover
-                content={(
-                  <div>
-                    <p>{this.props.invite_id}</p>
-                    <p>Copied to clipboard!</p>
-                  </div>
-                )}
-                title="Invite URL"
+                content={this.props.invite_id}
+                title="Copied to clipboard!"
                 trigger="click"
                 visible={this.state.clicked}
                 onVisibleChange={this.handleClickChange}
@@ -37,8 +32,16 @@ export default class InviteUrlComponent extends React.Component<
     }
 
     private copyToClipboard = () => {
+        const hrefmatch = document.location ? document.location.href.match(/.*\/groups\/[0-9a-zA-Z]*\/?/g) : null ;
+        let href : string;
+        if(hrefmatch === null){
+            href = "";
+        } else {
+            href = hrefmatch[0].endsWith("/") ? hrefmatch[0] : hrefmatch[0] + "/";
+        }
+        
         const el = document.createElement('textarea');
-        el.value = this.props.invite_id;
+        el.value = href + this.props.invite_id;
         el.setAttribute('readonly', '');
         el.style.position = 'absolute';
         el.style.left = '-9999px';
