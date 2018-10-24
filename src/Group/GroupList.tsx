@@ -1,41 +1,35 @@
 import * as React from 'react';
-
-
-interface IGroup{
-    id: number,
-    name: string,
-    members: IMember[]
-}
+import GroupResponse from './GroupResponse';
 
 interface IMember{
     id: number,
     name: string
 }
 
-export default class GroupList extends React.Component<IGroup> {
-  constructor(props: IGroup){
-    
-    let group: IGroup = {
-      id: 1,
-      name: "Peterogco",
-      members: [
-        {id: 1, name: "Teitur"},
-        {id: 2, name: "Peter"},
-        {id: 3, name: "Casper"},
-        {id: 4, name: "Dennis"},
-        {id: 5, name: "Christian"},
-        {id: 6, name: "Lau"}
-      ]} 
-      super(group)
+export default class GroupList extends React.Component<{group : GroupResponse}, GroupResponse> {
+  private members : IMember[];
+
+  public constructor(props: {group : GroupResponse}){
+    super(props)
+
+    const members: IMember[] = [
+      {id: 1, name: "Teitur"},
+      {id: 2, name: "Peter"},
+      {id: 3, name: "Casper"},
+      {id: 4, name: "Dennis"},
+      {id: 5, name: "Christian"},
+      {id: 6, name: "Lau"}
+    ]
+    this.members = members;
   }
 
 
     public render() {
       return(
         <div>
-        <h1>{this.props.name}</h1>
+        <h1>{this.props.group.name}</h1>
         <ul>
-          {this.props.members.map((member)=> {
+          {this.members.map((member)=> {
             return <li  key={member.id}>
                   {member.name}></li>
           })}
