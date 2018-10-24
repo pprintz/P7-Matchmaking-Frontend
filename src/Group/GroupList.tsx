@@ -1,10 +1,29 @@
 import * as React from 'react';
 import GroupResponse from './GroupResponse';
+import styled from 'styled-components'
 
 interface IMember{
     id: number,
     name: string
 }
+
+const Wrapper = styled.div`
+background-color: bisque;
+`
+
+const Unlist = styled.ul`
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  background-color: blueviolet;
+`
+const Litem = styled.li`
+margin: 10px;
+flex-basis: 5%;
+background-color: orange;
+`
 
 export default class GroupList extends React.Component<{group : GroupResponse}, GroupResponse> {
   private members : IMember[];
@@ -17,8 +36,7 @@ export default class GroupList extends React.Component<{group : GroupResponse}, 
       {id: 2, name: "Peter"},
       {id: 3, name: "Casper"},
       {id: 4, name: "Dennis"},
-      {id: 5, name: "Christian"},
-      {id: 6, name: "Lau"}
+      {id: 5, name: "Lau"}
     ]
     this.members = members;
   }
@@ -26,15 +44,15 @@ export default class GroupList extends React.Component<{group : GroupResponse}, 
 
     public render() {
       return(
-        <div>
+        <Wrapper>
         <h1>{this.props.group.name}</h1>
-        <ul>
+        <Unlist>
           {this.members.map((member)=> {
-            return <li  key={member.id}>
-                  {member.name}</li>
+            return <Litem key={member.id}>
+                  {member.name}</Litem>
           })}
-        </ul>
-        </div> 
+        </Unlist>
+        </Wrapper> 
       );
   }
 }
