@@ -1,8 +1,9 @@
 import Cookies from "universal-cookie";
 
 import {User} from "./user";
+import { UserService } from '../interfaces';
 
-export class UserServiceCookies {
+export class UserServiceCookies implements UserService{
     private cookies : Cookies;
 
     private groupId : string;
