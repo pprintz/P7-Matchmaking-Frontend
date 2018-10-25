@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {GroupService} from "../interfaces";
+import {GroupService} from "./interfaces";
 
 export class GroupServiceApi implements GroupService{
     public async leaveGroup(groupId : string, userId : string) : Promise<boolean>{

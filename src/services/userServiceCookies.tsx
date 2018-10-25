@@ -1,7 +1,7 @@
 import Cookies from "universal-cookie";
 
-import {User} from "./user";
-import { UserService } from '../interfaces';
+import { UserService } from './interfaces';
+import { User } from 'src/models/User';
 
 export class UserServiceCookies implements UserService{
     public groupId : string;

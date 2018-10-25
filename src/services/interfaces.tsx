@@ -1,4 +1,4 @@
-import { User } from './users/user';
+import { User } from '../models/User';
 
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,

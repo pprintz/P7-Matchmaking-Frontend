@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { FormComponentProps } from 'antd/lib/form/Form';
+// import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
-import './App.css';
+import GroupService from 'src/services/GroupService';
 // import GroupService from './services/GroupService';
 
-class CreateGroupForm extends React.Component<FormComponentProps> {
-  //   constructor(props : any) {
-  //     super(props);
-  //     // this is necessary for 'this' to not be undefined when calling handleSubmit
-  //     this.handleSubmit = this.handleSubmit.bind(this);
-  //   }
+class CreateGroupForm extends React.Component<any> {
 
   public render() {
     const FormItem = Form.Item;
@@ -57,14 +52,23 @@ class CreateGroupForm extends React.Component<FormComponentProps> {
 
   private handleSubmit = (event: any) => {
     event.preventDefault();
-    this.props.form.validateFields((validationErrors: boolean, formGroup: any) => {
+    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IFormGroup) => {
       if (!validationErrors) {
-        // TODO: send userID and group
-        // const createdGroup = GroupService.createGroup(formGroup);
-        // TODO: Redirect to group
-      }
-    });
+        // TODO: Inject group service
+        // TODO: Send userID to createGroup and attach the user to the group when creating
+        const response = await GroupService.createGroup(formGroup);
+          const createdGroup = response.data;
+          this.props.history.push('/groups/'+createdGroup._id)
+        };
+      })
+    
   }
 }
 
-export default Form.create()(CreateGroupForm);
+interface IFormGroup {
+  name: string;
+  game: string;
+  maxSize: number;
+}
+
+export default Form.create<any>()(CreateGroupForm);

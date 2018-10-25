@@ -1,6 +1,6 @@
 import * as React from 'react';
-import GroupResponse from './GroupResponse';
 import styled from 'styled-components';
+import IGroup from 'src/models/IGroup';
 
 
 const Wrapper = styled.div`
@@ -22,9 +22,9 @@ flex-basis: 5%;
 background-color: orange;
 `
 
-export default class GroupList extends React.Component<{ group: GroupResponse }> {
+export default class GroupList extends React.Component<{ group: IGroup }> {
 
-  public constructor(props: { group: GroupResponse }) {
+  public constructor(props: { group: IGroup }) {
     super(props)
   }
 

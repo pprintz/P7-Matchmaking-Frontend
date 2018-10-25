@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router-dom';
 // import {ITeam} from './Teamlist'; 
-import GroupResponse from './GroupResponse';
+import IGroup from '../models/IGroup';
 import Response from '../Response/Response';
 import axios from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';
@@ -15,7 +15,7 @@ import GroupList from './GroupList';
 
 export default class GroupPageContainer extends React.Component<
     RouteComponentProps<{group_id : string, invite_id : string}> /*RouteComponentProps<IMatchParams>*/ /*IProps*/, 
-    Response<GroupResponse>
+    Response<IGroup>
   > {
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public async componentDidMount(){

@@ -1,12 +1,13 @@
 import * as React from 'react'
 import Axios from 'axios';
-import { notification, Icon } from 'antd';
+import { notification, Icon, Button, Card } from 'antd';
 // import { UserService } from './services/interfaces';
 
-export class JoinGroup extends React.Component<any> {
+export class JoinGroup extends React.Component<any, any> {
   
   constructor(props: any) {
     super(props);
+    this.state = { group: { name: "", users: [] } };
   }
 
   public handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,17 +31,24 @@ export class JoinGroup extends React.Component<any> {
     });
   };
 
-  public componentDidMount() {
+  public async componentDidMount() {
+    const group_id = this.props.match.params.group_id
+    const response = await Axios.get(`/groups/${group_id}`)
+    const groupToJoin = response.data.data;
+    this.setState({group: groupToJoin});
     console.log("Mounted: Params:", this.props.match.params);
   }
 
   public render() {
     return (
-      <div>
-        <button onClick={this.handleClick}>
-          JOIN GROUP!
-        </button>
-      </div>
+      <Card style={{maxWidth: 500, margin: '0 auto'}}>
+        <p>Group name: {this.state.group.name}</p>
+        <p>Game: {this.state.group.game}</p>
+        <p>Members: {this.state.group.users.length}/{this.state.group.maxSize}</p>
+        <Button type="primary" onClick={this.handleClick}>
+          Join Group
+        </Button>
+      </Card>
     )
   }
 }
