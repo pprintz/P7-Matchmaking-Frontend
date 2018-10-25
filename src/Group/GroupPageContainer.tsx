@@ -19,8 +19,9 @@ export default class GroupPageContainer extends React.Component<
   > {
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public componentDidMount(){
-      axios.get('http://localhost:3000/groups/' + this.props.match.params.group_id)
+      axios.get('/groups/' + this.props.match.params.group_id)
       .then((res : AxiosResponse) => {
+        console.log(res);
         this.setState(res.data);
       });
     }

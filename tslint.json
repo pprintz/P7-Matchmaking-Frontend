@@ -8,8 +8,8 @@
     ]
   },
   "rules": {
-    "ordered-imports": [false],
-    "object-literal-sort-keys": [false],
-    "no-console" : [true]
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-console" : false
   }
 }
