@@ -9,9 +9,10 @@ interface IMember{
 
 const Wrapper = styled.div`
 background-color: bisque;
+margin: 20px;
 `
 
-const Unlist = styled.ul`
+const UnList = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -19,7 +20,7 @@ const Unlist = styled.ul`
   justify-content: space-evenly;
   background-color: blueviolet;
 `
-const Litem = styled.li`
+const LItem = styled.li`
 margin: 10px;
 flex-basis: 5%;
 background-color: orange;
@@ -46,12 +47,12 @@ export default class GroupList extends React.Component<{group : GroupResponse}, 
       return(
         <Wrapper>
         <h1>{this.props.group.name}</h1>
-        <Unlist>
+        <UnList>
           {this.members.map((member)=> {
-            return <Litem key={member.id}>
-                  {member.name}</Litem>
+            return <LItem key={member.id}>
+                  {member.name}</LItem>
           })}
-        </Unlist>
+        </UnList>
         </Wrapper> 
       );
   }
