@@ -21,24 +21,23 @@ flex-basis: 5%;
 background-color: orange;
 `
 
-export default class GroupList extends React.Component<{group : GroupResponse}, GroupResponse> {
+export default class GroupList extends React.Component<{ group: GroupResponse }> {
 
-  public constructor(props: {group : GroupResponse}){
+  public constructor(props: { group: GroupResponse }) {
     super(props)
   }
 
-
-    public render() {
-      return(
-        <Wrapper>
+  public render() {
+    return (
+      <Wrapper>
         <h1>{this.props.group.name}</h1>
         <UnList>
-          {this.props.group.users.map((member)=> {
+          {this.props.group.users.map((member) => {
             return <LItem key={member}>
-                  {member}</LItem>
+              {member}</LItem>
           })}
         </UnList>
-        </Wrapper> 
-      );
+      </Wrapper>
+    );
   }
 }

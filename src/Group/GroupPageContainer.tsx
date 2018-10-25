@@ -3,7 +3,7 @@ import {RouteComponentProps} from 'react-router-dom';
 // import {ITeam} from './Teamlist'; 
 import GroupResponse from './GroupResponse';
 import Response from '../Response/Response';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';
 import GroupList from './GroupList';
 
@@ -18,23 +18,28 @@ export default class GroupPageContainer extends React.Component<
     Response<GroupResponse>
   > {
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
-    public componentDidMount(){
-      axios.get('/groups/' + this.props.match.params.group_id)
-      .then((res : AxiosResponse) => {
-        console.log(res);
-        this.setState(res.data);
-      });
+    public async componentDidMount(){
+      let result;
+      try {
+        result = await axios.get('/groups/' + this.props.match.params.group_id);
+        console.log("RESULT:", result);
+        this.setState(result.data);
+        
+      } catch (error) {
+        console.error(error);
+        this.setState({statuscode: -1});
+      }
     }
 
     public render() {
-      // Basicly we have 3 render cases:
+      // Basically we have 3 render cases:
       // 1) No state has yet been set (i.e. we have not gotten any response from the backend yet through componentDidMount)
       // 2) We have gotten a response and it is valid (statuscode === 0)
       // 3) Response from backend has errors (statuscode !== 0)
 
       // Case 1)
       if(this.state === null){
-        return (<div><h3>LOADING</h3></div>);
+        return (<div><h3>Loading..</h3></div>);
       }
       else{
         // Case 2)
