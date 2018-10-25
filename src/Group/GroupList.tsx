@@ -1,5 +1,5 @@
 import * as React from 'react';
-import GroupResponse from './GroupResponse';
+import {GroupResponse} from "../services/interfaces";
 import styled from 'styled-components';
 
 
