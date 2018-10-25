@@ -4,5 +4,5 @@ export default interface IGroupResponse {
     maxSize: number,
     game: string,
     invite_id: string,
-    users: number[]
+    users: string[]
 };

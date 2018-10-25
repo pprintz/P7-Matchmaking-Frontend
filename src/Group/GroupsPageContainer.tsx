@@ -9,8 +9,12 @@ import { Row, Col } from 'antd'
 
 export default class GroupPageContainer extends React.Component<any, Response<IGroupResponse[]>>{
 
-    public componentDidMount() {
+    constructor(props: any) {
+        super(props)
+        this.state = { data: [], statuscode: 0, error: "" };
+    }
 
+    public componentDidMount() {
         Axios.get('http://localhost:3000/groups')
             .then((res: AxiosResponse) => {
                 this.setState(res.data);
@@ -19,12 +23,24 @@ export default class GroupPageContainer extends React.Component<any, Response<IG
 
     public render() {
         if (this.state === null) {
-            return (<p>Loading</p>)
+            return (<p>Loading</p>);
         }
         else if (this.state.statuscode === 0) {
-            const groups = this.state.data.map((element) => {
+            const sorted = this.state.data.sort((x, y): any => {
+                if (x.maxSize - x.users.length < y.maxSize - y.users.length) {
+                    return -1
+                }
+                if (x.maxSize - x.users.length > y.maxSize - y.users.length) {
+                    return 1
+                }
+                return 0
+
+            });
+            const groups = sorted.map((element) => {
                 return (<GroupCardComponent key={element._id} group={element} />)
             })
+
+
             return (
                 <div>
                     <Row>
@@ -36,7 +52,7 @@ export default class GroupPageContainer extends React.Component<any, Response<IG
             )
         }
         else {
-            return (<p>Ooops, something went wrong!</p>)
+            return (<p>Ooops, no groups!</p>)
         }
     }
 }

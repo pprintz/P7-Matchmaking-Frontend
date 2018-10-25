@@ -61,7 +61,7 @@ export default class GroupPageContainer extends React.Component<
         <p>Game: {this.state.data.game} (ID: {this.state.data._id})</p>
         <p>Max size: {this.state.data.maxSize}</p>
         <p>Invite ID: {this.state.data.invite_id}</p> */}
-
+      <p><h3>{this.state.data.name}</h3></p>
     </div>
   );
 }
