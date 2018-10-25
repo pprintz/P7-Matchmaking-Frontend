@@ -2,6 +2,7 @@ import * as React from 'react';
 import GroupResponse from './GroupResponse';
 import styled from 'styled-components';
 
+
 const Wrapper = styled.div`
 background-color: bisque;
 margin: 20px;
@@ -32,10 +33,14 @@ export default class GroupList extends React.Component<{ group: GroupResponse }>
       <Wrapper>
         <h1>{this.props.group.name}</h1>
         <UnList>
-          {this.props.group.users.map((member) => {
-            return <LItem key={member}>
+          {this.props.group.users.map((member) =>  {
+            return  <LItem key={member}>
               {member}</LItem>
           })}
+          {
+          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},() =><LItem>Open</LItem> )
+          
+          }
         </UnList>
       </Wrapper>
     );
