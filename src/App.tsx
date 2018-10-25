@@ -1,12 +1,16 @@
 import * as React from 'react';
 
+import CreateGroupForm from "./CreateGroupForm";
+
 import LeaveGroup from './components/leave_group/LeaveGroup';
+import logo from './logo.svg';
+
 
 import "./components/leave_group/LeaveGroup"
 
 import './App.css';
+import { Card } from 'antd'
 
-import logo from './logo.svg';
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 class App extends React.Component {
@@ -23,6 +27,11 @@ class App extends React.Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <LeaveGroup />
+        <Card style={{
+          margin: '0 auto',
+          maxWidth: 500}}>
+          <CreateGroupForm />
+        </Card>
       </div>
     );
   }
