@@ -2,7 +2,7 @@ import * as React from 'react';
 import {FormComponentProps} from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber } from 'antd'
 import './App.css';
-import GroupService from './services/GroupService';
+// import GroupService from './services/GroupService';
 
 class CreateGroupForm extends React.Component<FormComponentProps> {
 //   constructor(props : any) {
@@ -49,7 +49,7 @@ class CreateGroupForm extends React.Component<FormComponentProps> {
     event.preventDefault();
     this.props.form.validateFields((validationErrors: boolean, formGroup: any) => {
       if (!validationErrors) {
-        const createdGroup = GroupService.createGroup(formGroup);
+        // const createdGroup = GroupService.createGroup(formGroup);
         // TODO: Redirect to group
       }
     });

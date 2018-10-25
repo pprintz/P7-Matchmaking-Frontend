@@ -1,15 +1,13 @@
 import * as React from 'react';
-
+import { BrowserRouter as Router, Route} from "react-router-dom";
+import './App.css';
+import GroupPageContainer from './Group/GroupPageContainer';
 import CreateGroupForm from "./CreateGroupForm";
-
 import LeaveGroup from './components/leave_group/LeaveGroup';
 import logo from './logo.svg';
-
 import {UserServiceCookies} from "./services/users/userServiceCookies";
 import {GroupServiceApi} from "./services/groups/groupServiceApi";
-
 import "./components/leave_group/LeaveGroup"
-
 import './App.css';
 import { Card } from 'antd'
 
@@ -36,6 +34,18 @@ class App extends React.Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+        <p className="App-intro">
+          To get started, edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <Router>
+          {/* <Switch>           */}
+            {/* The commented routes below should be un-commented and modified to point to the correct component
+            once the components are implemented. */}
+            {/* <Route path="/groups/:group_id/:invite_id" component={GroupPageContainer} /> */}
+            {/* <Route path="/groups/" component={GroupPageContainer} /> */}
+            <Route path="/groups/:group_id" component={GroupPageContainer} />
+          {/* </Switch> */}
+        </Router>
         <LeaveGroup groupService={this.groupServiceApi} userService={this.userServiceCookies}/>
         <Card style={{
           margin: '0 auto',
