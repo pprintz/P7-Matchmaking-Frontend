@@ -1,36 +1,32 @@
 import * as React from 'react';
 
-import {UserService} from "../../services/users/userService";
-
-import {LeaveGroupService} from "../../services/groups/groupService"
+import {GroupService, UserService} from "../../services/interfaces";
 
 // Interface for States
 // The groupId is saved to state
-interface IGroupStates {
+interface GroupStates {
     groupId: string,
     message: string
 }
 
-class LeaveGroup extends React.Component<any, IGroupStates> {
-    // This is the Axios link to the backend, for leave group functionality   and userService  
-    private leaveGroupService: LeaveGroupService;
-    private userService : UserService;
+interface GroupProps {
+    groupService: GroupService,
+    userService: UserService,
+}
 
+class LeaveGroup extends React.Component<GroupProps, GroupStates> {
+    // This is the Axios link to the backend, for leave group functionality   and userService  
     private groupId : string;
     private userId : string;
 
-    constructor(props : any){
+    constructor(props : GroupProps){
         super(props);
 
-        // Get access to cookie functions
-        this.userService = new UserService();
-
         // Set properties based on cookies
-        this.groupId = this.userService.getUserInfo().groupId;
-        this.userId = this.userService.getUserInfo().userId;
+        this.groupId = this.props.userService.getUserInfo().groupId;
+        this.userId = this.props.userService.getUserInfo().userId;
 
-        this.leaveGroupService = new LeaveGroupService(this.groupId, this.userId);
-        
+
         // Initial State
         this.state = {groupId: this.groupId,
                       message: ""
@@ -42,7 +38,7 @@ class LeaveGroup extends React.Component<any, IGroupStates> {
     // When the leave button is clicked
     public handleOnClick() : void {
         // Make the leave group request
-        const request : Promise<boolean> = this.leaveGroupService.leaveGroup();
+        const request : Promise<boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
         request.then((response) => {
             // Update state, if the request was successfull
             if(response){
@@ -51,7 +47,7 @@ class LeaveGroup extends React.Component<any, IGroupStates> {
                 this.setState({groupId: ""});
 
                 // Update the cookie
-                this.userService.setUserInfo(this.userId, "");
+                this.props.userService.setUserInfo(this.userId, "");
                 this.setState({message: "Succesfully left the group"});
             }else{
                 this.setState({groupId: "Error"});  

@@ -5,6 +5,8 @@ import GroupPageContainer from './Group/GroupPageContainer';
 import CreateGroupForm from "./CreateGroupForm";
 import LeaveGroup from './components/leave_group/LeaveGroup';
 import logo from './logo.svg';
+import {UserServiceCookies} from "./services/users/userServiceCookies";
+import {GroupServiceApi} from "./services/groups/groupServiceApi";
 import "./components/leave_group/LeaveGroup"
 import './App.css';
 import { Card } from 'antd'
@@ -12,8 +14,16 @@ import { Card } from 'antd'
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 class App extends React.Component {
+
+  private groupServiceApi : GroupServiceApi;
+  private userServiceCookies : UserServiceCookies;
+
   constructor(props : any){
     super(props);  
+
+    this.groupServiceApi = new GroupServiceApi();
+    this.userServiceCookies = new UserServiceCookies();
+
   }
 
   // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
@@ -36,7 +46,7 @@ class App extends React.Component {
             <Route path="/groups/:group_id" component={GroupPageContainer} />
           {/* </Switch> */}
         </Router>
-        <LeaveGroup />
+        <LeaveGroup groupService={this.groupServiceApi} userService={this.userServiceCookies}/>
         <Card style={{
           margin: '0 auto',
           maxWidth: 500}}>

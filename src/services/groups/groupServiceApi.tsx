@@ -1,19 +1,13 @@
 import axios from "axios";
 
-export class LeaveGroupService {
-    private groupId: string;
-    private userId: string;
-    
-    constructor(groupId: string, userId: string){
-        this.groupId = groupId;
-        this.userId = userId;
-    }
+import {GroupService} from "../interfaces";
 
-    public async leaveGroup() : Promise<boolean>{
+export class GroupServiceApi implements GroupService{
+    public async leaveGroup(groupId : string, userId : string) : Promise<boolean>{
         // Axios Request - Takes a group_id and user_id
         const request = axios.post("http://www.localhost:3000/groups/leave", {
-                "group_id": this.groupId,
-                "user_id": this.userId
+                "group_id": groupId,
+                "user_id": userId
             });
         
         // The request data is being processed - Returns true if the data is modified, else false
