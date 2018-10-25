@@ -8,7 +8,13 @@ import './App.css';
 
 import logo from './logo.svg';
 
+// The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 class App extends React.Component {
+  constructor(props : any){
+    super(props);  
+  }
+
+  // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
   public render() {
     return (
       <div className="App">
@@ -16,7 +22,7 @@ class App extends React.Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <LeaveGroup groupName="PeterErSejGruppen"/>
+        <LeaveGroup />
       </div>
     );
   }
