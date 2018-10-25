@@ -45,10 +45,16 @@ class CreateGroupForm extends React.Component<FormComponentProps> {
     );
   }
 
+  public componentDidMount() {
+    // TODO: get user
+    // TODO: save userID in state
+  }
+
   private handleSubmit = (event : any) => {
     event.preventDefault();
     this.props.form.validateFields((validationErrors: boolean, formGroup: any) => {
       if (!validationErrors) {
+        // TODO: send userID and group
         const createdGroup = GroupService.createGroup(formGroup);
         // TODO: Redirect to group
       }
