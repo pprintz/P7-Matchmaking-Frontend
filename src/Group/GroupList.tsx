@@ -2,11 +2,6 @@ import * as React from 'react';
 import GroupResponse from './GroupResponse';
 import styled from 'styled-components';
 
-interface IMember{
-    id: number,
-    name: string
-}
-
 const Wrapper = styled.div`
 background-color: bisque;
 margin: 20px;
@@ -27,19 +22,9 @@ background-color: orange;
 `
 
 export default class GroupList extends React.Component<{group : GroupResponse}, GroupResponse> {
-  private members : IMember[];
 
   public constructor(props: {group : GroupResponse}){
     super(props)
-
-    const members: IMember[] = [
-      {id: 1, name: "Teitur"},
-      {id: 2, name: "Peter"},
-      {id: 3, name: "Casper"},
-      {id: 4, name: "Dennis"},
-      {id: 5, name: "Lau"}
-    ]
-    this.members = members;
   }
 
 
@@ -48,9 +33,9 @@ export default class GroupList extends React.Component<{group : GroupResponse}, 
         <Wrapper>
         <h1>{this.props.group.name}</h1>
         <UnList>
-          {this.members.map((member)=> {
-            return <LItem key={member.id}>
-                  {member.name}</LItem>
+          {this.props.group.users.map((member)=> {
+            return <LItem key={member}>
+                  {member}</LItem>
           })}
         </UnList>
         </Wrapper> 
