@@ -2,6 +2,7 @@ import * as React from 'react'
 
 export class JoinGroup extends React.Component {
   public handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+    alert("lol")
     console.log(e);
   }
 
@@ -9,7 +10,7 @@ export class JoinGroup extends React.Component {
     return (
       <div>
         <button onClick={this.handleClick}>
-          JOIN GROUP
+          JOIN GROUP!
         </button>
       </div>
     )
