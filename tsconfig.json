@@ -17,7 +17,12 @@
     "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": false
+    "noUnusedLocals": true,
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ]
   },
   "exclude": [
     "node_modules",
@@ -27,5 +32,5 @@
     "webpack",
     "jest",
     "src/setupTests.ts"
-  ]
+  ],
 }
