@@ -10,14 +10,14 @@ export class JoinGroup extends React.Component<any, any> {
     this.state = { group: { name: "", users: [] } };
   }
 
-  public handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  public handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const groupId = this.props.match.params.group_id;
-      Axios.post("/groups/join", { group_id: groupId, 
+      await Axios.post("/groups/join", { group_id: groupId, 
                                    user_id: this.props.userServiceCookies.getUserInfo().userId 
                                  });
-      this.openNotification();
-      // TODO: Setup group_id in cookie
+      this.props.history.push(`/groups/${groupId}`);
+      // TODO: Save group_id in cookie
     } catch (error) {
       console.error(error);
     }
