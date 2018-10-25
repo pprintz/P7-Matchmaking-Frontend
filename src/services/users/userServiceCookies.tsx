@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 
 import {User} from "./user";
 
-export class UserService {
+export class UserServiceCookies {
     private cookies : Cookies;
 
     private groupId : string;
