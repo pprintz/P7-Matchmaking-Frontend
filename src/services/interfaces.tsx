@@ -7,4 +7,5 @@ export interface GroupService {
 export interface UserService {
     setUserInfo(userId : string, groupId : string) : void;
     getUserInfo() : User;
+    setUserId(userId: string): void;
 }

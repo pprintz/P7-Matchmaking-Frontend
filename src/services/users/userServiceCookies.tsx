@@ -4,10 +4,10 @@ import {User} from "./user";
 import { UserService } from '../interfaces';
 
 export class UserServiceCookies implements UserService{
+    public groupId : string;
+    public userId : string;
     private cookies : Cookies;
 
-    private groupId : string;
-    private userId : string;
     
     constructor(){
         // Get the information form the existing cookies
@@ -19,6 +19,10 @@ export class UserServiceCookies implements UserService{
     
     public getUserInfo() : User {
         return new User(this.groupId, this.userId);
+    }
+
+    public setUserId(userId: string): void {
+        this.cookies.set("user_id", userId);
     }
 
     public setUserInfo(groupId: string, userId: string) : void {
