@@ -8,6 +8,7 @@ import GroupPageContainer from './components/GroupPageContainer';
 import LeaveGroup from './components/LeaveGroup';
 import CreateGroupForm from './components/CreateGroupForm';
 import MenuBar from './components/MenuBar';
+import Axios from 'axios';
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 class App extends React.Component {
@@ -23,16 +24,20 @@ class App extends React.Component {
 
   }
 
-  public componentDidMount() {
-    this.userServiceCookies.setUserId("5bd04cdea1a09e9dc186bba6");
+  public async componentDidMount() {
+    const userInfo = this.userServiceCookies.getUserInfo();
+    // Visitor is not a user or has deleted cookie
+    if(userInfo.userId === undefined) {
+      await this.createUserAndSaveInCookie();
+    }
   }
-
+  
   // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
   public render() {
     return (
       <Router>
         <div className="App">
-          <MenuBar />
+          <MenuBar userServiceCookies={this.userServiceCookies} />
           <Switch>
             <Route path="/groups/:group_id/:invite_id" render={(props) => <JoinGroup userServiceCookies={this.userServiceCookies} {... props} />} />
             <Route path="/groups/:group_id" component={GroupPageContainer} />
@@ -42,6 +47,17 @@ class App extends React.Component {
         </div>
       </Router>
     );
+  }
+
+  private async createUserAndSaveInCookie() {
+    try {
+      const response = await Axios.post("/users/create", { username: "Automatically generated from frontend" });
+      const user = response.data;
+      this.userServiceCookies.setUserId(user._id);
+    }
+    catch (error) {
+      console.error("ERROR:", error);
+    }
   }
 }
 
