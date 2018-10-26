@@ -2,6 +2,8 @@ import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
 import GroupService from 'src/services/GroupService';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import IGroup from 'src/models/IGroup';
 // import GroupService from './services/GroupService';
 
 class CreateGroupForm extends React.Component<any> {
@@ -45,30 +47,26 @@ class CreateGroupForm extends React.Component<any> {
     );
   }
 
-  public componentDidMount() {
-    // TODO: get user
-    // TODO: save userID in state
-  }
-
   private handleSubmit = (event: any) => {
     event.preventDefault();
-    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IFormGroup) => {
+    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
       if (!validationErrors) {
-        // TODO: Inject group service
-        // TODO: Send userID to createGroup and attach the user to the group when creating
-        const response = await GroupService.createGroup(formGroup);
-          const createdGroup = response.data;
-          this.props.history.push('/groups/'+createdGroup._id)
-        };
-      })
-    
+        const createdGroup = await this.createGroup(formGroup);
+        this.props.history.push('/groups/' + createdGroup._id)
+      };
+    })
   }
-}
 
-interface IFormGroup {
-  name: string;
-  game: string;
-  maxSize: number;
+  private async createGroup(formGroup: IGroup) {
+    const userServiceCookies = new UserServiceCookies();
+    const userId = userServiceCookies.getUserInfo().userId;
+    // Add the user creating the group to the list of users
+    formGroup.users = [userId];
+    // TODO: Inject group service
+    const response = await GroupService.createGroup(formGroup);
+    const createdGroup = response.data;
+    return createdGroup;
+  }
 }
 
 export default Form.create<any>()(CreateGroupForm);
