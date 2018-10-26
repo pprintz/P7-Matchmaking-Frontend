@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import {GroupService, UserService} from "../../services/interfaces";
+import { UserService, GroupService } from 'src/services/interfaces';
 
 // Interface for States
 // The groupId is saved to state

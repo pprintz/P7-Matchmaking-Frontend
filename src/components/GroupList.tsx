@@ -1,6 +1,6 @@
 import * as React from 'react';
-import GroupResponse from './GroupResponse';
 import styled from 'styled-components';
+import IGroup from 'src/models/IGroup';
 
 
 const Wrapper = styled.div`
@@ -22,9 +22,9 @@ flex-basis: 5%;
 background-color: orange;
 `
 
-export default class GroupList extends React.Component<{ group: GroupResponse }> {
+export default class GroupList extends React.Component<{ group: IGroup }> {
 
-  public constructor(props: { group: GroupResponse }) {
+  public constructor(props: { group: IGroup }) {
     super(props)
   }
 
@@ -38,8 +38,9 @@ export default class GroupList extends React.Component<{ group: GroupResponse }>
               {member}</LItem>
           })}
           {
-          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},() =><LItem>Open</LItem> )
-          
+          // We set key to the index, since they cannot be uniquely identified otherwise
+          // Iterate and return a LItem for every missing member in the group
+          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},(_, i) => <LItem key={i}>Open</LItem>)
           }
         </UnList>
       </Wrapper>

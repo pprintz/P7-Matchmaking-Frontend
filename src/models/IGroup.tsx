@@ -1,4 +1,4 @@
-export default interface IGroupResponse {
+export default interface IGroup {
     _id : string,
     name : string,
     maxSize : number,
