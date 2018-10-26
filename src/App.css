@@ -1,21 +1,16 @@
 @import '~antd/dist/antd.css';
 
 .App {
-  /* background-image: linear-gradient(to right, #004972 , #00304c); */
-  
-  top:0px;
-  left:0px;
-  height:100%;
-  width:100%;
-  
-  /*Fallback if gradeints don't work */
+  text-align: center;
+  height: 100vh;
+
   background: #00304c;
   /*Linear gradient... */
   background: 
     radial-gradient(
      at center, #004972, #00304c
     );
-} 
+}
 
 .ant-card-head {
   background-color: #001624
@@ -49,6 +44,10 @@
   background-color: #222;
   height: 150px;
   padding: 20px;
+  color: white;
+}
+
+.App-header h1 {
   color: white;
 }
 

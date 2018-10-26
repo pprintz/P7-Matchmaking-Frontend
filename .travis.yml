@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "8"
+before_install:
+- npm install typescript
+script:
+- npm run build
+notifications:
+  slack: p7-iot-aau:hHKmtDlYe6LKo4TjuilHR3P2
+

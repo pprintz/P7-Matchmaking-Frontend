@@ -1,13 +1,13 @@
 import * as React from 'react';
 // import GroupsResponse from './GroupsResponse';
 import Response from '../Response/Response';
-import IGroupResponse from './GroupResponse';
 import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col } from 'antd'
+import IGroup from 'src/models/IGroup';
 
 
-export default class GroupPageContainer extends React.Component<any, Response<IGroupResponse[]>>{
+export default class GroupPageContainer extends React.Component<any, Response<IGroup[]>>{
 
     constructor(props: any) {
         super(props)
@@ -15,9 +15,9 @@ export default class GroupPageContainer extends React.Component<any, Response<IG
     }
 
     public componentDidMount() {
-        Axios.get('http://localhost:3000/groups')
+        Axios.get('/groups')
             .then((res: AxiosResponse) => {
-                this.setState(res.data);
+                this.setState({ data: res.data});
             });
     }
 
