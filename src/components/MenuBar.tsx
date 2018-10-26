@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
-export class MenuBar extends React.Component {
+export class MenuBar extends React.Component<{ userServiceCookies: UserServiceCookies}> {
   public render() {
     return (
         <header className="App-header">
@@ -10,6 +11,7 @@ export class MenuBar extends React.Component {
           <li><Link to="/">Create Group / Home</Link></li>
           <li><Link to="/leave">Leave</Link></li>
         </ul>
+        <p>Hello, {this.props.userServiceCookies.getUserInfo().userId}!</p>
       </header>
     )
   }
