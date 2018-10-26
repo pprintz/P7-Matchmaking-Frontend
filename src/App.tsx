@@ -5,6 +5,7 @@ import { GroupServiceApi } from './services/groupServiceApi';
 import { UserServiceCookies } from './services/userServiceCookies';
 import JoinGroup from './components/JoinGroup';
 import GroupPageContainer from './components/GroupPageContainer';
+import GroupsPageContainer from './components/GroupsPageContainer';
 import LeaveGroup from './components/LeaveGroup';
 import CreateGroupForm from './components/CreateGroupForm';
 import MenuBar from './components/MenuBar';
@@ -43,6 +44,7 @@ class App extends React.Component<{}, { userId: string }> {
           <Switch>
             <Route path="/groups/:group_id/:invite_id" render={(props) => <JoinGroup userServiceCookies={this.userServiceCookies} {... props} />} />
             <Route path="/groups/:group_id" component={GroupPageContainer} />
+            <Route path="/groups" component={GroupsPageContainer} />
             <Route path="/leave" render={() => <LeaveGroup groupService={this.groupServiceApi} userService={this.userServiceCookies} />} />
             <Route path="/" component={CreateGroupForm} />
           </Switch>
