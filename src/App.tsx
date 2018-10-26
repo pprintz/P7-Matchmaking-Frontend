@@ -27,6 +27,7 @@ class App extends React.Component<{}, { userId: string }> {
 
   public async componentDidMount() {
     const userInfo = this.userServiceCookies.getUserInfo();
+    this.setState({ userId: userInfo.userId });
     // Visitor is not a user or has deleted cookie
     if(userInfo.userId === undefined) {
       await this.createUserAndSaveInCookie();
