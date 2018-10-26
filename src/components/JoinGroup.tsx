@@ -10,19 +10,6 @@ export class JoinGroup extends React.Component<any, any> {
     this.state = { group: { name: "", users: [] } };
   }
 
-  public handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      const groupId = this.props.match.params.group_id;
-      await Axios.post("/groups/join", { group_id: groupId, 
-                                   user_id: this.props.userServiceCookies.getUserInfo().userId 
-                                 });
-      this.props.history.push(`/groups/${groupId}`);
-      // TODO: Save group_id in cookie
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   public openNotification = () => {
     notification.open({
       message: 'Success!',
@@ -32,11 +19,7 @@ export class JoinGroup extends React.Component<any, any> {
   };
 
   public async componentDidMount() {
-    const group_id = this.props.match.params.group_id
-    const response = await Axios.get(`/groups/${group_id}`)
-    const groupToJoin = response.data.data;
-    this.setState({group: groupToJoin});
-    console.log("Mounted: Params:", this.props.match.params);
+    await this.getAndSetGroup();
   }
 
   public render() {
@@ -51,6 +34,31 @@ export class JoinGroup extends React.Component<any, any> {
       </Card>
     )
   }
+
+  private async getAndSetGroup() {
+    const group_id = this.props.match.params.group_id;
+    try {
+      const response = await Axios.get(`/groups/${group_id}`);
+      const groupToJoin = response.data.data;
+      this.setState({ group: groupToJoin });
+    }
+    catch (error) {
+      console.error("ERROR:", error);
+    }
+  }
+
+  private handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const groupId = this.props.match.params.group_id;
+      await Axios.post("/groups/join", { group_id: groupId, 
+                                   user_id: this.props.userServiceCookies.getUserInfo().userId 
+                                 });
+      this.props.history.push(`/groups/${groupId}`);
+      this.props.userServiceCookies.setGroupId(groupId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 }
 
 export default JoinGroup

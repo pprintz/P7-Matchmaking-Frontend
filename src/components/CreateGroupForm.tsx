@@ -36,7 +36,7 @@ class CreateGroupForm extends React.Component<any> {
               rules: [{ required: true, message: 'Please input group size.' }],
             })(
               // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              <InputNumber min={1} max={99} placeholder="Group size" />
+              <InputNumber min={2} max={99} placeholder="Group size" />
             )}
           </FormItem>
           <Button type="primary" htmlType="submit" size="large">

@@ -11,7 +11,7 @@ import MenuBar from './components/MenuBar';
 import Axios from 'axios';
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
-class App extends React.Component {
+class App extends React.Component<{}, { userId: string }> {
 
   private groupServiceApi: GroupServiceApi;
   private userServiceCookies: UserServiceCookies;
@@ -21,6 +21,7 @@ class App extends React.Component {
 
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
+    this.state = { userId: "" }
 
   }
 
@@ -37,7 +38,7 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <MenuBar userServiceCookies={this.userServiceCookies} />
+          <MenuBar userId={this.state.userId} />
           <Switch>
             <Route path="/groups/:group_id/:invite_id" render={(props) => <JoinGroup userServiceCookies={this.userServiceCookies} {... props} />} />
             <Route path="/groups/:group_id" component={GroupPageContainer} />
@@ -54,6 +55,7 @@ class App extends React.Component {
       const response = await Axios.post("/users/create", { username: "Automatically generated from frontend" });
       const user = response.data;
       this.userServiceCookies.setUserId(user._id);
+      this.setState({ userId: user._id });
     }
     catch (error) {
       console.error("ERROR:", error);
