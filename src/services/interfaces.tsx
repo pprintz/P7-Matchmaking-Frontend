@@ -9,7 +9,7 @@ export interface UserService {
     getUserInfo() : User;
 }
 
-export default interface IGroupResponse {
+export interface GroupResponse {
     _id : string,
     name : string,
     maxSize : number,
