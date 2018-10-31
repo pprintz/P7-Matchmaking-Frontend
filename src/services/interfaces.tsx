@@ -9,3 +9,13 @@ export interface UserService {
     getUserInfo() : User;
     setUserId(userId: string): void;
 }
+
+export interface GroupResponse {
+    _id : string,
+    name : string,
+    maxSize : number,
+    game : string,
+    invite_id : string,
+    users : string[]
+};
+

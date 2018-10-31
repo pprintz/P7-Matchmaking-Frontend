@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
 import GroupService from 'src/services/GroupService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import IGroup from 'src/models/IGroup';
+import {GroupResponse} from "../services/interfaces";
 // import GroupService from './services/GroupService';
 
 class CreateGroupForm extends React.Component<any> {
@@ -49,7 +49,7 @@ class CreateGroupForm extends React.Component<any> {
 
   private handleSubmit = (event: any) => {
     event.preventDefault();
-    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
+    this.props.form.validateFields(async (validationErrors: boolean, formGroup: GroupResponse) => {
       if (!validationErrors) {
         const createdGroup = await this.createGroup(formGroup);
         this.props.history.push('/groups/' + createdGroup._id)
@@ -57,7 +57,7 @@ class CreateGroupForm extends React.Component<any> {
     })
   }
 
-  private async createGroup(formGroup: IGroup) {
+  private async createGroup(formGroup: GroupResponse) {
     const userServiceCookies = new UserServiceCookies();
     const userId = userServiceCookies.getUserInfo().userId;
     // Add the user creating the group to the list of users

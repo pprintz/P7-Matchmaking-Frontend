@@ -4,10 +4,10 @@ import Response from '../Response/Response';
 import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col } from 'antd'
-import IGroup from 'src/models/IGroup';
+import {GroupResponse} from "../services/interfaces";
 
 
-export default class GroupPageContainer extends React.Component<any, Response<IGroup[]>>{
+export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
 
     constructor(props: any) {
         super(props)

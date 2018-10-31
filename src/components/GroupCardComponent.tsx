@@ -3,10 +3,10 @@ import * as React from 'react';
 import Response from '../Response/Response';
 import { Button, Card } from 'antd'
 import Axios, { AxiosResponse } from 'axios';
-import IGroup from 'src/models/IGroup';
+import {GroupResponse} from "../services/interfaces";
 
-export default class GroupCardComponent extends React.Component<{ group: IGroup }, Response<IGroup>>{
-    constructor(props: { group: IGroup }) {
+export default class GroupCardComponent extends React.Component<{ group: GroupResponse }, Response<GroupResponse>>{
+    constructor(props: { group: GroupResponse }) {
         super(props);
         this.joinGroup = this.joinGroup.bind(this);
         this.state = { data: props.group, error: "", statuscode: 0 };
@@ -37,7 +37,7 @@ export default class GroupCardComponent extends React.Component<{ group: IGroup 
         const userID = "Coolie33faeafadd3dd33";// get this info from coolie
         const gropupID = this.state.data._id;
 
-        const result: AxiosResponse<Response<IGroup>> =
+        const result: AxiosResponse<Response<GroupResponse>> =
             await Axios.post('http://localhost:3000/groups/join',
                 { "data": { "user_id": userID, "group_id": gropupID } });
 
