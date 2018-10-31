@@ -13,6 +13,7 @@ export default class GroupList extends React.Component<{ group: GroupResponse }>
     return (
       <Div>
         <h1>{this.props.group.name}</h1>
+        <h2>{this.props.group.game}</h2>
         <Ul>
           {this.props.group.users.map((member) =>  {
             return  <Li key={member}>
