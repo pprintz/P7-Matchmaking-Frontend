@@ -1,9 +1,9 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
-import GroupService from 'src/services/GroupService';
-import { UserServiceCookies } from 'src/services/userServiceCookies';
-import IGroup from 'src/models/IGroup';
+import GroupService from '../services/GroupService';
+import { UserServiceCookies } from '../services/userServiceCookies';
+import IGroup from '../models/IGroup';
 // import GroupService from './services/GroupService';
 
 class CreateGroupForm extends React.Component<any> {

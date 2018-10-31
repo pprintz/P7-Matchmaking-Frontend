@@ -1,7 +1,7 @@
 import Cookies from "universal-cookie";
 
 import { UserService } from './interfaces';
-import { User } from 'src/models/User';
+import { User } from '../models/User';
 
 export class UserServiceCookies implements UserService{
     private cookies : Cookies;
