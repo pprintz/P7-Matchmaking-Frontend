@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router-dom';
 import {GroupResponse} from "../services/interfaces";
+// import {ITeam} from './Teamlist'; 
 import Response from '../Response/Response';
 import axios from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';

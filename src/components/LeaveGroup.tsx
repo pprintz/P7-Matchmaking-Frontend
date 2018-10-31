@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {GroupService, UserService} from "../../services/interfaces";
-import { LeaveBtn } from '../../UI'
+import {GroupService, UserService} from "../services/interfaces";
+import { LeaveBtn } from '../UI'
 
 // Interface for States
 // The groupId is saved to state

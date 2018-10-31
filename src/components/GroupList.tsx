@@ -3,9 +3,6 @@ import {GroupResponse} from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 
 
-
-
-
 export default class GroupList extends React.Component<{ group: GroupResponse }> {
 
   public constructor(props: { group: GroupResponse }) {

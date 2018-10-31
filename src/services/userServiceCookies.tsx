@@ -1,23 +1,29 @@
 import Cookies from "universal-cookie";
-import {User} from "./user";
-import { UserService } from '../interfaces';
+
+import { UserService } from './interfaces';
+import { User } from 'src/models/User';
 
 export class UserServiceCookies implements UserService{
     private cookies : Cookies;
 
-    private groupId : string;
-    private userId : string;
     
     constructor(){
         // Get the information form the existing cookies
         this.cookies = new Cookies();
-
-        this.groupId = this.cookies.get("group_id");
-        this.userId = this.cookies.get("user_id");
     }
     
     public getUserInfo() : User {
-        return new User(this.groupId, this.userId);
+        const groupId = this.cookies.get("group_id");
+        const userId = this.cookies.get("user_id");
+        return new User(groupId, userId);
+    }
+
+    public setUserId(userId: string): void {
+        this.cookies.set("user_id", userId);
+    }
+
+    public setGroupId(groupId: string): void {
+        this.cookies.set("group_id", groupId);
     }
 
     public setUserInfo(groupId: string, userId: string) : void {
