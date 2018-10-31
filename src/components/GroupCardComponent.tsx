@@ -34,18 +34,21 @@ export default class GroupCardComponent extends React.Component<{ group: IGroup 
         );
     }
     private async joinGroup() {
-        const userID = "Coolie33faeafadd3dd33";// get this info from coolie
+        console.log("IN JOIN GROUP!!!!!!");
+        const userID = "5bd4d2b69d946e75d10ff1be";// get this info from coolie
         const gropupID = this.state.data._id;
 
-        const result: AxiosResponse<Response<IGroup>> =
+        const result: AxiosResponse<IGroup> =
             await Axios.post('http://localhost:3000/groups/join',
-                { "data": { "user_id": userID, "group_id": gropupID } });
-
-        if (result === null || result.data === null || result.data.data === null) {
-            alert("Not good: " + result.data.error);
+                { "user_id": userID, "group_id": gropupID } );
+        
+        if (result === null || result.data === null) {
+            alert("Not good: " + JSON.stringify(result.data));
             return;
         }
-
-        this.setState(result.data);
+        console.log("RESULT: " + JSON.stringify(result));
+        this.setState({data : result.data});
+        console.log("State has been set: " + JSON.stringify(this.state));
+        
     }
 }

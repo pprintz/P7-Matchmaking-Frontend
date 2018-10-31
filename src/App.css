@@ -2,7 +2,7 @@
 
 .App {
   text-align: center;
-  height: 100vh;
+  background-size: cover;
 
   background: #00304c;
   /*Linear gradient... */

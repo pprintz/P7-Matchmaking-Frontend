@@ -10,6 +10,7 @@ import LeaveGroup from './components/LeaveGroup';
 import CreateGroupForm from './components/CreateGroupForm';
 import MenuBar from './components/MenuBar';
 import Axios from 'axios';
+import SocketTest from './SocketTest';
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 class App extends React.Component<{}, { userId: string }> {
@@ -37,6 +38,7 @@ class App extends React.Component<{}, { userId: string }> {
   
   // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
   public render() {
+      return <SocketTest/>;
     return (
       <Router>
         <div className="App">
