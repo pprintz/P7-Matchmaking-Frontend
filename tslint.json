@@ -11,6 +11,7 @@
       "coverage/lcov-report/*.js"
     ]
   },
+  "defaultSeverity": "warning",
   "rules": {
     "ordered-imports": false,
     "object-literal-sort-keys": false,
