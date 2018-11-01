@@ -1,14 +1,11 @@
 import * as React from "react";
 import { RouteComponentProps, Redirect } from "react-router";
 import { Button, Layout } from "antd";
+import { log } from "util";
 const { Content } = Layout;
+import { withRouter } from "react-router-dom";
 
-interface LandingPageProps extends RouteComponentProps {
-  userId: string;
-  doIt(): Promise<void>;
-}
-
-export default class LandingPage extends React.Component<RouteComponentProps> {
+class LandingPage extends React.Component<RouteComponentProps> {
   public render() {
     return (
       <Layout>
@@ -19,7 +16,7 @@ export default class LandingPage extends React.Component<RouteComponentProps> {
             margin: 0,
             minHeight: 280,
           }}>
-          <Button type="primary" onClick={this.clicked}>
+          <Button type="primary" onClick={this.handleClicked}>
             Register
           </Button>
         </Content>
@@ -27,7 +24,9 @@ export default class LandingPage extends React.Component<RouteComponentProps> {
     );
   }
 
-  private clicked = () => {
+  private handleClicked = () => {
     this.props.history.push("/register");
   };
 }
+
+export default withRouter(LandingPage);

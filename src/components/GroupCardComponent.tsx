@@ -10,17 +10,20 @@ export default class GroupCardComponent extends React.Component<{ group: GroupRe
         super(props);
         this.joinGroup = this.joinGroup.bind(this);
         this.state = { data: props.group, error: "", statuscode: 0 };
-        console.log("Name: " + props.group.name + " -- State: " + JSON.stringify(this.state) + " -- Props: " + JSON.stringify(this.props));
     }
 
     public render() {
-        const flag = this.state.data.maxSize > this.state.data.users.length ? false : true
+        const disableJoinButton = this.state.data.maxSize > this.state.data.users.length ? false : true
+        if(disableJoinButton) {
+            // Don't render the card if the group is full
+            return null;
+        }
         const availableSlots = this.state.data.maxSize - this.state.data.users.length;
         return (
             <div style={{ paddingTop: 10, paddingBottom: 10 }}>
                 <Card
                     title={'Group name: ' + this.state.data.name}
-                    extra={<Button disabled={flag} type='primary' icon="usergroup-add" onClick={this.joinGroup}>Join</Button>}
+                    extra={<Button disabled={disableJoinButton} type='primary' icon="usergroup-add" onClick={this.joinGroup}>Join</Button>}
                     style={{ width: '100%' }}>
                     <p>Available slots: {availableSlots}</p>
                     <p><b>Users in this group:</b></p>

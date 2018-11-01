@@ -16,6 +16,7 @@
     "object-literal-sort-keys": false,
     "no-console" : false,
     "interface-name": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "no-unbound-method": true
   }
 }
