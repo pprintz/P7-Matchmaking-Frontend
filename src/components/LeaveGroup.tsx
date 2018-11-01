@@ -36,7 +36,7 @@ class LeaveGroup extends React.Component<GroupProps, GroupStates> {
     }
 
     // When the leave button is clicked
-    public handleOnClick() : void {
+    public handleOnClick = () => {
         // Make the leave group request
         const request : Promise<boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
         request.then((response) => {

@@ -39,7 +39,7 @@ class App extends React.Component<{}, UserState> {
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.state = { user: new User() };
-    // this.createUserAndSaveInCookie = this.createUserAndSaveInCookie.bind(this);
+    this.createUserAndSaveInCookie = this.createUserAndSaveInCookie.bind(this);
   }
 
   public async componentDidMount() {
