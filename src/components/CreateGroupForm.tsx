@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
-import {UserService, GroupService, GroupResponse} from "../services/interfaces";
+import {UserService, GroupService, GroupResponse, IGroup} from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 // import GroupService from './services/GroupService';
 
@@ -54,19 +54,22 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> 
 
   private handleSubmit = (event: any) => {
     event.preventDefault();
-    this.props.form.validateFields(async (validationErrors: boolean, formGroup: GroupResponse) => {
+    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
       if (!validationErrors) {
         const createdGroup = await this.createGroup(formGroup);
+        console.log(createdGroup);
         this.props.history.push('/groups/' + createdGroup._id)
       };
     })
   }
 
-  private async createGroup(formGroup: GroupResponse) {
+  private async createGroup(formGroup: IGroup) {
     const userId = this.props.userService.getUserInfo().userId;
     // Add the user creating the group to the list of users
     formGroup.users = [userId];
+    formGroup.invite_id = "";
     // TODO: Inject group service
+    console.log(formGroup)
     const response = await this.props.groupService.createGroup(formGroup);
     const createdGroup = response.data;
     return createdGroup;
