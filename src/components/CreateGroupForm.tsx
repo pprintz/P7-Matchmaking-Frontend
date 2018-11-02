@@ -1,12 +1,17 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
-import GroupService from 'src/services/GroupService';
-import { UserServiceCookies } from 'src/services/userServiceCookies';
-import {GroupResponse} from "../services/interfaces";
+import {UserService, GroupService, GroupResponse} from "../services/interfaces";
+import { withRouter, RouteComponentProps } from 'react-router';
 // import GroupService from './services/GroupService';
 
-class CreateGroupForm extends React.Component<any> {
+interface GroupProps {
+  groupService: GroupService,
+  userService: UserService,
+  form: any
+}
+
+class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> {
 
   public render() {
     const FormItem = Form.Item;
@@ -58,15 +63,14 @@ class CreateGroupForm extends React.Component<any> {
   }
 
   private async createGroup(formGroup: GroupResponse) {
-    const userServiceCookies = new UserServiceCookies();
-    const userId = userServiceCookies.getUserInfo().userId;
+    const userId = this.props.userService.getUserInfo().userId;
     // Add the user creating the group to the list of users
     formGroup.users = [userId];
     // TODO: Inject group service
-    const response = await GroupService.createGroup(formGroup);
+    const response = await this.props.groupService.createGroup(formGroup);
     const createdGroup = response.data;
     return createdGroup;
   }
 }
 
-export default Form.create<any>()(CreateGroupForm);
+export default withRouter(Form.create<any>()(CreateGroupForm));

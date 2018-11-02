@@ -2,6 +2,7 @@ import { User } from '../models/User';
 
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
+    createGroup(group : any),
 }
 
 export interface UserService {

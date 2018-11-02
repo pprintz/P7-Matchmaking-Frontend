@@ -81,7 +81,12 @@ class App extends React.Component<{}, UserState> {
                   />
                 )}
               />
-              <Route path="/create" component={CreateGroupForm} />
+              <Route path="/create" render={() => (
+                  <CreateGroupForm
+                    groupService={this.groupServiceApi}
+                    userService={this.userServiceCookies}
+                  />
+                )} />
               <Route
                 path="/register"
                 render={() => (
