@@ -3,9 +3,10 @@ import { Form, Card, Input, Icon, InputNumber, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { GroupResponse } from "src/services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
+import { User } from 'src/models/User';
 
 interface MyProps extends RouteComponentProps, FormComponentProps {
-  doIt(): any
+  doIt(IFormUser): any
 }
 
 class RegisterUserForm extends React.Component<MyProps> {
@@ -76,16 +77,21 @@ class RegisterUserForm extends React.Component<MyProps> {
   private handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     this.props.form.validateFields(
-      async (validationErrors: boolean, formGroup: GroupResponse) => {
+      async (validationErrors: boolean, user: IFormUser) => {
         if (!validationErrors) {
           // login()
           console.log("Registering");
-          this.props.doIt()
+          this.props.doIt(user)
           this.props.history.push("/");
         }
       }
     );
   };
+}
+
+export interface IFormUser {
+  name: string
+  discordId: string
 }
 
 const RegisterUserFormWithRouter = withRouter(RegisterUserForm);

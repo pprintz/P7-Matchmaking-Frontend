@@ -11,7 +11,7 @@ import CreateGroupForm from "./components/CreateGroupForm";
 import MenuBar from "./components/MenuBar";
 import Axios, { AxiosResponse } from "axios";
 import { User } from "./models/User";
-import RegisterUser from "./components/RegisterUser";
+import RegisterUser, { IFormUser } from "./components/RegisterUser";
 import FrontPage from "./components/FrontPage";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
@@ -24,7 +24,7 @@ interface UserState {
 }
 
 export const UserContext = React.createContext({
-  user: new User(),
+  user: new User("", "", "", ""),
 });
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
@@ -38,7 +38,7 @@ class App extends React.Component<{}, UserState> {
 
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
-    this.state = { user: new User() };
+    this.state = { user: new User("", "", "", "") };
     this.createUserAndSaveInCookie = this.createUserAndSaveInCookie.bind(this);
   }
 
@@ -96,16 +96,19 @@ class App extends React.Component<{}, UserState> {
     );
   }
 
-  public async createUserAndSaveInCookie() {
+  public async createUserAndSaveInCookie(user: IFormUser) {
     try {
-      console.log("createUserAndSaveInCookie");
-      console.log(this);
-      const response = await Axios.post("/users/create", {
-        name: "Automatically generated from frontend",
-      });
-      console.log("CreatedUser", response);
-      const userState = { user: new User("groupId", response.data._id) };
-      this.userServiceCookies.setUserId(userState.user.userId);
+      const response = await Axios.post("/users/create", user);
+      const createdUser = response.data;
+      const userState = {
+        user: new User(
+          createdUser._id,
+          createdUser.name,
+          createdUser.discordId,
+          "groupId"
+        ),
+      };
+      this.userServiceCookies.setUserInfo(userState.user);
       this.setState(userState);
     } catch (error) {
       console.error("ERROR:", error);

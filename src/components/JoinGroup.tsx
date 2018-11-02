@@ -28,7 +28,7 @@ export class JoinGroup extends React.Component<any, any> {
         <p>Group name: {this.state.group.name}</p>
         <p>Game: {this.state.group.game}</p>
         <p>Members: {this.state.group.users.length}/{this.state.group.maxSize}</p>
-        <Button type="primary" onClick={this.handleClick}>
+        <Button type="primary" onClick={this.joinGroup}>
           Join Group
         </Button>
       </Card>
@@ -47,7 +47,7 @@ export class JoinGroup extends React.Component<any, any> {
     }
   }
 
-  private handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  private joinGroup = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const groupId = this.props.match.params.group_id;
       await Axios.post("/groups/join", { group_id: groupId, 

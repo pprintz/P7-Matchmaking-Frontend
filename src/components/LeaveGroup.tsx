@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {GroupService, UserService} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
+import { User } from 'src/models/User';
 
 // Interface for States
 // The groupId is saved to state
@@ -47,7 +48,7 @@ class LeaveGroup extends React.Component<GroupProps, GroupStates> {
                 this.setState({groupId: ""});
 
                 // Update the cookie
-                this.props.userService.setUserInfo(this.userId, "");
+                this.props.userService.setUserInfo(new User("", "", "", ""));
                 this.setState({message: "Succesfully left the group"});
             }else{
                 this.setState({groupId: "Error"});  
