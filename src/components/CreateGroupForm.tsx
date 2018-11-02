@@ -68,8 +68,6 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> 
     // Add the user creating the group to the list of users
     formGroup.users = [userId];
     formGroup.invite_id = "";
-    // TODO: Inject group service
-    console.log(formGroup)
     const response = await this.props.groupService.createGroup(formGroup);
     const createdGroup = response.data;
     return createdGroup;
