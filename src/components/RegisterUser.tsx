@@ -5,11 +5,11 @@ import { GroupResponse } from "src/services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
 import { User } from 'src/models/User';
 
-interface MyProps extends RouteComponentProps, FormComponentProps {
-  doIt(IFormUser): any
+interface RegisterUserFormProps extends RouteComponentProps, FormComponentProps {
+  createUserAndSaveInCookie(IFormUser): any
 }
 
-class RegisterUserForm extends React.Component<MyProps> {
+class RegisterUserForm extends React.Component<RegisterUserFormProps> {
   public render() {
     const formItemLayout = {
       labelCol: {
@@ -79,9 +79,7 @@ class RegisterUserForm extends React.Component<MyProps> {
     this.props.form.validateFields(
       async (validationErrors: boolean, user: IFormUser) => {
         if (!validationErrors) {
-          // login()
-          console.log("Registering");
-          this.props.doIt(user)
+          this.props.createUserAndSaveInCookie(user)
           this.props.history.push("/");
         }
       }

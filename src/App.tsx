@@ -90,7 +90,7 @@ class App extends React.Component<{}, UserState> {
               <Route
                 path="/register"
                 render={() => (
-                  <RegisterUser doIt={this.createUserAndSaveInCookie} />
+                  <RegisterUser createUserAndSaveInCookie={this.createUserAndSaveInCookie} />
                 )}
               />
               <Route path="/" render={() => HomePage} />
