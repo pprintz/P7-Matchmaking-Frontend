@@ -39,7 +39,7 @@ export class JoinGroup extends React.Component<any, any> {
     const group_id = this.props.match.params.group_id;
     try {
       const response = await Axios.get(`/groups/${group_id}`);
-      const groupToJoin = response.data.data;
+      const groupToJoin = response.data;
       this.setState({ group: groupToJoin });
     }
     catch (error) {
