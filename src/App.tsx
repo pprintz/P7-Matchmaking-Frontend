@@ -39,7 +39,6 @@ class App extends React.Component<{}, UserState> {
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.state = { user: new User("", "", "", "") };
-    this.createUserAndSaveInCookie = this.createUserAndSaveInCookie.bind(this);
   }
 
   public async componentDidMount() {
@@ -101,7 +100,7 @@ class App extends React.Component<{}, UserState> {
     );
   }
 
-  public async createUserAndSaveInCookie(user: IFormUser) {
+  public createUserAndSaveInCookie = async (user: IFormUser) => {
     try {
       const response = await Axios.post("/users/create", user);
       const createdUser = response.data;

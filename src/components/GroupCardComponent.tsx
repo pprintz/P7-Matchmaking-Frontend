@@ -58,7 +58,7 @@ class GroupCardComponent extends React.Component<
     );
   }
 
-  private async joinGroup() {
+  private joinGroup = async () => {
     try {
       const groupId = this.state.data._id;
       const response = await Axios.post("/groups/join", {
