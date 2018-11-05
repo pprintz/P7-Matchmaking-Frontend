@@ -1,9 +1,7 @@
 import * as React from 'react';
 import WSGroupService from './services/WSGroupsService';
-// import * as IOClient from 'socket.io-client';
 
 export default class SocketTest extends React.Component<{}, {count : number}> {
-    // private socket : SocketIOClient.Socket;
     private WSGroupService : WSGroupService;
     constructor(props : {}){
         super(props);
@@ -31,6 +29,4 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
         console.log('Button hit!');
         this.WSGroupService.incTimer(this.state.count);
     }
-
 }
-

@@ -4,13 +4,20 @@ import Response from '../Response/Response';
 import { Button, Card } from 'antd'
 import Axios, { AxiosResponse } from 'axios';
 import IGroup from 'src/models/IGroup';
+import WSGroupService from 'src/services/WSGroupsService';
 
-export default class GroupCardComponent extends React.Component<{ group: IGroup }, Response<IGroup>>{
-    constructor(props: { group: IGroup }) {
+export default class GroupCardComponent extends React.Component<{ 
+        group: IGroup, 
+        WSGroupService : WSGroupService,
+        onGroupChangeCallback : (group : IGroup) => void
+    }, Response<IGroup>>{
+
+    constructor(props: { group: IGroup, WSGroupService : WSGroupService, onGroupChangeCallback : (group : IGroup) => void }) {
         super(props);
-        this.joinGroup = this.joinGroup.bind(this);
+        this.props.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
+
         this.state = { data: props.group, error: "", statuscode: 0 };
-        console.log("Name: " + props.group.name + " -- State: " + JSON.stringify(this.state) + " -- Props: " + JSON.stringify(this.props));
+        console.log("Name: " + props.group.name + " -- State: " + JSON.stringify(this.state) + " -- Props (group): " + JSON.stringify(this.props.group));
     }
 
     public render() {
@@ -20,7 +27,7 @@ export default class GroupCardComponent extends React.Component<{ group: IGroup 
             <div style={{ paddingTop: 10, paddingBottom: 10 }}>
                 <Card
                     title={'Group name: ' + this.state.data.name}
-                    extra={<Button disabled={flag} type='primary' icon="usergroup-add" onClick={this.joinGroup}>Join</Button>}
+                    extra={<Button disabled={flag} type='primary' icon="usergroup-add" onClick={this.joinGroup.bind(this)}>Join</Button>}
                     style={{ width: '100%' }}>
                     <p>Available slots: {availableSlots}</p>
                     <p><b>Users in this group:</b></p>
@@ -33,7 +40,22 @@ export default class GroupCardComponent extends React.Component<{ group: IGroup 
             </div>
         );
     }
+
+    private onGroupChanged = (group : IGroup) =>{
+        if(group._id !== this.state.data._id){
+            return;
+        }
+        
+        // handle the change
+        this.setState({data : group});
+
+        this.props.onGroupChangeCallback(group);
+    }
+
     private async joinGroup() {
+        this.props.WSGroupService.joinGroup(this.state.data._id, "5bdc42e94d5a1c10426582fd");
+        return;
+
         console.log("IN JOIN GROUP!!!!!!");
         const userID = "5bd4d2b69d946e75d10ff1be";// get this info from coolie
         const gropupID = this.state.data._id;

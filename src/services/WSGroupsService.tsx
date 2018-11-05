@@ -7,8 +7,10 @@ export default class WSGroupService extends WSService implements IWSGroupService
         super('/groups');
     }
 
-    public joinGroup(groupID: string, userID: string): IGroup {
-        throw new Error("Method not implemented.");
+    public joinGroup = (groupID: string, userID: string, ackFn? : () => void) : void => {
+        this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn ? ackFn : () => {
+            console.log('Join group event acknowledged.');
+        });
     }    
     
     public leaveGroup(groupID: string, userID: string): void {

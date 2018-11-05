@@ -12,7 +12,7 @@ export interface UserService {
 }
 
 export interface IWSGroupService {
-    joinGroup(groupId : string, userId : string) : IGroup,
+    joinGroup(groupId : string, userId : string) : void,
     leaveGroup(groupId : string, userId : string) : void,
     getGroup(groupId : string) : IGroup,
     getGroups() : IGroup[],
