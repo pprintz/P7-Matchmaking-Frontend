@@ -7,18 +7,10 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
     private WSGroupService : WSGroupService;
     constructor(props : {}){
         super(props);
-        this.state = {count : 1};
+        this.state = {"count" : 1};
         this.WSGroupService = new WSGroupService();
         this.WSGroupService.registerCallback('timer', this.onTimerCallback);
-        // this.socket = IOClient('http://localhost:3000/groups');
-        
-        // this.socket.emit('subscribeToTimer', this.state.count);
-        // this.socket.on('timer', count => this.setState({"count" : count}));
-        
-        
         this.onButtonHit = this.onButtonHit.bind(this);
-        this.onTimerCallback = this.onTimerCallback.bind(this);
-        // this.IO.on('timer', count => this.incTimer(count));
         this.WSGroupService.subscribeToTimer(this.state.count);
     }
 
@@ -31,7 +23,7 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
         );
     }   
     
-    private onTimerCallback(count : number) : void{
+    private onTimerCallback = (count : number) : void => {
         this.setState({ "count" : count});
     }
 
