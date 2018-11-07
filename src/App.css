@@ -27,11 +27,6 @@
   border-color: black;
 }
 
-.ant-card,
-.ant-card-bordered p {
-  /* color: white; */
-}
-
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -39,7 +34,6 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
   padding: 20px;
   color: white;
 }

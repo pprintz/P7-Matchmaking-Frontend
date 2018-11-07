@@ -23,8 +23,6 @@ export class UserServiceCookies implements UserService{
     }
 
     public setUserInfo(user: User) : void {
-        // tslint:disable-next-line:no-debugger
-        debugger
         this.cookies.set("user", user);
     }
 }

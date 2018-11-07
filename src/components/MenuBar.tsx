@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from 'src/App';
+import { UserContext } from "src/App";
 
 export class MenuBar extends React.Component {
   public render() {
@@ -10,18 +10,14 @@ export class MenuBar extends React.Component {
           <Link to="/">F-LAN Matchmaking</Link>
         </h1>
         <UserContext.Consumer>
-          {context => 
-          <p>UserID: {context.user.userId}</p>
-          }
+          {context => (
+            <div>
+              <p>UserID: {context.user.userId}</p>
+              <p>DiscordID: {context.user.discordId}</p>
+              <p>Name: {context.user.name}</p>
+            </div>
+          )}
         </UserContext.Consumer>
-        {/* <ul>
-          <li>
-            <Link to="/">Create Group / Home</Link>
-          </li>
-          <li>
-            <Link to="/leave">Leave</Link>
-          </li>
-        </ul> */}
       </header>
     );
   }

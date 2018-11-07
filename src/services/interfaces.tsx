@@ -4,7 +4,7 @@ import Group from 'antd/lib/input/Group';
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
     mergeGroups(fromGroup: string, toGroup:string): Promise<GroupResponse>
-
+    createGroup(group : any),
 }
 
 export interface UserService {
@@ -20,4 +20,11 @@ export interface GroupResponse {
     invite_id : string,
     users : string[]
 };
+export interface IGroup {
+    name : string,
+    maxSize : number,
+    game : string,
+    invite_id : string,
+    users : string[]
+}
 

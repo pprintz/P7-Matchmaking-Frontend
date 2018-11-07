@@ -31,4 +31,8 @@ export class GroupServiceApi implements GroupService{
         });
         return await request.then((response) => {return response.data})
     }
+
+    public async createGroup(group : any) {
+        return axios.post("/groups/create", group);
+    }
 }
