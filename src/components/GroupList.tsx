@@ -1,49 +1,29 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import IGroup from 'src/models/IGroup';
+import {GroupResponse} from "../services/interfaces";
+import { Button, Li, OpenLi, Div, Ul } from '../UI'
 
 
-const Wrapper = styled.div`
-background-color: bisque;
-margin: 20px;
-`
+export default class GroupList extends React.Component<{ group: GroupResponse }> {
 
-const UnList = styled.ul`
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
-  background-color: blueviolet;
-`
-const LItem = styled.li`
-margin: 10px;
-flex-basis: 5%;
-background-color: orange;
-`
-
-export default class GroupList extends React.Component<{ group: IGroup }> {
-
-  public constructor(props: { group: IGroup }) {
+  public constructor(props: { group: GroupResponse }) {
     super(props)
   }
 
   public render() {
     return (
-      <Wrapper>
+      <Div>
         <h1>{this.props.group.name}</h1>
-        <UnList>
+        <Ul>
           {this.props.group.users.map((member) =>  {
-            return  <LItem key={member}>
-              {member}</LItem>
+            return  <Li key={member}>
+              {member}</Li>
           })}
           {
-          // We set key to the index, since they cannot be uniquely identified otherwise
-          // Iterate and return a LItem for every missing member in the group
-          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},(_, i) => <LItem key={i}>Open</LItem>)
+          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},() =><OpenLi>Open<Button>Invite player</Button></OpenLi> )
+          
           }
-        </UnList>
-      </Wrapper>
+        </Ul>
+      </Div>
     );
   }
 }

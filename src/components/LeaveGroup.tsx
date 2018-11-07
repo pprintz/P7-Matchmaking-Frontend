@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { UserService, GroupService } from 'src/services/interfaces';
+import {GroupService, UserService} from "../services/interfaces";
+import { LeaveBtn } from '../UI'
 
 // Interface for States
 // The groupId is saved to state
@@ -59,7 +60,7 @@ class LeaveGroup extends React.Component<GroupProps, GroupStates> {
     public render() {
         return (
             <div className="LeaveGroupComponent">
-                <button onClick={this.handleOnClick}>Leave</button>
+                <LeaveBtn onClick={this.handleOnClick}>Leave group</LeaveBtn>
                 <p>{this.state.message}</p>
             </div>
         );

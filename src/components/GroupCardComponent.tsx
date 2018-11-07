@@ -2,16 +2,16 @@ import * as React from 'react';
 // import GroupsResponse from './GroupsResponse';
 import Response from '../Response/Response';
 import { Button, Card } from 'antd'
-import IGroup from 'src/models/IGroup';
 import WSGroupService from 'src/services/WSGroupsService';
+import { GroupResponse } from 'src/services/interfaces';
 
 export default class GroupCardComponent extends React.Component<{ 
-        group: IGroup, 
+        group: GroupResponse, 
         WSGroupService : WSGroupService,
-        onGroupChangeCallback : (group : IGroup) => void
-    }, Response<IGroup>>{
+        onGroupChangeCallback : (group : GroupResponse) => void
+    }, Response<GroupResponse>>{
 
-    constructor(props: { group: IGroup, WSGroupService : WSGroupService, onGroupChangeCallback : (group : IGroup) => void }) {
+    constructor(props: { group: GroupResponse, WSGroupService : WSGroupService, onGroupChangeCallback : (group : GroupResponse) => void }) {
         super(props);
         this.props.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
         this.state = { data: props.group, error: "", statuscode: 0 };
@@ -39,7 +39,7 @@ export default class GroupCardComponent extends React.Component<{
         );
     }
 
-    private onGroupChanged = (group : IGroup) =>{
+    private onGroupChanged = (group : GroupResponse) =>{
         // Each time a group is changed, this method is invoked *on all GroupCardComponents*
         // As such, we need to check the ID of the group being changed and only update the state
         // if the group being changed is *this* group

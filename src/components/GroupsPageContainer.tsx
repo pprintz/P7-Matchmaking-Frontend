@@ -4,13 +4,14 @@ import Response from '../Response/Response';
 import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col } from 'antd'
-import IGroup from 'src/models/IGroup';
 import WSGroupService from '../services/WSGroupsService';
+import {GroupResponse} from "../services/interfaces";
 
 
-export default class GroupPageContainer extends React.Component<any, Response<IGroup[]>>{
+export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
     private WSGroupService : WSGroupService;
     private sortFlag : boolean = false;
+
     constructor(props: any) {
         super(props)
         this.state = { data: [], statuscode: 0, error: "" };
@@ -41,7 +42,7 @@ export default class GroupPageContainer extends React.Component<any, Response<IG
 
             });
 
-            const groups = sorted.map((element : IGroup) => {
+            const groups = sorted.map((element : GroupResponse) => {
                 return (<GroupCardComponent key={element._id} group={element} WSGroupService={this.WSGroupService} onGroupChangeCallback={this.onGroupChanged} />)
             });
             
@@ -60,11 +61,11 @@ export default class GroupPageContainer extends React.Component<any, Response<IG
         }
     }
 
-    private onGroupChanged = (group : IGroup) : void =>{
+    private onGroupChanged = (group : GroupResponse) : void =>{
         if(!this.sortFlag) {return};
 
         const oldData = this.state.data;
-        const groupIndex = oldData.findIndex((value : IGroup, index : number, obj : IGroup[]) => {
+        const groupIndex = oldData.findIndex((value : GroupResponse, index : number, obj : GroupResponse[]) => {
             return value._id === group._id;
         });
         if(groupIndex === -1){

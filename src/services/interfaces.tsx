@@ -1,5 +1,4 @@
 import { User } from '../models/User';
-import IGroup from '../models/IGroup';
 
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
@@ -12,11 +11,20 @@ export interface UserService {
 }
 
 export interface IWSGroupService {
-    joinGroup(groupId : string, userId : string) : void,
+    joinGroup(groupID: string, userID: string, ackFn? : (args : GroupResponse) => void) : Promise<void>,
     leaveGroup(groupId : string, userId : string) : void,
-    getGroup(groupId : string) : IGroup,
-    getGroups() : IGroup[],
+    getGroup(groupId : string) : GroupResponse,
+    getGroups() : GroupResponse[],
     // createGroup()
     // verifyInvite()
     // registerGroupChanged() 
 }
+export interface GroupResponse {
+    _id : string,
+    name : string,
+    maxSize : number,
+    game : string,
+    invite_id : string,
+    users : string[]
+};
+
