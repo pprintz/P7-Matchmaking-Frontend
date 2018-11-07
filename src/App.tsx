@@ -13,9 +13,12 @@ import Axios, { AxiosResponse } from "axios";
 import { User } from "./models/User";
 import RegisterUser, { IFormUser } from "./components/RegisterUser";
 import FrontPage from "./components/FrontPage";
+import {GroupResponse} from "./services/interfaces";
+
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
+import ShowFittingGroups from './components/ShowFittingGroups';
 
 const { Header } = Layout;
 

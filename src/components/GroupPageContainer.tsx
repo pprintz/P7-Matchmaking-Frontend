@@ -6,6 +6,7 @@ import Response from '../Response/Response';
 import axios from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';
 import GroupList from './GroupList';
+import ShowFittingGroups from './ShowFittingGroups';
 
 // IMatchParams and IProps are used for Route/Routing
 // in order to encapsulate the match data we get from routing groups/:group_id
@@ -17,6 +18,8 @@ interface GroupStates {
   groupId: string,
 }
 */
+
+
 
 export default class GroupPageContainer extends React.Component<
     RouteComponentProps<{group_id : string, invite_id : string}> /*RouteComponentProps<IMatchParams>*/ /*IProps*/, 
@@ -70,7 +73,10 @@ export default class GroupPageContainer extends React.Component<
       <div>
         <GroupList group={this.state.data}/>
         <InviteUrlComponent invite_id={this.state.data.invite_id}/>
+        <ShowFittingGroups group = {this.state.data}  />
+        <h1>asd</h1>
       </div>
     );
 }
 
+// group={this.state.data} userService = {new UserServiceCookies()}

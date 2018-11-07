@@ -5,3 +5,4 @@ export default class GroupService {
         return axios.post("/groups/create", group);
     }
 }
+

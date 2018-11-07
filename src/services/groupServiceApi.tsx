@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {GroupService} from "./interfaces";
+import {GroupService, GroupResponse} from "./interfaces";
 
 export class GroupServiceApi implements GroupService{
     public async leaveGroup(groupId : string, userId : string) : Promise<boolean>{
@@ -22,5 +22,13 @@ export class GroupServiceApi implements GroupService{
         .catch((e) => {
             return false
         });
+    }
+    public async mergeGroups(fromGroupid: string, toGroupid:string): Promise<GroupResponse>{
+        
+        const request = axios.post<GroupResponse>("/groups/merge", {
+            "fromGroup_id": fromGroupid,
+            "toGroup_id": toGroupid
+        });
+        return await request.then((response) => {return response.data})
     }
 }
