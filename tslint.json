@@ -11,11 +11,14 @@
       "coverage/lcov-report/*.js"
     ]
   },
+  "defaultSeverity": "warning",
   "rules": {
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-console" : false,
     "interface-name": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "no-unbound-method": true,
+    "no-debugger": false
   }
 }

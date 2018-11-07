@@ -2,12 +2,12 @@ import { User } from '../models/User';
 
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
+    createGroup(group : any),
 }
 
 export interface UserService {
-    setUserInfo(userId : string, groupId : string) : void;
+    setUserInfo(user: User) : void;
     getUserInfo() : User;
-    setUserId(userId: string): void;
 }
 
 export interface GroupResponse {
@@ -18,4 +18,11 @@ export interface GroupResponse {
     invite_id : string,
     users : string[]
 };
+export interface IGroup {
+    name : string,
+    maxSize : number,
+    game : string,
+    invite_id : string,
+    users : string[]
+}
 

@@ -13,21 +13,16 @@ export class UserServiceCookies implements UserService{
     }
     
     public getUserInfo() : User {
-        const groupId = this.cookies.get("group_id");
-        const userId = this.cookies.get("user_id");
-        return new User(groupId, userId);
+        const abc = this.cookies.get("user");
+        if (abc === undefined || abc === "" || abc == null) {
+            return new User("", "","","");
+        }
+        const user: User = this.cookies.get("user") as unknown as User;
+        console.log("getUserInfo user", user);
+        return user;
     }
 
-    public setUserId(userId: string): void {
-        this.cookies.set("user_id", userId);
-    }
-
-    public setGroupId(groupId: string): void {
-        this.cookies.set("group_id", groupId);
-    }
-
-    public setUserInfo(groupId: string, userId: string) : void {
-        this.cookies.set("group_id", groupId);
-        this.cookies.set("user_id", userId);
+    public setUserInfo(user: User) : void {
+        this.cookies.set("user", user);
     }
 }
