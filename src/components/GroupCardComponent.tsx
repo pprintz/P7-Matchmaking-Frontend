@@ -2,7 +2,6 @@ import * as React from 'react';
 // import GroupsResponse from './GroupsResponse';
 import Response from '../Response/Response';
 import { Button, Card } from 'antd'
-import Axios, { AxiosResponse } from 'axios';
 import IGroup from 'src/models/IGroup';
 import WSGroupService from 'src/services/WSGroupsService';
 
@@ -15,7 +14,6 @@ export default class GroupCardComponent extends React.Component<{
     constructor(props: { group: IGroup, WSGroupService : WSGroupService, onGroupChangeCallback : (group : IGroup) => void }) {
         super(props);
         this.props.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
-
         this.state = { data: props.group, error: "", statuscode: 0 };
         console.log("Name: " + props.group.name + " -- State: " + JSON.stringify(this.state) + " -- Props (group): " + JSON.stringify(this.props.group));
     }
@@ -42,35 +40,39 @@ export default class GroupCardComponent extends React.Component<{
     }
 
     private onGroupChanged = (group : IGroup) =>{
+        // Each time a group is changed, this method is invoked *on all GroupCardComponents*
+        // As such, we need to check the ID of the group being changed and only update the state
+        // if the group being changed is *this* group
         if(group._id !== this.state.data._id){
             return;
         }
-        
+
         // handle the change
         this.setState({data : group});
-
+        
+        // Inform the parent of changes
         this.props.onGroupChangeCallback(group);
     }
 
     private async joinGroup() {
-        this.props.WSGroupService.joinGroup(this.state.data._id, "5bdc42e94d5a1c10426582fd");
-        return;
+        await this.props.WSGroupService.joinGroup(this.state.data._id, "5bdc42e94d5a1c10426582fd", this.onGroupChanged);
+        // return;
 
-        console.log("IN JOIN GROUP!!!!!!");
-        const userID = "5bd4d2b69d946e75d10ff1be";// get this info from coolie
-        const gropupID = this.state.data._id;
+        // console.log("IN JOIN GROUP!!!!!!");
+        // const userID = "5bd4d2b69d946e75d10ff1be";// get this info from coolie
+        // const gropupID = this.state.data._id;
 
-        const result: AxiosResponse<IGroup> =
-            await Axios.post('http://localhost:3000/groups/join',
-                { "user_id": userID, "group_id": gropupID } );
+        // const result: AxiosResponse<IGroup> =
+        //     await Axios.post('http://localhost:3000/groups/join',
+        //         { "user_id": userID, "group_id": gropupID } );
         
-        if (result === null || result.data === null) {
-            alert("Not good: " + JSON.stringify(result.data));
-            return;
-        }
-        console.log("RESULT: " + JSON.stringify(result));
-        this.setState({data : result.data});
-        console.log("State has been set: " + JSON.stringify(this.state));
+        // if (result === null || result.data === null) {
+        //     alert("Not good: " + JSON.stringify(result.data));
+        //     return;
+        // }
+        // console.log("RESULT: " + JSON.stringify(result));
+        // this.setState({data : result.data});
+        // console.log("State has been set: " + JSON.stringify(this.state));
         
     }
 }
