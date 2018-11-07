@@ -16,6 +16,7 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
         return (
             <div>
                 <p>{this.state.count}</p>
+                // eslint-disable-next-line
                 <button onClick={this.onButtonHit}>Increment count</button>
             </div>
         );
