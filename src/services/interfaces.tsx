@@ -3,6 +3,7 @@ import { User } from '../models/User';
 export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
     createGroup(group : any),
+    getGameList() : Promise<IGame[]>
 }
 
 export interface UserService {
@@ -26,3 +27,7 @@ export interface IGroup {
     users : string[]
 }
 
+export interface IGame {
+    name: string,
+    maxSize: number
+}

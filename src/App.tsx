@@ -16,6 +16,7 @@ import FrontPage from "./components/FrontPage";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
+import { IGame } from './services/interfaces';
 
 const { Header } = Layout;
 
@@ -39,6 +40,7 @@ class App extends React.Component<{}, UserState> {
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.state = { user: new User("", "", "", "") };
+    this.groupServiceApi.getGameList();
   }
 
   public async componentDidMount() {
