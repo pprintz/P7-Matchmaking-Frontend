@@ -5,9 +5,10 @@ import { RouteComponentProps } from 'react-router-dom';
 import * as React from 'react';
 import {IWSGroupsService} from '../services/interfaces';
 import WSGroupsService from '../services/WSGroupsService';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 export class SharedContext implements ISharedContext{
-    public User: User = new User("", "", "", ""); 
+    public UserService: UserServiceCookies = new UserServiceCookies(); 
     public Client : SocketIOClient.Socket = IOClient('http://localhost:3000');
     public WSGroupsService : WSGroupsService = new WSGroupsService();
     // public WSUserService : WSUserService = new WSUserService();

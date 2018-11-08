@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { GlobalContext } from "../models/SharedContext";
+import { GlobalContext, SharedContext } from "../models/SharedContext";
 import { Button } from 'antd';
 import { UserService } from '../services/interfaces'
 
@@ -26,7 +26,7 @@ export class MenuBar extends React.Component<GroupProps>  {
     return (
       <header className="App-header">
         <GlobalContext.Consumer>
-          {context => (
+          {(context : SharedContext) => (
             <div id="wrap">
               {/* <div>
                 <div id="wrap">
@@ -44,9 +44,9 @@ export class MenuBar extends React.Component<GroupProps>  {
               <div id="item">
                 <h1><Link to="/">F-LAN Matchmaking</Link></h1>
                 <div id="wrap">
-                  <div id="item"><p><b>UserID:</b> {context.User.userId} - </p></div>
-                  <div id="item"><p><b>DiscordID:</b> {context.User.discordId} - </p></div>
-                  <div id="item"><p><b>Name:</b> {context.User.name}</p></div>
+                  <div id="item"><p><b>UserID:</b> {context.UserService.getUserInfo().userId} - </p></div>
+                  <div id="item"><p><b>DiscordID:</b> {context.UserService.getUserInfo().discordId} - </p></div>
+                  <div id="item"><p><b>Name:</b> {context.UserService.getUserInfo().name}</p></div>
                 </div>
               </div>
               <div id="menuitem">

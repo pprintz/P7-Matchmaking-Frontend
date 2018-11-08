@@ -51,7 +51,7 @@ class GroupCardComponent extends React.Component<
                                 disabled={disableJoinButton}
                                 type='primary'
                                 icon="usergroup-add"
-                                onClick={() => this.joinGroup(context.User.userId)}>
+                                onClick={() => this.joinGroup(context.UserService.getUserInfo().userId)}>
                                 Join
                         </Button>
                         }

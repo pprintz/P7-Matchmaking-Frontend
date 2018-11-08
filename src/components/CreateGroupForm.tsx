@@ -4,7 +4,6 @@ import { Form, Icon, Input, Button, InputNumber, Card, Col, Row } from 'antd'
 import { UserService, GroupService, IGroup } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 import { ThemeConsumer } from 'styled-components';
-// import GroupService from './services/GroupService';
 
 interface GroupProps {
   groupService: GroupService,

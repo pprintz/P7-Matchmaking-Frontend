@@ -1,6 +1,7 @@
 import { User } from '../models/User';
 import { RouteComponentProps } from 'react-router-dom';
 import WSGroupService from './WSGroupsService';
+import { UserServiceCookies } from './userServiceCookies';
 
 export interface GroupService {
     leaveGroup(groupId: string, userId: string): Promise<boolean>,
@@ -45,7 +46,7 @@ export interface IGroup {
 }
 
 export interface ISharedContext {
-    User: User,
+    UserService: UserServiceCookies,
     Client: SocketIOClient.Socket,
     WSGroupsService: IWSGroupsService
 }
