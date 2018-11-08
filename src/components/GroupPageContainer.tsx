@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {RouteComponentProps} from 'react-router-dom';
-import {GroupResponse} from "../services/interfaces";
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { GroupResponse } from "../services/interfaces";
 import Response from '../Response/Response';
 import axios from 'axios';
 import InviteUrlComponent from './InviteUrlComponent';
@@ -21,36 +21,45 @@ interface GroupStates {
 
 
 
-export default class GroupPageContainer extends React.Component<
-  RouteComponentProps & {
-    group_id: string;
-    invite_id: string;
-  } /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
-  GroupResponse
-> {
-  // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
-  public async componentDidMount() {
-    let result;
-    try {
-      result = await axios.get("/groups/" + this.props.group_id);//this.props.match.params.group_id);
-      this.setState(result.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+export class GroupPageContainer extends React.Component<
+    RouteComponentProps & {
+        group_id: string;
+        invite_id: string;
+    } /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
+    GroupResponse
+    > {
+    // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
+    public async componentDidMount() {
+        let result;
+        try {
+            result = await axios.get("/groups/" + (this.props.match.params as { group_id: string }).group_id);//this.props.match.params.group_id);
+            this.setState(result.data);
 
-  public render() {
-    if (this.state === null) {
-      return (
-        <div>
-          <h3>Loading..</h3>
-        </div>
-      );
+        } catch (error) {
+            console.error(error);
+        }
     }
-    return (<div>
-      <GroupList group={this.state} />
-      <InviteUrlComponent invite_id={this.state.invite_id} />
-      <ShowFittingGroups group={this.state} />
-    </div>)
-  }
+
+    private forceRender = (group: GroupResponse) => {
+        if (group && group !== undefined && group._id !== this.state._id) {
+            this.setState(group);
+        }
+    }
+
+    public render() {
+        if (this.state === null) {
+            return (
+                <div>
+                    <h3>Loading..</h3>
+                </div>
+            );
+        }
+        return (<div>
+            <GroupList group={this.state} />
+            <InviteUrlComponent invite_id={this.state.invite_id} />
+            <ShowFittingGroups group={this.state} onMergeHandler={this.forceRender} />
+        </div>)
+    }
 }
+
+export default withRouter(GroupPageContainer);

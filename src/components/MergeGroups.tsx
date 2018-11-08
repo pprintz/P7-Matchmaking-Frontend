@@ -4,7 +4,7 @@ import { Button } from '../UI'
 import { GroupService, UserService, GroupResponse } from "../services/interfaces";
 import { __await } from 'tslib';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 interface GroupStates {
     fromGroupid: string,
@@ -14,10 +14,11 @@ interface GroupStates {
 interface GroupProps {
     fromGroupid: string,
     toGroupid: string,
+    onMergeHandler : (group : GroupResponse) => void,
 
 }
 
-export default class MergeGroups extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
+export class MergeGroups extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
     private groupService;
     constructor(props: any){
         super(props);
@@ -36,6 +37,7 @@ export default class MergeGroups extends React.Component<RouteComponentProps & G
         // request.then((response) => {
         //     console.log("Request accepted: " + JSON.stringify(response))
         this.props.history.push("/groups/" + response._id);
+        this.props.onMergeHandler(response);
         // });
     };
     public render() {
@@ -48,3 +50,5 @@ export default class MergeGroups extends React.Component<RouteComponentProps & G
         )
     }
 }
+
+export default withRouter(MergeGroups);
