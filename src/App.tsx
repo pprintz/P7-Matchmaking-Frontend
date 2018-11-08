@@ -102,7 +102,7 @@ class App extends React.Component<{}, UserState> {
 
   public createUserAndSaveInCookie = async (user: IFormUser) => {
     try {
-      const response = await Axios.post("/users/create", user);
+      const response = await Axios.post("http://localhost:3000/users/create", user);
       const createdUser = response.data;
       const userState = {
         user: new User(

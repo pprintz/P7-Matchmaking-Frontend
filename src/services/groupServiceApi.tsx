@@ -5,7 +5,7 @@ import {GroupService} from "./interfaces";
 export class GroupServiceApi implements GroupService{
     public async leaveGroup(groupId : string, userId : string) : Promise<boolean>{
         // Axios Request - Takes a group_id and user_id
-        const request = axios.post("/groups/leave", {
+        const request = axios.post("http://localhost:3000/groups/leave", {
                 "group_id": groupId,
                 "user_id": userId
             });
@@ -24,6 +24,6 @@ export class GroupServiceApi implements GroupService{
         });
     }
     public async createGroup(group : any) {
-        return axios.post("/groups/create", group);
+        return axios.post("http://localhost:3000/groups/create", group);
     }
 }
