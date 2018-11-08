@@ -276,7 +276,7 @@ Then add the block below to your `launch.json` file and put it inside the `.vsco
     "name": "Chrome",
     "type": "chrome",
     "request": "launch",
-    "url": process.env.API_URL + "",
+    "url": process.env.REACT_APP_API_URL + "",
     "webRoot": "${workspaceRoot}/src",
     "userDataDir": "${workspaceRoot}/.vscode/chrome",
     "sourceMapPathOverrides": {

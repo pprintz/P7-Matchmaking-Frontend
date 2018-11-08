@@ -27,7 +27,7 @@ export default class GroupPageContainer extends React.Component<
   public async componentDidMount() {
     let result;
     try {
-      result = await axios.get(process.env.API_URL + "/api/groups/" + this.props.match.params.group_id);
+      result = await axios.get(process.env.REACT_APP_API_URL + "/api/groups/" + this.props.match.params.group_id);
       this.setState(result.data);
     } catch (error) {
       console.error(error);

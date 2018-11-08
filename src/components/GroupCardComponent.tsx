@@ -61,7 +61,7 @@ class GroupCardComponent extends React.Component<
   private joinGroup = async () => {
     try {
       const groupId = this.state.data._id;
-      const response = await Axios.post(process.env.API_URL + "/api/groups/join", {
+      const response = await Axios.post(process.env.REACT_APP_API_URL + "/api/groups/join", {
         group_id: groupId,
         user_id: new UserServiceCookies().getUserInfo().userId,
       });

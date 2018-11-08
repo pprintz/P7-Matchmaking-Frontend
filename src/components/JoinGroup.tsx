@@ -50,7 +50,7 @@ export class JoinGroup extends React.Component<any, any> {
   private joinGroup = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const groupId = this.props.match.params.group_id;
-      await Axios.post(process.env.API_URL + "/api/groups/join", { group_id: groupId, 
+      await Axios.post(process.env.REACT_APP_API_URL + "/api/groups/join", { group_id: groupId, 
                                    user_id: this.props.userServiceCookies.getUserInfo().userId 
                                  });
       this.props.history.push(`/groups/${groupId}`);

@@ -37,7 +37,7 @@
   },
   "eslintConfig": {
     "globals": {
-      "API_URL": false
+      "REACT_APP_API_URL": false
     }
   },
   "homepage": "."
