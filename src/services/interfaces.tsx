@@ -5,6 +5,7 @@ export interface GroupService {
     leaveGroup(groupId : string, userId: string): Promise<boolean>,
     mergeGroups(fromGroup: string, toGroup:string): Promise<GroupResponse>,
     createGroup(group : any),
+    getGameList() : Promise<IGame[]>
 }
 
 export interface UserService {
@@ -28,3 +29,7 @@ export interface IGroup {
     users : string[]
 }
 
+export interface IGame {
+    name: string,
+    maxSize: number
+}
