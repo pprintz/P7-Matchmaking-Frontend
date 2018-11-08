@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
-import { Form, Icon, Input, Button, InputNumber, Card } from 'antd'
-import {UserService, GroupService, GroupResponse, IGroup} from "../services/interfaces";
+import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
+import {UserService, GroupService, GroupResponse, IGroup, IGame} from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 // import GroupService from './services/GroupService';
 
@@ -11,7 +11,31 @@ interface GroupProps {
   form: any
 }
 
-class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> {
+interface State {
+  gameList : IGame[],
+  game : IGame,
+  gamesLoaded: boolean
+}
+
+class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, State> {
+
+  constructor(props : GroupProps & RouteComponentProps){
+    super(props);
+
+    this.state = {
+      gameList: [],
+      game: {name: "12345", maxSize: 0},
+      gamesLoaded: false
+    }
+  }
+
+  public async componentDidMount(){
+    const games = await this.props.groupService.getGameList();
+    this.setState({
+      gameList: games,
+      gamesLoaded: true
+    });
+  }
 
   public render() {
     const FormItem = Form.Item;
@@ -30,10 +54,16 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> 
             )}
           </FormItem>
           <FormItem label="Game">
-            {getFieldDecorator('game', {
-              rules: [{ required: true, message: 'Please input the game.' }],
+           {getFieldDecorator('game', {
+             rules: [{ required: true, message: 'Please input game.' }],
             })(
-              <Input prefix={<Icon type="crown" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Game" />
+              <Select placeholder="Choose Game" onChange={this.handleGameChange}>
+                {
+                  this.state.gamesLoaded ? this.state.gameList.map((val : IGame, id : number) => {
+                    return <Select.Option key={id.toString()} value={val.name}>{val.name}</Select.Option>
+                  }) : null
+                }
+              </Select>
             )}
           </FormItem>
           <FormItem label="Group size">
@@ -41,7 +71,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> 
               rules: [{ required: true, message: 'Please input group size.' }],
             })(
               // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              <InputNumber min={2} max={99} placeholder="Group size" />
+              <InputNumber min={2} max={99} placeholder="Group size" disabled={true} />
             )}
           </FormItem>
           <Button type="primary" htmlType="submit" size="large">
@@ -51,6 +81,18 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps> 
       </Card>
     );
   }
+
+  private handleGameChange = (event: string) => {
+    const maybeGame : IGame | undefined = this.state.gameList.find(game => game.name === event) ;
+    const chosenGame : IGame = maybeGame === undefined ? {name: "none", maxSize: 2} : maybeGame;
+
+    this.setState({game: chosenGame})
+
+    this.props.form.setFieldsValue({
+      "maxSize": chosenGame.maxSize 
+    });
+  }
+
 
   private handleSubmit = (event: any) => {
     event.preventDefault();
