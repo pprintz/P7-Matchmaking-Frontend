@@ -22,17 +22,17 @@ interface GroupStates {
 
 
 export default class GroupPageContainer extends React.Component<
-  RouteComponentProps<{
+  RouteComponentProps & {
     group_id: string;
     invite_id: string;
-  }> /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
+  } /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
   GroupResponse
 > {
   // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
   public async componentDidMount() {
     let result;
     try {
-      result = await axios.get("/groups/" + this.props.match.params.group_id);
+      result = await axios.get("/groups/" + this.props.group_id);//this.props.match.params.group_id);
       this.setState(result.data);
     } catch (error) {
       console.error(error);
@@ -50,6 +50,7 @@ export default class GroupPageContainer extends React.Component<
     return (<div>
       <GroupList group={this.state} />
       <InviteUrlComponent invite_id={this.state.invite_id} />
+      <ShowFittingGroups group={this.state} />
     </div>)
   }
 }

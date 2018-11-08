@@ -2,7 +2,9 @@ import * as React from "react";
 import axios from 'axios';
 import { GroupResponse, UserService, GroupService } from "../services/interfaces";
 import { Li, Div, Ul } from '../UI'
-import MergeGroups from '../components/MergeGroups'
+import MergeGroups from './MergeGroups';
+import { RouteComponentProps } from 'react-router';
+// import MergeGroups from '../components/MergeGroups'
 
 
 interface GroupProps {
@@ -10,7 +12,7 @@ interface GroupProps {
     // groupService : GroupService,
 }
 
-export default class ShowFittingGroups extends React.Component< GroupProps, { groups: GroupResponse[]}> {
+export default class ShowFittingGroups extends React.Component<RouteComponentProps & GroupProps, { groups: GroupResponse[]}> {
 
     constructor(props: any) {
         super(props)
@@ -19,7 +21,7 @@ export default class ShowFittingGroups extends React.Component< GroupProps, { gr
 
     public async componentDidMount() {
         try {
-            const response = await axios.get(`groups/fitting/${this.props.group.maxSize - this.props.group.users.length}`)
+            const response = await axios.get(`fitting/${this.props.group.maxSize - this.props.group.users.length}/${this.props.group.game}`)
             const data = response.data;
             this.setState({ groups: data });
         } catch (error) {
@@ -32,7 +34,7 @@ export default class ShowFittingGroups extends React.Component< GroupProps, { gr
             <Div>
                 <Ul>
                     <h1>group</h1>
-                    {this.state.groups.map(group => <Li key={group._id}>{group.name}</Li>)}
+                    {this.state.groups.map(group => <Li key={group._id}>{group.name} -- <MergeGroups fromGroupid={this.props.group._id} toGroupid={group._id}/> </Li>)}
                 </Ul>
             </Div>
         )

@@ -24,12 +24,14 @@ export class GroupServiceApi implements GroupService{
         });
     }
     public async mergeGroups(fromGroupid: string, toGroupid:string): Promise<GroupResponse>{
-        
-        const request = axios.post<GroupResponse>("/groups/merge", {
-            "fromGroup_id": fromGroupid,
-            "toGroup_id": toGroupid
+        console.log("Inside mergeGroup service");
+        const request = await axios.post("/groups/merge", {
+            "from_id": fromGroupid,
+            "to_id": toGroupid
         });
-        return await request.then((response) => {return response.data})
+        //const result = await request.then((response) => {return response.data})
+    console.log("Returned data: " + JSON.stringify(request));
+        return request.data;
     }
 
     public async createGroup(group : any) {
