@@ -24,7 +24,7 @@ export class GroupServiceApi implements GroupService{
         });
     }
     public async createGroup(group : any) {
-        return axios.post("http://localhost:3000/groups", group); 
+        return axios.post("http://localhost:3000/groups/create", group); 
     }
 
     public async getGameList() : Promise<IGame[]>{
