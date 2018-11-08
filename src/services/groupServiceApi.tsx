@@ -5,7 +5,7 @@ import {GroupService, IGame} from "./interfaces";
 export class GroupServiceApi implements GroupService{
     public async leaveGroup(groupId : string, userId : string) : Promise<boolean>{
         // Axios Request - Takes a group_id and user_id
-        const request = axios.post("http://localhost:3000/api/groups/leave", {
+        const request = axios.post(process.env.API_URL + "/api/groups/leave", {
                 "group_id": groupId,
                 "user_id": userId
             });
@@ -24,11 +24,11 @@ export class GroupServiceApi implements GroupService{
         });
     }
     public async createGroup(group : any) {
-        return axios.post("http://localhost:3000/api/groups/create", group); 
+        return axios.post(process.env.API_URL + "/api/groups/create", group); 
     }
 
     public async getGameList() : Promise<IGame[]>{
-        const request = await axios.get("http://localhost:3000/api/groups/game");
+        const request = await axios.get(process.env.API_URL + "/api/groups/game");
         
         const games : IGame[] = [];
         request.data.forEach(game => {
