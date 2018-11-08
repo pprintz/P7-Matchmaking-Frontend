@@ -4,19 +4,22 @@ import Response from '../Response/Response';
 import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col } from 'antd'
-import WSGroupService from '../services/WSGroupsService';
+import WSGroupsService from '../services/WSGroupsService';
 import {GroupResponse} from "../services/interfaces";
-
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 
 export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
-    private WSGroupService : WSGroupService;
+    private static contextType = GlobalContext;
+    private WSGroupService : WSGroupsService;
     private sortFlag : boolean = false;
 
     constructor(props: any) {
         super(props)
         this.state = { data: [], statuscode: 0, error: "" };
+    }
 
-        this.WSGroupService = new WSGroupService();
+    public componentWillMount(){
+        this.WSGroupService = (this.context as SharedContext).WSGroupsService;
     }
 
     public componentDidMount() {
@@ -43,9 +46,8 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
             });
 
             const groups = sorted.map((element : GroupResponse) => {
-                return (<GroupCardComponent key={element._id} group={element} WSGroupService={this.WSGroupService} onGroupChangeCallback={this.onGroupChanged} />)
+                return (<GroupCardComponent key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
             });
-            
             return (
                 <div>
                     <Row>

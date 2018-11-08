@@ -23,6 +23,7 @@ export class GroupServiceApi implements GroupService{
             return false
         });
     }
+    
     public async createGroup(group : any) {
         return axios.post("/groups/create", group);
     }
