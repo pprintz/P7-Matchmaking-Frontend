@@ -11,7 +11,7 @@ export default class GroupList extends React.Component<{ group: GroupResponse },
     super(props)
     this.WSGroupService = new WSGroupService();
     this.state = this.props.group;
-    this.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
+    this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
   }
 
   public render() {
