@@ -7,7 +7,6 @@ import { GroupResponse } from 'src/services/interfaces';
 import { RouteComponentProps, withRouter } from "react-router";
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
 
-
 class GroupCardComponent extends React.Component<
     RouteComponentProps & {
         group: GroupResponse,
@@ -15,9 +14,10 @@ class GroupCardComponent extends React.Component<
     },
     Response<GroupResponse>
     >{
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private WSGroupsService: WSGroupsService;
 
+    private WSGroupsService: WSGroupsService;
     constructor(props:
         RouteComponentProps & {
             group: GroupResponse,
@@ -100,7 +100,7 @@ class GroupCardComponent extends React.Component<
 
     }
 
-    private async joinGroup(userId : string) {
+    private async joinGroup(userId: string) {
         await this.WSGroupsService.joinGroup(
             this.state.data._id,
             userId,
