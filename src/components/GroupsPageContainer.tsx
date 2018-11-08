@@ -16,7 +16,7 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
 
     public componentDidMount() {
         
-        Axios.get('http://localhost:3000/api/groups')
+        Axios.get(process.env.API_URL + "/api/groups")
             .then((res: AxiosResponse) => {
                 this.setState({ data: res.data});
             });
