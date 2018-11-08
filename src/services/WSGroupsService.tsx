@@ -1,15 +1,17 @@
-import {IWSGroupService, GroupResponse} from './interfaces';
+import { IWSGroupService, GroupResponse } from './interfaces';
 import WSService from './WSService';
+import GroupService from './GroupService';
 
 export default class WSGroupService extends WSService implements IWSGroupService {
-    constructor(){
+    constructor() {
         super('/groups');
     }
 
-    public joinGroup = async (groupID: string, userID: string, ackFn? : (args : GroupResponse) => void) : Promise<void> => {
+    public joinGroup = async (groupID: string, userID: string, ackFn?: (args: GroupResponse) => void): Promise<void> => {
         await this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn);
-    }    
-    
+
+    }
+
     public leaveGroup(groupID: string, userID: string): void {
         throw new Error("Method not implemented.");
     }
@@ -22,12 +24,17 @@ export default class WSGroupService extends WSService implements IWSGroupService
         throw new Error("Method not implemented.");
     }
 
-    public incTimer(count : number) : void {
+    public incTimer(count: number): void {
         console.log('IncTimer invoked');
         this.IO.emit('incTimer', count);
     }
 
-    public subscribeToTimer(count : number) : void{
+    public subscribeToTimer(count: number): void {
         this.IO.emit('subscribeToTimer', count);
     }
+
+    public updateVisibility = async (group, ackFn: (args: GroupResponse) => void): Promise<void> => {
+        await this.IO.emit('updateVisibility', group, ackFn);
+    }
+
 }

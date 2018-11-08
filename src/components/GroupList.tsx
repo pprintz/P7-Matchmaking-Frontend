@@ -1,29 +1,52 @@
 import * as React from 'react';
-import {GroupResponse} from "../services/interfaces";
+import { GroupResponse } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
+import { Switch } from "antd";
+import WSGroupService from '../services/WSGroupsService';
 
-
-export default class GroupList extends React.Component<{ group: GroupResponse }> {
+export default class GroupList extends React.Component<{ group: GroupResponse }, GroupResponse> {
+  private WSGroupService: WSGroupService;
 
   public constructor(props: { group: GroupResponse }) {
     super(props)
+    this.WSGroupService = new WSGroupService();
+    this.state = this.props.group;
+    this.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
   }
 
   public render() {
     return (
       <Div>
-        <h1>{this.props.group.name}</h1>
+        <h1>{this.state.name}</h1>
+        <div id="wrapper">
+          <div id="left">
+            <p>Make group visible to others:</p>
+          </div>
+          <div id="right"><Switch onChange={this.updateVisibility} defaultChecked={this.state.visible} /></div>
+        </div>
+        <br />
         <Ul>
-          {this.props.group.users.map((member) =>  {
-            return  <Li key={member}>
+          {this.state.users.map((member) => {
+            return <Li key={member}>
               {member}</Li>
           })}
           {
-          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},() =><OpenLi>Open<Button>Invite player</Button></OpenLi> )
-          
+            Array.from({ length: (this.state.maxSize - this.state.users.length) }, () => <OpenLi>Open<Button>Invite player</Button></OpenLi>)
+
           }
         </Ul>
       </Div>
     );
+  }
+  private updateVisibility = async () => {
+    await this.WSGroupService.updateVisibility(this.state, this.onVisibilityChanged)
+  }
+
+  private onVisibilityChanged = (group: GroupResponse) => {
+    this.setState(group);
+  }
+
+  private onGroupChanged = (response: { group: GroupResponse, caller: string }) => {
+    this.setState(response.group);
   }
 }

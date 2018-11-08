@@ -58,7 +58,7 @@ class App extends React.Component<{}, UserState> {
             <Router>
                 <div className="App">
                     <UserContext.Provider value={this.state}>
-                        <MenuBar />
+                        <MenuBar userService={this.userServiceCookies} />
                         <Switch>
                             <Route
                                 path="/groups/:group_id/:invite_id"
