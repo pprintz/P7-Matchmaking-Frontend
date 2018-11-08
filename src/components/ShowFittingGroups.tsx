@@ -4,6 +4,7 @@ import { GroupResponse, UserService, GroupService } from "../services/interfaces
 import { Li, Div, Ul } from '../UI'
 import MergeGroups from './MergeGroups';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { Group } from 'antd/lib/radio';
 // import MergeGroups from '../components/MergeGroups'
 
 
@@ -25,11 +26,18 @@ export class ShowFittingGroups extends React.Component<RouteComponentProps & Gro
             const response = await axios.get(`fitting/${this.props.group.maxSize - this.props.group.users.length}/${this.props.group.game}`)
             const data = response.data;
             this.setState({ groups: data });
+            {this.state.groups.filter(group => {
+                if(this.props.group._id === group._id){
+                    return false;
+                }
+                return true;
+            }
+            )}
         } catch (error) {
             console.error(error)
         }
     }
-
+    
     public render() {
         return (
             <Div>
