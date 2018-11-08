@@ -7,7 +7,7 @@ export default class WSService {
         this.IO = IOClient('http://localhost:3000' + (namespace.startsWith('/') ? namespace : ('/' + namespace)));
     }
 
-    public registerCallback(event : string, fn : any) : void {
+    public registerEventHandler(event : string, fn : any) : void {
         this.IO.on(event, fn);
     }
 }

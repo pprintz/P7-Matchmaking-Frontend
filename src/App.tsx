@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as IOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { GroupServiceApi } from "./services/groupServiceApi";
@@ -16,40 +17,31 @@ import FrontPage from "./components/FrontPage";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
-
+import { SharedContext, GlobalContext } from './models/SharedContext';
 const { Header } = Layout;
-
-interface UserState {
-    user: User;
-}
-
-export const UserContext = React.createContext({
-    user: new User("", "", "", ""),
-});
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 // tslint:disable-next-line:max-classes-per-file
-class App extends React.Component<{}, UserState> {
+class App extends React.Component<{}, SharedContext> {
     private groupServiceApi: GroupServiceApi;
     private userServiceCookies: UserServiceCookies;
 
-    constructor(props: any) {
+    constructor(props) {
         super(props);
-
         this.groupServiceApi = new GroupServiceApi();
         this.userServiceCookies = new UserServiceCookies();
-        this.state = { user: new User("", "", "", "") };
+        this.state = new SharedContext();
     }
 
     public async componentDidMount() {
         const userInfo = this.userServiceCookies.getUserInfo();
-        this.setState({ user: userInfo });
+        this.setState({ User: userInfo });
     }
 
     // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
     public render() {
         let HomePage;
-        if (isLoggedIn(this.state.user)) {
+        if (isLoggedIn(this.state.User)) {
             HomePage = <CreateOrFindGroup />;
         } else {
             HomePage = <LandingPage />;
@@ -57,7 +49,7 @@ class App extends React.Component<{}, UserState> {
         return (
             <Router>
                 <div className="App">
-                    <UserContext.Provider value={this.state}>
+                    <GlobalContext.Provider value={this.state}>
                         <MenuBar userService={this.userServiceCookies} />
                         <Switch>
                             <Route
@@ -94,7 +86,7 @@ class App extends React.Component<{}, UserState> {
                             />
                             <Route path="/" render={() => HomePage} />
                         </Switch>
-                    </UserContext.Provider>
+                    </GlobalContext.Provider>
                 </div>
             </Router>
         );
@@ -105,14 +97,14 @@ class App extends React.Component<{}, UserState> {
             const response = await Axios.post("/users/create", user);
             const createdUser = response.data;
             const userState = {
-                user: new User(
+                User: new User(
                     createdUser._id,
                     createdUser.name,
                     createdUser.discordId,
                     "groupId"
                 ),
             };
-            this.userServiceCookies.setUserInfo(userState.user);
+            this.userServiceCookies.setUserInfo(userState.User);
             this.setState(userState);
         } catch (error) {
             console.error("ERROR:", error);

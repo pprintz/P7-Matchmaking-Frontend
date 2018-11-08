@@ -1,4 +1,6 @@
 import { User } from '../models/User';
+import { RouteComponentProps } from 'react-router-dom';
+import WSGroupService from './WSGroupsService';
 
 export interface GroupService {
     leaveGroup(groupId: string, userId: string): Promise<boolean>,
@@ -12,16 +14,17 @@ export interface UserService {
 
 }
 
-export interface IWSGroupService {
+export interface IWSGroupsService {
     joinGroup(groupID: string, userID: string, ackFn?: (args: GroupResponse) => void): Promise<void>,
-    leaveGroup(groupId: string, userId: string): void,
+    leaveGroup(groupId: string, userId: string, ackFn: (args: any) => void): Promise<void>,
     getGroup(groupId: string): GroupResponse,
     getGroups(): GroupResponse[],
     updateVisibility(group, ackFn: (args: GroupResponse) => void): any
     // createGroup()
     // verifyInvite()
     // registerGroupChanged() 
-}
+};
+
 export interface GroupResponse {
     _id: string,
     name: string,
@@ -31,6 +34,7 @@ export interface GroupResponse {
     users: string[],
     visible: boolean
 };
+
 export interface IGroup {
     name: string,
     maxSize: number,
@@ -38,5 +42,11 @@ export interface IGroup {
     invite_id: string,
     users: string[],
     visible: boolean
+}
+
+export interface ISharedContext {
+    User: User,
+    Client: SocketIOClient.Socket,
+    WSGroupsService: IWSGroupsService
 }
 

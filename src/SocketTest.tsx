@@ -7,9 +7,9 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
         super(props);
         this.state = {"count" : 1};
         this.WSGroupService = new WSGroupService();
-        this.WSGroupService.registerCallback('timer', this.onTimerCallback);
+        this.WSGroupService.registerEventHandler('timer', this.onTimerCallback);
         this.onButtonHit = this.onButtonHit.bind(this);
-        this.WSGroupService.subscribeToTimer(this.state.count);
+        // this.WSGroupService.subscribeToTimer(this.state.count);
     }
 
     public render(){
@@ -17,7 +17,7 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
             <div>
                 <p>{this.state.count}</p>
                 // eslint-disable-next-line
-                <button onClick={this.onButtonHit}>Increment count</button>
+                {/* <button onClick={this.onButtonHit}>Increment count</button> */}
             </div>
         );
     }   
@@ -28,6 +28,6 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
 
     private onButtonHit(){
         console.log('Button hit!');
-        this.WSGroupService.incTimer(this.state.count);
+        // this.WSGroupService.incTimer(this.state.count);
     }
 }

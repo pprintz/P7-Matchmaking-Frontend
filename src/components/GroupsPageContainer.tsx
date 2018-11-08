@@ -3,6 +3,7 @@ import * as React from 'react';
 import Response from '../Response/Response';
 import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
+<<<<<<< HEAD
 import { Row, Col, Card } from 'antd'
 import WSGroupService from '../services/WSGroupsService';
 import { GroupResponse } from "../services/interfaces";
@@ -14,13 +15,30 @@ import img from '../images/cs-header.jpg'
 export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
     private WSGroupService: WSGroupService;
     private sortFlag: boolean = false;
+=======
+import { Row, Col } from 'antd'
+import WSGroupsService from '../services/WSGroupsService';
+import {GroupResponse} from "../services/interfaces";
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
+
+export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
+    private static contextType = GlobalContext;
+    private WSGroupService : WSGroupsService;
+    private sortFlag : boolean = false;
+>>>>>>> f51519bacfa2575da2a649966f4fcd838bd5c626
 
     constructor(props: any) {
         super(props)
         this.state = { data: [], statuscode: 0, error: "" };
+    }
 
+<<<<<<< HEAD
         this.WSGroupService = new WSGroupService();
         this.WSGroupService.registerCallback('groupChanged', this.onGroupChanged);
+=======
+    public componentWillMount(){
+        this.WSGroupService = (this.context as SharedContext).WSGroupsService;
+>>>>>>> f51519bacfa2575da2a649966f4fcd838bd5c626
     }
 
     public componentDidMount() {
@@ -46,11 +64,17 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
 
             });
 
+<<<<<<< HEAD
             const groups = sorted.map((element: GroupResponse) => {
                 return (<GroupCardComponent key={element._id} group={element} WSGroupService={this.WSGroupService} onGroupChangeCallback={this.onGroupChanged} />)
             });
 
 
+=======
+            const groups = sorted.map((element : GroupResponse) => {
+                return (<GroupCardComponent key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
+            });
+>>>>>>> f51519bacfa2575da2a649966f4fcd838bd5c626
             return (
                 <div>
                     <Row>
