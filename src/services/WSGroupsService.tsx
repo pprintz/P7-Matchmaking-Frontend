@@ -1,6 +1,5 @@
-import { IWSGroupsService, GroupResponse } from './interfaces';
+import { IWSGroupsService, GroupResponse, IGroup } from './interfaces';
 import WSService from './WSService';
-import GroupService from './GroupService';
 
 export default class WSGroupService extends WSService implements IWSGroupsService {
     constructor() {
@@ -21,6 +20,13 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         });
     }
 
+    public createGroup = async (group: IGroup, ackFn: (group: GroupResponse) => void): Promise<any> => {
+        await this.IO.emit('createGroup', group, (error: any, group: GroupResponse) => {
+            if (!error) {
+                ackFn(group);
+            }
+        });
+    }
 
     public getGroup(groupID: string): GroupResponse {
         throw new Error("Method not implemented.");

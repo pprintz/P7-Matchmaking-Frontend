@@ -1,34 +1,38 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import { GlobalContext, SharedContext } from "../models/SharedContext";
 import { Button } from 'antd';
 import { UserService } from '../services/interfaces'
+import { User } from 'src/models/User';
 
-interface GroupProps {
-  userService: UserService,
-}
+export class MenuBar extends React.Component<RouteComponentProps> {
+    private user: User;
 
-export class MenuBar extends React.Component<GroupProps>  {
-  public render() {
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+    private static contextType = GlobalContext;
 
-    const user = this.props.userService.getUserInfo()
-    let myGroupButton;
-    let disVal = false;
-
-    const usersGroupId = "groups/" + user.groupId;
-    console.log("##############################" + user.groupId.length)
-    if (user.groupId !== "") {
-
-      myGroupButton = <Button type={"primary"} size={"large"}><Link to={usersGroupId}> My group!</Link></Button >
+    public componentWillMount() {
+        this.user = (this.context as SharedContext).UserService.getUserInfo();
     }
 
+    public render() {
 
-    return (
-      <header className="App-header">
-        <GlobalContext.Consumer>
-          {(context : SharedContext) => (
-            <div id="wrap">
-              {/* <div>
+        let myGroupButton;
+        let disVal = false;
+
+        const usersGroupId = "groups/" + this.user.groupId;
+        console.log("##############################" + this.user.groupId.length)
+        if (this.user.groupId !== "") {
+            myGroupButton = <Button type={"primary"} size={"large"}><Link to={usersGroupId}> My group!</Link></Button >
+        }
+
+
+        return (
+            <header className="App-header">
+                <GlobalContext.Consumer>
+                    {(context: SharedContext) => (
+                        <div id="wrap">
+                            {/* <div>
                 <div id="wrap">
                   <h1>
                     <Link to="/">F-LAN Matchmaking</Link>
@@ -41,38 +45,38 @@ export class MenuBar extends React.Component<GroupProps>  {
                 </div>
               </div>
               <div id="menu-item"><Button ghost>GROUPS</Button></div> */}
-              <div id="item">
-                <h1><Link to="/">F-LAN Matchmaking</Link></h1>
-                <div id="wrap">
-                  <div id="item"><p><b>UserID:</b> {context.UserService.getUserInfo().userId} - </p></div>
-                  <div id="item"><p><b>DiscordID:</b> {context.UserService.getUserInfo().discordId} - </p></div>
-                  <div id="item"><p><b>Name:</b> {context.UserService.getUserInfo().name}</p></div>
-                </div>
-              </div>
-              <div id="menuitem">
-                <div id="wrap">
+                            <div id="item">
+                                <h1><Link to="/">F-LAN Matchmaking</Link></h1>
+                                <div id="wrap">
+                                    <div id="item"><p><b>UserID:</b> {context.UserService.getUserInfo().userId} - </p></div>
+                                    <div id="item"><p><b>DiscordID:</b> {context.UserService.getUserInfo().discordId} - </p></div>
+                                    <div id="item"><p><b>Name:</b> {context.UserService.getUserInfo().name}</p></div>
+                                </div>
+                            </div>
+                            <div id="menuitem">
+                                <div id="wrap">
 
 
-                  <div id="button">
-                    {myGroupButton}
-                  </div>
+                                    <div id="button">
+                                        {myGroupButton}
+                                    </div>
 
 
-                  <div id="button">
-                    <Button.Group size={"large"}>
-                      <Button ghost disabled={disVal}><Link to={"/"}>Home</Link></Button>
-                      <Button ghost disabled={disVal}><Link to={"/groups"}>Groups</Link></Button>
-                      <Button ghost disabled={disVal}><Link to={"/create"}>Create a group</Link></Button>
-                    </Button.Group>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </GlobalContext.Consumer>
-      </header>
-    );
-  }
+                                    <div id="button">
+                                        <Button.Group size={"large"}>
+                                            <Button ghost disabled={disVal}><Link to={"/"}>Home</Link></Button>
+                                            <Button ghost disabled={disVal}><Link to={"/groups"}>Groups</Link></Button>
+                                            <Button ghost disabled={disVal}><Link to={"/create"}>Create a group</Link></Button>
+                                        </Button.Group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </GlobalContext.Consumer>
+            </header>
+        );
+    }
 }
 
-export default MenuBar;
+export default withRouter(MenuBar);

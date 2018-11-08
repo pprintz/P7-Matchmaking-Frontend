@@ -29,19 +29,16 @@ class App extends React.Component<{}, SharedContext> {
     constructor(props) {
         super(props);
         this.groupServiceApi = new GroupServiceApi();
-        this.userServiceCookies = new UserServiceCookies();
-        this.state = new SharedContext();
-    }
 
-    public async componentDidMount() {
-        const userInfo = this.userServiceCookies.getUserInfo();
-        this.setState({ User: userInfo });
+        this.state = new SharedContext();
+
+        this.userServiceCookies = this.state.UserService;
     }
 
     // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
     public render() {
         let HomePage;
-        if (isLoggedIn(this.state.User)) {
+        if (isLoggedIn(this.state.UserService.getUserInfo())) {
             HomePage = <CreateOrFindGroup />;
         } else {
             HomePage = <LandingPage />;
@@ -50,7 +47,7 @@ class App extends React.Component<{}, SharedContext> {
             <Router>
                 <div className="App">
                     <GlobalContext.Provider value={this.state}>
-                        <MenuBar userService={this.userServiceCookies} />
+                        <MenuBar />
                         <Switch>
                             <Route
                                 path="/groups/:group_id/:invite_id"
@@ -73,10 +70,7 @@ class App extends React.Component<{}, SharedContext> {
                                 )}
                             />
                             <Route path="/create" render={() => (
-                                <CreateGroupForm
-                                    groupService={this.groupServiceApi}
-                                    userService={this.userServiceCookies}
-                                />
+                                <CreateGroupForm />
                             )} />
                             <Route
                                 path="/register"
@@ -105,7 +99,7 @@ class App extends React.Component<{}, SharedContext> {
                 ),
             };
             this.userServiceCookies.setUserInfo(userState.User);
-            this.setState(userState);
+            this.setState({ UserService: this.userServiceCookies });
         } catch (error) {
             console.error("ERROR:", error);
         }
