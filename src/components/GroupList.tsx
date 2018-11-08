@@ -1,12 +1,21 @@
 import * as React from 'react';
 import {GroupResponse} from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
+import LeaveGroup from './LeaveGroup';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { GroupServiceApi } from 'src/services/groupServiceApi';
 
 
-export default class GroupList extends React.Component<{ group: GroupResponse }> {
+interface Props {
+  userService: UserServiceCookies,
+  groupService: GroupServiceApi,
+  group: GroupResponse
+}
 
-  public constructor(props: { group: GroupResponse }) {
-    super(props)
+export default class GroupList extends React.Component<Props> {
+
+  public constructor(props : Props) {
+    super(props);
   }
 
   public render() {
@@ -19,11 +28,12 @@ export default class GroupList extends React.Component<{ group: GroupResponse }>
               {member}</Li>
           })}
           {
-          Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},() =><OpenLi>Open<Button>Invite player</Button></OpenLi> )
-          
+            Array.from({length: (this.props.group.maxSize - this.props.group.users.length)},(v: {}, k: number) =><OpenLi key={k}>Open<Button>Invite player</Button></OpenLi> )
           }
         </Ul>
       </Div>
+      
+
     );
   }
 }

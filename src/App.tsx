@@ -71,14 +71,20 @@ class App extends React.Component<{}, UserState> {
                   />
                 )}
               />
-              <Route path="/groups/:group_id" component={GroupPageContainer} />
+              <Route path="/groups/:group_id" render={routeComponentProps => (
+                <GroupPageContainer userService={this.userServiceCookies} 
+                                    groupService={this.groupServiceApi} 
+                                    {...routeComponentProps}  
+                                  />
+               )} /> 
               <Route path="/groups" component={GroupsPageContainer} />
               <Route
                 path="/leave"
-                render={() => (
+                render={routeComponentProps => (
                   <LeaveGroup
                     groupService={this.groupServiceApi}
                     userService={this.userServiceCookies}
+                    {...routeComponentProps}
                   />
                 )}
               />

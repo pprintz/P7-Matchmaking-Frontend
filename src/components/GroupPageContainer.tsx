@@ -1,9 +1,13 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { GroupResponse } from "../services/interfaces";
+import { RouteComponentProps, Route } from "react-router-dom";
+import { GroupResponse, UserService, GroupService } from "../services/interfaces";
 import axios from "axios";
 import InviteUrlComponent from "./InviteUrlComponent";
 import GroupList from "./GroupList";
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { GroupServiceApi } from 'src/services/groupServiceApi';
+import LeaveGroup from './LeaveGroup';
+import DiscordUrlComponent from './DiscordUrlComponent';
 
 // IMatchParams and IProps are used for Route/Routing
 // in order to encapsulate the match data we get from routing groups/:group_id
@@ -16,13 +20,23 @@ interface GroupStates {
 }
 */
 
+interface Props {
+  userService: UserServiceCookies,
+  groupService: GroupService
+}
+
 export default class GroupPageContainer extends React.Component<
   RouteComponentProps<{
     group_id: string;
     invite_id: string;
-  }> /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
-  GroupResponse
-> {
+  }> & Props, GroupResponse> {
+
+  constructor(props : RouteComponentProps<{
+    group_id: string;
+    invite_id: string;
+  }> & Props){
+    super(props);
+  }
   // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
   public async componentDidMount() {
     let result;
@@ -43,8 +57,17 @@ export default class GroupPageContainer extends React.Component<
       );
     }
     return (<div>
-      <GroupList group={this.state} />
+      <GroupList group={this.state} userService={this.props.userService} groupService={this.props.groupService}  />
       <InviteUrlComponent invite_id={this.state.invite_id} />
+      <DiscordUrlComponent />
+      <Route render={routeComponentProps => (
+        <LeaveGroup 
+        userService={this.props.userService} 
+        groupService={this.props.groupService}
+        {...routeComponentProps}
+        />
+      )} />
+      
     </div>)
   }
 }

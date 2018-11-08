@@ -1,7 +1,7 @@
 import { User } from '../models/User';
 
 export interface GroupService {
-    leaveGroup(groupId : string, userId: string): Promise<boolean>,
+    leaveGroup(groupId : string, userId : string) : Promise<GroupResponse | boolean>,
     createGroup(group : any),
     getGameList() : Promise<IGame[]>
 }
@@ -9,6 +9,7 @@ export interface GroupService {
 export interface UserService {
     setUserInfo(user: User) : void;
     getUserInfo() : User;
+    updateGroupIdUserInfo(groupId : string) : User;
 }
 
 export interface GroupResponse {

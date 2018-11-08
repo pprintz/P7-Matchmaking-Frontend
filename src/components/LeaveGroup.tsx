@@ -1,7 +1,9 @@
 import * as React from 'react';
-import {GroupService, UserService} from "../services/interfaces";
+import {GroupService, GroupResponse} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
-import { User } from 'src/models/User';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { RouteComponentProps } from 'react-router';
+
 
 // Interface for States
 // The groupId is saved to state
@@ -12,21 +14,20 @@ interface GroupStates {
 
 interface GroupProps {
     groupService: GroupService,
-    userService: UserService,
+    userService: UserServiceCookies,
 }
 
-class LeaveGroup extends React.Component<GroupProps, GroupStates> {
+class LeaveGroup extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
     // This is the Axios link to the backend, for leave group functionality   and userService  
     private groupId : string;
     private userId : string;
 
-    constructor(props : GroupProps){
+    constructor(props : GroupProps & RouteComponentProps){
         super(props);
 
         // Set properties based on cookies
         this.groupId = this.props.userService.getUserInfo().groupId;
         this.userId = this.props.userService.getUserInfo().userId;
-
 
         // Initial State
         this.state = {groupId: this.groupId,
@@ -37,24 +38,27 @@ class LeaveGroup extends React.Component<GroupProps, GroupStates> {
     }
 
     // When the leave button is clicked
-    public handleOnClick = () => {
+    public handleOnClick = async () => {
         // Make the leave group request
-        const request : Promise<boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
-        request.then((response) => {
-            // Update state, if the request was successfull
-            if(response){
-                // This is returned if the group is left successfully!
-                // We should update the state of the "userConfig.xxxx" file here!
-                this.setState({groupId: ""});
+        try{
+            const request : Promise<GroupResponse | boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
 
-                // Update the cookie
-                this.props.userService.setUserInfo(new User("", "", "", ""));
-                this.setState({message: "Succesfully left the group"});
-            }else{
-                this.setState({groupId: "Error"});  
+            if(await request === false){
                 this.setState({message: "You are not in a group"});
+                
+                
+            }else{  
+                // Update the cookie
+                this.props.userService.updateGroupIdUserInfo("");
+
+                this.setState({message: "Succesfully left the group"});
+
+                console.log("Redirect!");
+                this.props.history.push("/");
             }
-        });
+        }catch(error){
+            this.setState({message: "Group was not changed"})
+        }
     }
 
     // Simple Rendering, self explanatory
