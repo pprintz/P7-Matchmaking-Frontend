@@ -7,7 +7,7 @@ export class GroupServiceApi implements GroupService{
     public async leaveGroup(groupId : string, userId : string) : Promise<GroupResponse | boolean>{
         try{
             // Axios Request - Takes a group_id and user_id
-            const request = await axios.post("http://localhost:3000/groups/leave", {
+            const request = await axios.post(process.env.REACT_APP_API_URL + "/api/groups/leave", {
                 "group_id": groupId,
                 "user_id": userId
             });
@@ -21,13 +21,11 @@ export class GroupServiceApi implements GroupService{
     }
 
     public async createGroup(group : IGroup) {
-        const request = await axios.post("http://localhost:3000/groups/create", group); 
-
-        return request;
+        return axios.post(process.env.REACT_APP_API_URL + "/api/groups/create", group); 
     }
 
     public async getGameList() : Promise<IGame[]>{
-        const request = await axios.get("http://localhost:3000/groups/game");
+        const request = await axios.get(process.env.REACT_APP_API_URL + "/api/groups/game");
         
         const games : IGame[] = [];
         request.data.forEach(game => {

@@ -5,7 +5,6 @@
   "dependencies": {
     "antd": "^3.10.2",
     "axios": "^0.18.0",
-    "dotenv": "^6.1.0",
     "npm": "^6.4.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
@@ -15,7 +14,7 @@
     "universal-cookie": "^2.1.2"
   },
   "scripts": {
-    "startprod": "pm2 start ./server.sh --name Matchmaking",
+    "startprod": "pm2 start ./server.sh --name Frontend",
     "restartprod": "pm2 restart all",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
@@ -25,15 +24,21 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/jest": "^23.3.5",
-    "@types/react-router-dom": "^4.3.1",
-    "@types/styled-components": "^4.0.2",
     "@types/node": "^10.12.0",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/styled-components": "^4.0.2",
     "@types/universal-cookie": "^2.2.0",
+    "dotenv": "^6.1.0",
     "react-app-env": "^1.2.3",
     "typescript": "^3.1.3",
     "typescript-styled-plugin": "^0.12.0"
   },
-  "proxy": "http://localhost:3000"
+  "eslintConfig": {
+    "globals": {
+      "REACT_APP_API_URL": false
+    }
+  },
+  "homepage": "."
 }
