@@ -13,14 +13,12 @@ interface GroupStates {
 
 interface GroupProps {
     fromGroupid: string,
-    toGroupid: string,
-    onMergeHandler : (group : GroupResponse) => void,
-
+    toGroupid: string
 }
 
-export class MergeGroups extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
+export default class MergeGroups extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
     private groupService;
-    constructor(props: any){
+    constructor(props: RouteComponentProps & GroupProps){
         super(props);
         // this.fromGroupid = this.props.userService.getUserInfo().groupId;
         // this.toGroupid = this.props.userService.getUserInfo().groupId;
@@ -33,11 +31,11 @@ export class MergeGroups extends React.Component<RouteComponentProps & GroupProp
     private handleClick = async () => {
         console.log("Inside handler for button click")
        const response = await this.groupService.mergeGroups(this.props.fromGroupid, this.props.toGroupid);
-       console.log("Request accepted: " + JSON.stringify(response))
+       console.log("Request accepted: " + `/groups/${this.props.toGroupid}`)
         // request.then((response) => {
         //     console.log("Request accepted: " + JSON.stringify(response))
-        this.props.history.push("/groups/" + response._id);
-        this.props.onMergeHandler(response);
+        this.props.history.replace(`/groups/${this.props.toGroupid}`);
+ //       this.props.onMergeHandler(response);
         // });
     };
     public render() {
@@ -51,4 +49,4 @@ export class MergeGroups extends React.Component<RouteComponentProps & GroupProp
     }
 }
 
-export default withRouter(MergeGroups);
+//export default withRouter(MergeGroups);

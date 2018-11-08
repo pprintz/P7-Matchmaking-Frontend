@@ -3,18 +3,17 @@ import axios from 'axios';
 import { GroupResponse, UserService, GroupService } from "../services/interfaces";
 import { Li, Div, Ul } from '../UI'
 import MergeGroups from './MergeGroups';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter, Route } from 'react-router';
 import { Group } from 'antd/lib/radio';
 // import MergeGroups from '../components/MergeGroups'
 
 
 interface GroupProps {
     group: GroupResponse,
-    onMergeHandler : (group : GroupResponse) => void,
     // groupService : GroupService,
 }
 
-export class ShowFittingGroups extends React.Component<RouteComponentProps & GroupProps, { groups: GroupResponse[]}> {
+export default class ShowFittingGroups extends React.Component<RouteComponentProps & GroupProps, { groups: GroupResponse[]}> {
 
     constructor(props: any) {
         super(props)
@@ -26,13 +25,7 @@ export class ShowFittingGroups extends React.Component<RouteComponentProps & Gro
             const response = await axios.get(`fitting/${this.props.group.maxSize - this.props.group.users.length}/${this.props.group.game}`)
             const data = response.data;
             this.setState({ groups: data });
-            {this.state.groups.filter(group => {
-                if(this.props.group._id === group._id){
-                    return false;
-                }
-                return true;
-            }
-            )}
+            this.setState({groups: this.state.groups.filter(group => this.props.group._id !== group._id)});
         } catch (error) {
             console.error(error)
         }
@@ -43,12 +36,18 @@ export class ShowFittingGroups extends React.Component<RouteComponentProps & Gro
             <Div>
                 <Ul>
                     <h1>group</h1>
-                    {this.state.groups.map(group => <Li key={group._id}>{group.name} -- <MergeGroups fromGroupid={this.props.group._id} toGroupid={group._id} onMergeHandler={this.props.onMergeHandler}/> </Li>)}
+                    {this.state.groups.map(group => <Li key={group._id}>{group.name} -- <Route render={RouteComponentProps => (
+                        <MergeGroups 
+                        fromGroupid={this.props.group._id} 
+                        toGroupid={group._id} 
+                        {...RouteComponentProps}
+                        />
+                    )}/> </Li>)}
                 </Ul>
             </Div>
         )
     }
 }
+// onMergeHandler={this.props.onMergeHandler}
 //  <MergeGroups fromGroupid = {this.props.userService.getUserInfo().groupId} toGroupid = {group._id}/>
 
-export default withRouter(ShowFittingGroups);

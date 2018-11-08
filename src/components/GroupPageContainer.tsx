@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, Route } from 'react-router-dom';
 import { GroupResponse } from "../services/interfaces";
 import Response from '../Response/Response';
 import axios from 'axios';
@@ -34,7 +34,7 @@ export class GroupPageContainer extends React.Component<
         try {
             result = await axios.get("/groups/" + (this.props.match.params as { group_id: string }).group_id);//this.props.match.params.group_id);
             this.setState(result.data);
-
+            console.log(result);
         } catch (error) {
             console.error(error);
         }
@@ -57,7 +57,12 @@ export class GroupPageContainer extends React.Component<
         return (<div>
             <GroupList group={this.state} />
             <InviteUrlComponent invite_id={this.state.invite_id} />
-            <ShowFittingGroups group={this.state} onMergeHandler={this.forceRender} />
+            <Route render={routeComponentProps => (
+                <ShowFittingGroups 
+                    group={this.state} 
+                    {...routeComponentProps}
+                    />
+            )} />
         </div>)
     }
 }
