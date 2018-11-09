@@ -71,9 +71,7 @@ class CreateGroupForm extends React.Component<{ form: any } & RouteComponentProp
                 formGroup.users = [userId];
                 formGroup.invite_id = "";
                 formGroup.visible = false;
-                console.info("Right before createGroup")
                 await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
-                console.info("Right after createGroup")
             };
         })
     }

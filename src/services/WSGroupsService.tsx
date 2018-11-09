@@ -10,14 +10,8 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         await this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 
-    public leaveGroup = async (groupID: string, userID: string, ackFn: (args: any) => void): Promise<void> => {
-        await this.IO.emit('leaveGroup', { "user_id": userID, "group_id": groupID }, (args: any) => {
-
-            // 
-
-            // Finish off by invoking the supplied callback acknowledge function
-            ackFn(args);
-        });
+    public leaveGroup = async (groupID: string, userID: string, ackFn: (error: boolean) => void): Promise<void> => {
+        await this.IO.emit('leaveGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 
     public createGroup = async (group: IGroup, ackFn: (group: GroupResponse) => void): Promise<any> => {

@@ -5,21 +5,22 @@ import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col, Card } from 'antd'
 import WSGroupsService from '../services/WSGroupsService';
-import {GroupResponse} from "../services/interfaces";
+import { GroupResponse } from "../services/interfaces";
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import img from '../images/cs-header.jpg'
 
 export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private WSGroupsService : WSGroupsService;
-    private sortFlag : boolean = false;
+    private WSGroupsService: WSGroupsService;
+    private sortFlag: boolean = false;
 
     constructor(props: any) {
         super(props)
         this.state = { data: [], statuscode: 0, error: "" };
     }
 
-    public componentWillMount(){
+    public componentWillMount() {
         this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
         this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
@@ -47,7 +48,7 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
 
             });
 
-            const groups = sorted.map((element : GroupResponse) => {
+            const groups = sorted.map((element: GroupResponse) => {
                 return (<GroupCardComponent key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
             });
             return (
@@ -76,7 +77,7 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
     }
 
     private onGroupChanged = (response: { group: GroupResponse, caller: string }): void => {
-        if (!this.sortFlag) { return };
+        if (!this.sortFlag && response.caller !== "createGroup" && response.caller !== "deleteGroup") { return };
 
         const oldData = this.state.data;
         const groupIndex = oldData.findIndex((value: GroupResponse, index: number, obj: GroupResponse[]) => {

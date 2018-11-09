@@ -18,7 +18,7 @@ export class UserServiceCookies implements UserService {
             return new User("", "", "", "");
         }
         const user: User = this.cookies.get("user") as unknown as User;
-        console.log("getUserInfo user", user);
+
         return user;
     }
 

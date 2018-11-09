@@ -17,7 +17,7 @@ export interface UserService {
 
 export interface IWSGroupsService {
     joinGroup(groupID: string, userID: string, ackFn?: (args: GroupResponse) => void): Promise<void>,
-    leaveGroup(groupId: string, userId: string, ackFn: (args: any) => void): Promise<void>,
+    leaveGroup(groupId: string, userId: string, ackFn: (error: boolean) => void): Promise<void>,
     getGroup(groupId: string): GroupResponse,
     getGroups(): GroupResponse[],
     updateVisibility(group, ackFn: (args: GroupResponse) => void): any

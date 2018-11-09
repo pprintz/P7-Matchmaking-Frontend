@@ -1,7 +1,10 @@
 import * as React from 'react';
-import {GroupService, UserService} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
 import { User } from 'src/models/User';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
+import WSGroupsService from '../services/WSGroupsService';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 // Interface for States
 // The groupId is saved to state
@@ -10,49 +13,57 @@ interface GroupStates {
     message: string
 }
 
-interface GroupProps {
-    groupService: GroupService,
-    userService: UserService,
-}
+// interface GroupProps {
+//     groupService: GroupService,
+//     userService: UserService,
+// }
 
-class LeaveGroup extends React.Component<GroupProps, GroupStates> {
+class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
     // This is the Axios link to the backend, for leave group functionality   and userService  
-    private groupId : string;
-    private userId : string;
+    private groupId: string;
+    private userId: string;
+    private WSGroupsService: WSGroupsService;
+    private UserService: UserServiceCookies;
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+    private static contextType = GlobalContext;
 
-    constructor(props : GroupProps){
+    constructor(props) {
         super(props);
-
-        // Set properties based on cookies
-        this.groupId = this.props.userService.getUserInfo().groupId;
-        this.userId = this.props.userService.getUserInfo().userId;
-
-
-        // Initial State
-        this.state = {groupId: this.groupId,
-                      message: ""
-                     };
 
         this.handleOnClick = this.handleOnClick.bind(this);
     }
 
+    public componentWillMount() {
+        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.UserService = (this.context as SharedContext).UserService;
+        // Set properties based on cookies
+        this.groupId = this.UserService.getUserInfo().groupId;
+        this.userId = this.UserService.getUserInfo().userId;
+
+        // Initial State
+        this.state = {
+            groupId: this.groupId,
+            message: ""
+        };
+    }
+
     // When the leave button is clicked
-    public handleOnClick = () => {
+    public handleOnClick = async () => {
         // Make the leave group request
-        const request : Promise<boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
-        request.then((response) => {
+        await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, (error: boolean) => {
             // Update state, if the request was successfull
-            if(response){
+            if (!error) {
                 // This is returned if the group is left successfully!
                 // We should update the state of the "userConfig.xxxx" file here!
-                this.setState({groupId: ""});
+                this.setState({ groupId: "" });
 
                 // Update the cookie
-                this.props.userService.setUserInfo(new User("", "", "", ""));
-                this.setState({message: "Succesfully left the group"});
-            }else{
-                this.setState({groupId: "Error"});  
-                this.setState({message: "You are not in a group"});
+                this.UserService.updateGroupInCookie("");
+
+                this.setState({ message: "Succesfully left the group" });
+            } else {
+                this.setState({ groupId: "Error" });
+                this.setState({ message: "You are not in a group" });
             }
         });
     }
@@ -65,7 +76,7 @@ class LeaveGroup extends React.Component<GroupProps, GroupStates> {
                 <p>{this.state.message}</p>
             </div>
         );
-  }
+    }
 }
 
-export default LeaveGroup;
+export default withRouter(LeaveGroup);
