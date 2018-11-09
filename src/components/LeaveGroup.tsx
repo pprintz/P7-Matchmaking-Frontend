@@ -1,8 +1,13 @@
 import * as React from 'react';
-import {GroupService, GroupResponse} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
+import { User } from 'src/models/User';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
+import WSGroupsService from '../services/WSGroupsService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { RouteComponentProps } from 'react-router';
+import { GroupService, GroupResponse } from "../services/interfaces";
+
+
 
 
 // Interface for States
@@ -12,53 +17,69 @@ interface GroupStates {
     message: string
 }
 
-interface GroupProps {
-    groupService: GroupService,
-    userService: UserServiceCookies,
-}
+// interface GroupProps {
+//     groupService: GroupService,
+//     userService: UserService,
+// }
 
-class LeaveGroup extends React.Component<RouteComponentProps & GroupProps, GroupStates> {
+class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
     // This is the Axios link to the backend, for leave group functionality   and userService  
-    private groupId : string;
-    private userId : string;
+    private groupId: string;
+    private userId: string;
+    private WSGroupsService: WSGroupsService;
+    private UserService: UserServiceCookies;
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+    private static contextType = GlobalContext;
 
-    constructor(props : GroupProps & RouteComponentProps){
+    constructor(props) {
         super(props);
-
-        // Set properties based on cookies
-        this.groupId = this.props.userService.getUserInfo().groupId;
-        this.userId = this.props.userService.getUserInfo().userId;
-
-        // Initial State
-        this.state = {groupId: this.groupId,
-                      message: ""
-                     };
 
         this.handleOnClick = this.handleOnClick.bind(this);
     }
 
+    public componentWillMount() {
+        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.UserService = (this.context as SharedContext).UserService;
+        // Set properties based on cookies
+        this.groupId = this.UserService.getUserInfo().groupId;
+        this.userId = this.UserService.getUserInfo().userId;
+
+        // Initial State
+        this.state = {
+            groupId: this.groupId,
+            message: ""
+        };
+    }
+
     // When the leave button is clicked
     public handleOnClick = async () => {
-        // Make the leave group request
-        try{
-            const request : Promise<GroupResponse | boolean> = this.props.groupService.leaveGroup(this.state.groupId, this.userId);
+        try {
+            // Make the leave group request
+            await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, (error: boolean) => {
+                // Update state, if the request was successfull
+                if (!error) {
+                    // This is returned if the group is left successfully!
+                    // We should update the state of the "userConfig.xxxx" file here!
+                    this.setState({ groupId: "" });
 
-            if(await request === false){
-                this.setState({message: "You are not in a group"});
-                
-                
-            }else{  
-                // Update the cookie
-                this.props.userService.updateGroupIdUserInfo("");
+                    // Update the cookie
 
-                this.setState({message: "Succesfully left the group"});
 
-                console.log("Redirect!");
-                this.props.history.push("/");
-            }
-        }catch(error){
-            this.setState({message: "Group was not changed"})
+
+
+                    this.setState({ message: "Succesfully left the group" });
+                } else {
+                    this.setState({ groupId: "Error" });
+                    this.setState({ message: "You are not in a group" });
+                }
+            });
         }
+        catch (error) {
+            this.setState({ message: "Group was not changed" })
+        }
+        const user = this.UserService.getUserInfo();
+        user.groupId = "";
+        this.UserService.setUserInfo(user);
     }
 
     // Simple Rendering, self explanatory
@@ -69,7 +90,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & GroupProps, Group
                 <p>{this.state.message}</p>
             </div>
         );
-  }
+    }
 }
 
-export default LeaveGroup;
+export default withRouter(LeaveGroup);

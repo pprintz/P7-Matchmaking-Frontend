@@ -1,15 +1,19 @@
 @import "~antd/dist/antd.css";
 
 .App {
-  text-align: center;
-  height: 100vh;
+  height: 100%
+}
 
-  /* background: #00304c; */
-  /*Linear gradient... */
-  /* background: 
+body {
+  background-size: fixed;
+
+   background: #00304c;
+   /*Linear gradient...*/ 
+   background: 
     radial-gradient(
      at center, #004972, #00304c
-    ); */
+    ); 
+
 }
 
 .ant-card-head {
@@ -23,9 +27,55 @@
 .ant-card,
 .ant-card-bordered {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  /* background-image: linear-gradient(to right, #052b44 , #001826); */
+  background-image: linear-gradient(to right, #052b44 , #001826); 
   border-color: black;
+  color: white;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 40px;
 }
+
+.ant-form-item label {
+  color: white
+}
+
+
+#wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+#wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+
+
+#item {
+  order: 1;
+  margin-right: 10px;
+}
+
+#menuitem {
+  order: 2;
+  margin-left: auto;
+}
+
+#button {
+  order: 1;
+  margin-right: 10px;
+} 
+#right {
+  order: 2;
+}
+
+#menu-item {
+  order: 2;
+  margin-left: auto;
+}
+
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
@@ -58,3 +108,4 @@
     transform: rotate(360deg);
   }
 }
+
