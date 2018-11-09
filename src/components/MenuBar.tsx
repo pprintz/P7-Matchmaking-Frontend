@@ -20,10 +20,7 @@ export class MenuBar extends React.Component<RouteComponentProps> {
     public render() {
 
         let myGroupButton;
-
-
         const usersGroupId = "groups/" + this.user.groupId;
-        console.log("##############################" + this.user.groupId.length)
         if (this.user.groupId !== "") {
             myGroupButton = <Button type={"primary"} size={"large"}><Link to={usersGroupId}> My group!</Link></Button >
         }
