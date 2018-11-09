@@ -26,7 +26,17 @@ export class UserServiceCookies implements UserService {
         this.cookies.set("user", user);
     }
 
-    public updateGroupInCookie(value: string): void {
-        this.cookies.set("groupId", value);
+    public updateGroupIdUserInfo(groupId: string): User {
+        const abc = this.cookies.get("user");
+        if (abc === undefined || abc === "" || abc == null) {
+            return new User("", "", "", "");
+        }
+        const user: User = this.cookies.get("user") as unknown as User;
+        user.groupId = groupId;
+        this.cookies.set("user", user);
+
+        console.log(user);
+
+        return user;
     }
 }

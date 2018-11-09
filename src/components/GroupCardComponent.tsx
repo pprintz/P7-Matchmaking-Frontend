@@ -110,19 +110,4 @@ class GroupCardComponent extends React.Component<
     }
 }
 
-//   private joinGroup = async () => {
-//     try {
-//       const groupId = this.state.data._id;
-//       const response = await Axios.post("/groups/join", {
-//         group_id: groupId,
-//         user_id: new UserServiceCookies().getUserInfo().userId,
-//       });
-//       console.log("Join Response:", response);
-//       this.props.history.push(`/groups/${groupId}`);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-// }
-
 export default withRouter(GroupCardComponent);

@@ -4,15 +4,15 @@ import WSGroupService from './WSGroupsService';
 import { UserServiceCookies } from './userServiceCookies';
 
 export interface GroupService {
-    leaveGroup(groupId: string, userId: string): Promise<boolean>,
+    leaveGroup(groupId: string, userId: string): Promise<GroupResponse | boolean>,
     createGroup(group: any),
+    getGameList(): Promise<IGame[]>
 }
 
 export interface UserService {
     setUserInfo(user: User): void;
     getUserInfo(): User;
-    updateGroupInCookie(value: string): void;
-
+    updateGroupIdUserInfo(groupId: string): User;
 }
 
 export interface IWSGroupsService {
@@ -51,3 +51,7 @@ export interface ISharedContext {
     WSGroupsService: IWSGroupsService
 }
 
+export interface IGame {
+    name: string,
+    maxSize: number
+}

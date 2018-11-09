@@ -19,6 +19,7 @@ import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
 import { SharedContext, GlobalContext } from './models/SharedContext';
 const { Header } = Layout;
+import { IGame } from "./services/interfaces";
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
 // tslint:disable-next-line:max-classes-per-file
@@ -28,14 +29,13 @@ class App extends React.Component<{}, SharedContext> {
 
     constructor(props) {
         super(props);
+        console.log(process.env);
         this.groupServiceApi = new GroupServiceApi();
-
         this.state = new SharedContext();
-
+        this.groupServiceApi.getGameList();
         this.userServiceCookies = this.state.UserService;
     }
 
-    // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
     public render() {
         let HomePage;
         if (isLoggedIn(this.state.UserService.getUserInfo())) {
@@ -49,24 +49,19 @@ class App extends React.Component<{}, SharedContext> {
                     <GlobalContext.Provider value={this.state}>
                         <MenuBar />
                         <Switch>
-                            <Route
+                            <Route // TODO
                                 path="/groups/:group_id/:invite_id"
-                                render={routeComponentProps => (
-                                    <JoinGroup
-                                        userServiceCookies={this.userServiceCookies}
-                                        {...routeComponentProps}
-                                    />
-                                )}
+                                // render={routeComponentProps => (
+                                //     <JoinGroup
+                                //         userServiceCookies={this.userServiceCookies}
+                                //         {...routeComponentProps}
+                                //     />
+                                // )}
+                                component={JoinGroup}
                             />
-                            <Route path="/groups/:group_id"
-                                render={routeComponentProps => (<GroupPageContainer
-                                    userService={this.userServiceCookies}
-                                    {...routeComponentProps}
-                                />
-                                )}
-                            />
+                            <Route path="/groups/:group_id" component={GroupPageContainer} />
                             <Route path="/groups" component={GroupsPageContainer} />
-                            <Route
+                            {/* <Route
                                 path="/leave"
                                 render={() => (
                                     <LeaveGroup
@@ -74,9 +69,9 @@ class App extends React.Component<{}, SharedContext> {
                                         userService={this.userServiceCookies}
                                     />
                                 )}
-                            />
-                            <Route path="/create" render={() => (
-                                <CreateGroupForm />
+                            /> */}
+                            <Route path="/create" render={() => ( // TODO
+                                <CreateGroupForm groupService={this.groupServiceApi} />
                             )} />
                             <Route
                                 path="/register"
@@ -94,22 +89,25 @@ class App extends React.Component<{}, SharedContext> {
 
     public createUserAndSaveInCookie = async (user: IFormUser) => {
         try {
-            const response = await Axios.post("/users/create", user);
+            const response = await Axios.post(
+                process.env.REACT_APP_API_URL + "/api/users/create",
+                user
+            );
             const createdUser = response.data;
             const userState = {
-                User: new User(
+                user: new User(
                     createdUser._id,
                     createdUser.name,
                     createdUser.discordId,
                     "groupId"
-                ),
+                )
             };
-            this.userServiceCookies.setUserInfo(userState.User);
-            this.setState({ UserService: this.userServiceCookies });
+            this.userServiceCookies.setUserInfo(userState.user);
+            this.setState({ UserService: this.state.UserService });
         } catch (error) {
             console.error("ERROR:", error);
         }
-    }
+    };
 }
 
 // Not sure where to put "helper" functions

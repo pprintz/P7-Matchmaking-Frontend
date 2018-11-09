@@ -1,9 +1,12 @@
 import { Icon, Popover, Button} from 'antd';
 import * as React from 'react';
 
-export default class InviteUrlComponent extends React.Component<
-    {invite_id : string},
-    {clicked : boolean, hovered : boolean}> {
+interface State {
+    clicked : boolean,
+    hovered : boolean
+}
+
+export default class DiscordUrlComponent extends React.Component<any, State> {
 
     public state = {
         clicked: false,
@@ -14,36 +17,28 @@ export default class InviteUrlComponent extends React.Component<
         return (
             <Popover
               style={{ width: 500 }}
-              content={this.props.invite_id}
-              title="Click to copy invite URL to clipboard"
+              content="https://discord.gg/mBGts6b"
+              title="Click to copy Discord Server URL to clipboard"
               trigger="hover"
               visible={this.state.hovered}
               onVisibleChange={this.handleHoverChange}
             >
               <Popover
-                content={this.props.invite_id}
+                content="https://discord.gg/mBGts6b"
                 title="Copied to clipboard!"
                 trigger="click"
                 visible={this.state.clicked}
                 onVisibleChange={this.handleClickChange}
               >
-                <Button type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}>{<Icon type="link" style={{ color: 'rgba(255,255,255)' }} />}</Button>
+                <Button type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}>{<Icon type="message" style={{ color: 'rgba(255,255,255)' }} />}</Button>
               </Popover>
             </Popover>
           );
     }
 
     private copyToClipboard = () => {
-        const hrefmatch = document.location ? document.location.href.match(/.*\/groups\/[0-9a-zA-Z]*\/?/g) : null ;
-        let href : string;
-        if(hrefmatch === null){
-            href = "";
-        } else {
-            href = hrefmatch[0].endsWith("/") ? hrefmatch[0] : hrefmatch[0] + "/";
-        }
-        
         const el = document.createElement('textarea');
-        el.value = href + this.props.invite_id;
+        el.value = "https://discord.gg/mBGts6b";
         el.setAttribute('readonly', '');
         el.style.position = 'absolute';
         el.style.left = '-9999px';

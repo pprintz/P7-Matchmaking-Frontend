@@ -5,6 +5,10 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import WSGroupsService from '../services/WSGroupsService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { GroupService, GroupResponse } from "../services/interfaces";
+
+
+
 
 // Interface for States
 // The groupId is saved to state
@@ -49,23 +53,28 @@ class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
 
     // When the leave button is clicked
     public handleOnClick = async () => {
-        // Make the leave group request
-        await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, (error: boolean) => {
-            // Update state, if the request was successfull
-            if (!error) {
-                // This is returned if the group is left successfully!
-                // We should update the state of the "userConfig.xxxx" file here!
-                this.setState({ groupId: "" });
+        try {
+            // Make the leave group request
+            await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, (error: boolean) => {
+                // Update state, if the request was successfull
+                if (!error) {
+                    // This is returned if the group is left successfully!
+                    // We should update the state of the "userConfig.xxxx" file here!
+                    this.setState({ groupId: "" });
 
-                // Update the cookie
-                this.UserService.updateGroupInCookie("");
+                    // Update the cookie
+                    this.UserService.updateGroupIdUserInfo("");
 
-                this.setState({ message: "Succesfully left the group" });
-            } else {
-                this.setState({ groupId: "Error" });
-                this.setState({ message: "You are not in a group" });
-            }
-        });
+                    this.setState({ message: "Succesfully left the group" });
+                } else {
+                    this.setState({ groupId: "Error" });
+                    this.setState({ message: "You are not in a group" });
+                }
+            });
+        }
+        catch (error) {
+            this.setState({ message: "Group was not changed" })
+        }
     }
 
     // Simple Rendering, self explanatory
