@@ -2,43 +2,35 @@ import * as React from 'react';
 import { GroupResponse } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 import { Switch } from "antd";
-import WSGroupService from '../services/WSGroupsService';
-import { userInfo } from 'os';
-import NotAllowedHere from '../components/NotAllowedHere'
+import WSGroupsService from '../services/WSGroupsService';
+import LeaveGroup from './LeaveGroup';
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { Group } from 'antd/lib/radio';
-import { GlobalContext } from 'src/models/SharedContext';
+import NotAllowedHere from '../components/NotAllowedHere';
 
-interface Props {
-  userService: UserServiceCookies,
-  group: GroupResponse
-}
-
-export default class GroupList extends React.Component<Props, GroupResponse> {
-  private WSGroupService: WSGroupService;
-  private UserService: UserServiceCookies
-
-  //DONT REMOVE THIS CONTEXTTYPE
+export class GroupList extends React.Component<
+  RouteComponentProps & { group: GroupResponse },
+  GroupResponse> {
+  // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
   private static contextType = GlobalContext;
+  private WSGroupsService: WSGroupsService;
+  private UserServiceCookies: UserServiceCookies;
 
-  public constructor(props: Props) {
+  public constructor(props: RouteComponentProps & { group: GroupResponse }) {
     super(props)
-    this.WSGroupService = new WSGroupService();
-    this.UserService = new UserServiceCookies();
     this.state = this.props.group;
-    console.log("====================>  THE CONS GROUP: " + JSON.stringify(this.props.group));
-    this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
-
+    console.log("INSIDE GROUPLIST")
+    console.log(JSON.stringify(this.props.group));
   }
 
+  public componentWillMount() {
+    this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+    this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
+    this.UserServiceCookies = (this.context as SharedContext).UserService;
+  }
 
   public render() {
-    const user = this.UserService.getUserInfo();
-    console.log("################ THIS IS THE GROUP: " + JSON.stringify(this.props.group));
-    const isUserInGroup = (this.props.group.users.indexOf(user.userId) > -1);
-    if (!isUserInGroup) {
-      return ({ NotAllowedHere })
-    }
 
     return (
       <Div>
@@ -60,11 +52,12 @@ export default class GroupList extends React.Component<Props, GroupResponse> {
 
           }
         </Ul>
+        <LeaveGroup />
       </Div>
     );
   }
   private updateVisibility = async () => {
-    await this.WSGroupService.updateVisibility(this.state, this.onVisibilityChanged)
+    await this.WSGroupsService.updateVisibility(this.state, this.onVisibilityChanged)
   }
 
   private onVisibilityChanged = (group: GroupResponse) => {
@@ -75,3 +68,5 @@ export default class GroupList extends React.Component<Props, GroupResponse> {
     this.setState(response.group);
   }
 }
+
+export default withRouter(GroupList);

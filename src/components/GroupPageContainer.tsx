@@ -1,35 +1,41 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { GroupResponse } from "../services/interfaces";
 import axios from "axios";
 import InviteUrlComponent from "./InviteUrlComponent";
 import GroupList from "./GroupList";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { SharedContext, GlobalContext } from 'src/models/SharedContext';
+import NotAllowedHere from '../components/NotAllowedHere';
 
-// IMatchParams and IProps are used for Route/Routing
-// in order to encapsulate the match data we get from routing groups/:group_id
-// IMatchParams is a RouteMatch type wrapper (populated in App.tsx when routing groups/:group_id)
-// interface IMatchParams { group_id : string };
-// interface IProps extends RouteComponentProps<IMatchParams>{}
-/*
-interface GroupStates {
-  groupId: string,
-}
-*/
+
 interface Props {
   userService: UserServiceCookies
 }
-export default class GroupPageContainer extends React.Component<
+
+export class GroupPageContainer extends React.Component<
   RouteComponentProps<{
     group_id: string;
     invite_id: string;
-  }> & Props /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
+  }> & Props,
   GroupResponse
   > {
+
+  // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+  private static contextType = GlobalContext;
+
+  private userService: UserServiceCookies;
+
+  public componentWillMount() {
+    this.userService = (this.context as SharedContext).UserService;
+  }
+
+
   // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
   public async componentDidMount() {
     let result;
     try {
+      console.log("TRYING TO GET GROUP WITH ID " + this.props.match.params.group_id);
       result = await axios.get("/groups/" + this.props.match.params.group_id);
       this.setState(result.data);
     } catch (error) {
@@ -45,9 +51,20 @@ export default class GroupPageContainer extends React.Component<
         </div>
       );
     }
+
+    const user = this.userService.getUserInfo();
+    const userIsInGroup = (this.state.users.indexOf(user.userId) > -1);
+    if (!userIsInGroup) {
+      return (
+        <NotAllowedHere />
+      )
+    }
+
     return (<div>
-      <GroupList group={this.state} userService={this.props.userService} />
+      <GroupList group={this.state} />
       <InviteUrlComponent invite_id={this.state.invite_id} />
     </div>)
   }
 }
+
+export default withRouter(GroupPageContainer);

@@ -3,15 +3,14 @@ import * as React from 'react';
 import { Form, Icon, Input, Button, InputNumber, Card, Col, Row } from 'antd'
 import { UserService, GroupService, IGroup, GroupResponse } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
-import { SharedContext } from 'src/models/SharedContext';
+import { SharedContext, GlobalContext } from 'src/models/SharedContext';
 import WSGroupsService from 'src/services/WSGroupsService';
-import { GlobalContext } from '../models/SharedContext'
 
 class CreateGroupForm extends React.Component<{ form: any } & RouteComponentProps> {
     private userService: UserService;
     private WSGroupsService: WSGroupsService;
 
-    // DONT DELETE THIS CONTEXTTYPE
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
 
     public componentWillMount() {
@@ -61,9 +60,9 @@ class CreateGroupForm extends React.Component<{ form: any } & RouteComponentProp
         );
     }
 
-    private handleSubmit = (event: any) => {
+    private handleSubmit = async (event: any) => {
         event.preventDefault();
-        this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
+        await this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
             if (!validationErrors) {
                 const userId = this.userService.getUserInfo().userId;
 

@@ -1,14 +1,21 @@
 import * as React from 'react';
-import { Card } from 'antd';
+import { Card, Row, Col } from 'antd';
 
 
 export default class NotAllowedHere extends React.Component {
 
     public render() {
         return (
-            <Card>
-                <h2>You are not allowed here!</h2>
-            </Card>
+            <Row>
+                <Col span={8} />
+                <Col span={8}>
+                    <Card>
+                        <p>WARNING:</p>
+                        <p>You are not allowed here!</p>
+                    </Card>
+                </Col>
+                <Col span={8} />
+            </Row>
         )
     }
 
