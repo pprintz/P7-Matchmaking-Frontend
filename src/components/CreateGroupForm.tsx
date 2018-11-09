@@ -1,12 +1,14 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
-import {UserService, GroupService, GroupResponse, IGroup, IGame} from "../services/interfaces";
+import {UserService, GroupResponse, IGroup, IGame} from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
-// import GroupService from './services/GroupService';
+import { User } from 'src/models/User';
+import { __await } from 'tslib';
+import { GroupServiceApi } from 'src/services/groupServiceApi';
 
 interface GroupProps {
-  groupService: GroupService,
+  groupService: GroupServiceApi,
   userService: UserService,
   form: any
 }
@@ -98,20 +100,25 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     event.preventDefault();
     this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
       if (!validationErrors) {
-        const createdGroup = await this.createGroup(formGroup);
-        console.log(createdGroup);
+        const createdGroup : GroupResponse = await this.createGroup(formGroup);
+
+        console.log("Created Group:", createdGroup);
+
         this.props.history.push('/groups/' + createdGroup._id)
       };
     })
   }
 
-  private async createGroup(formGroup: IGroup) {
+  private async createGroup(formGroup: IGroup) : Promise<GroupResponse>{
     const userId = this.props.userService.getUserInfo().userId;
     // Add the user creating the group to the list of users
     formGroup.users = [userId];
     formGroup.invite_id = "";
     const response = await this.props.groupService.createGroup(formGroup);
     const createdGroup = response.data;
+
+    this.props.userService.updateGroupIdUserInfo(createdGroup._id);
+
     return createdGroup;
   }
 }

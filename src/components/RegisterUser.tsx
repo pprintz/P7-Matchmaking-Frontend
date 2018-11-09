@@ -79,7 +79,7 @@ class RegisterUserForm extends React.Component<RegisterUserFormProps> {
     this.props.form.validateFields(
       async (validationErrors: boolean, user: IFormUser) => {
         if (!validationErrors) {
-          this.props.createUserAndSaveInCookie(user)
+          this.props.createUserAndSaveInCookie(user);
           this.props.history.push("/");
         }
       }

@@ -10,7 +10,7 @@ import { Group } from 'antd/lib/radio';
 
 interface GroupProps {
     group: GroupResponse,
-    // groupService : GroupService,
+    //groupService : GroupService,
 }
 
 export default class ShowFittingGroups extends React.Component<RouteComponentProps & GroupProps, { groups: GroupResponse[]}> {
@@ -22,7 +22,7 @@ export default class ShowFittingGroups extends React.Component<RouteComponentPro
 
     public async componentDidMount() {
         try {
-            const response = await axios.get(`fitting/${this.props.group.maxSize - this.props.group.users.length}/${this.props.group.game}`)
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/api/groups/fitting/${this.props.group.maxSize - this.props.group.users.length}/${this.props.group.game}`);
             const data = response.data;
             this.setState({ groups: data });
             this.setState({groups: this.state.groups.filter(group => this.props.group._id !== group._id)});
@@ -35,8 +35,8 @@ export default class ShowFittingGroups extends React.Component<RouteComponentPro
         return (
             <Div>
                 <Ul>
-                    <h1>group</h1>
-                    {this.state.groups.map(group => <Li key={group._id}>{group.name} -- <Route render={RouteComponentProps => (
+                    <h1>Group that are posible too join as a group</h1>
+                    {this.state.groups.map(group => <Li key={group._id}>{group.name} <Route render={RouteComponentProps => (
                         <MergeGroups 
                         fromGroupid={this.props.group._id} 
                         toGroupid={group._id} 
@@ -48,6 +48,4 @@ export default class ShowFittingGroups extends React.Component<RouteComponentPro
         )
     }
 }
-// onMergeHandler={this.props.onMergeHandler}
-//  <MergeGroups fromGroupid = {this.props.userService.getUserInfo().groupId} toGroupid = {group._id}/>
 

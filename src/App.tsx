@@ -28,7 +28,7 @@ interface UserState {
 }
 
 export const UserContext = React.createContext({
-  user: new User("", "", "", ""),
+  user: new User("", "", "", "")
 });
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
@@ -39,6 +39,7 @@ class App extends React.Component<{}, UserState> {
 
   constructor(props: any) {
     super(props);
+    console.log(process.env);
 
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
@@ -74,27 +75,38 @@ class App extends React.Component<{}, UserState> {
                   />
                 )}
               />
-              <Route path="/groups/:group_id" component={GroupPageContainer} />
+              <Route path="/groups/:group_id" render={routeComponentProps => (
+                <GroupPageContainer userService={this.userServiceCookies} 
+                                    groupService={this.groupServiceApi} 
+                                    {...routeComponentProps}  
+                                  />
+               )} /> 
               <Route path="/groups" component={GroupsPageContainer} />
               <Route
                 path="/leave"
-                render={() => (
+                render={routeComponentProps => (
                   <LeaveGroup
+                    groupService={this.groupServiceApi}
+                    userService={this.userServiceCookies}
+                    {...routeComponentProps}
+                  />
+                )}
+              />
+              <Route
+                path="/create"
+                render={() => (
+                  <CreateGroupForm
                     groupService={this.groupServiceApi}
                     userService={this.userServiceCookies}
                   />
                 )}
               />
-              <Route path="/create" render={() => (
-                  <CreateGroupForm
-                    groupService={this.groupServiceApi}
-                    userService={this.userServiceCookies}
-                  />
-                )} />
               <Route
                 path="/register"
                 render={() => (
-                  <RegisterUser createUserAndSaveInCookie={this.createUserAndSaveInCookie} />
+                  <RegisterUser
+                    createUserAndSaveInCookie={this.createUserAndSaveInCookie}
+                  />
                 )}
               />
               <Route path="/" render={() => HomePage} />
@@ -107,7 +119,10 @@ class App extends React.Component<{}, UserState> {
 
   public createUserAndSaveInCookie = async (user: IFormUser) => {
     try {
-      const response = await Axios.post("/users/create", user);
+      const response = await Axios.post(
+        process.env.REACT_APP_API_URL + "/api/users/create",
+        user
+      );
       const createdUser = response.data;
       const userState = {
         user: new User(
@@ -115,14 +130,14 @@ class App extends React.Component<{}, UserState> {
           createdUser.name,
           createdUser.discordId,
           "groupId"
-        ),
+        )
       };
       this.userServiceCookies.setUserInfo(userState.user);
       this.setState(userState);
     } catch (error) {
       console.error("ERROR:", error);
     }
-  }
+  };
 }
 
 // Not sure where to put "helper" functions
