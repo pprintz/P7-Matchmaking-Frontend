@@ -6,6 +6,8 @@ import { GroupResponse } from 'src/services/interfaces';
 // import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { ThemeConsumer } from 'styled-components';
 
 class GroupCardComponent extends React.Component<
     RouteComponentProps & {
@@ -18,6 +20,8 @@ class GroupCardComponent extends React.Component<
     private static contextType = GlobalContext;
 
     private WSGroupsService: WSGroupsService;
+    private UserService: UserServiceCookies;
+
     constructor(props:
         RouteComponentProps & {
             group: GroupResponse,
@@ -31,6 +35,7 @@ class GroupCardComponent extends React.Component<
 
     public componentWillMount() {
         this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.UserService = (this.context as SharedContext).UserService;
         this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
 
@@ -106,6 +111,9 @@ class GroupCardComponent extends React.Component<
             userId,
             this.redir
         );
+        const user = this.UserService.getUserInfo();
+        user.groupId = this.props.group._id;
+        this.UserService.setUserInfo(user);
 
     }
 }

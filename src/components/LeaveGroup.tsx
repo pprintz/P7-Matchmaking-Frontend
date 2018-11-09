@@ -63,7 +63,9 @@ class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
                     this.setState({ groupId: "" });
 
                     // Update the cookie
-                    this.UserService.updateGroupIdUserInfo("");
+
+
+
 
                     this.setState({ message: "Succesfully left the group" });
                 } else {
@@ -75,6 +77,9 @@ class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
         catch (error) {
             this.setState({ message: "Group was not changed" })
         }
+        const user = this.UserService.getUserInfo();
+        user.groupId = "";
+        this.UserService.setUserInfo(user);
     }
 
     // Simple Rendering, self explanatory
