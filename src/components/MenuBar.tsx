@@ -12,13 +12,15 @@ export class MenuBar extends React.Component<RouteComponentProps> {
     private static contextType = GlobalContext;
 
     public componentWillMount() {
+        console.log("CONTEXT IS")
+        console.log(this.context)
         this.user = (this.context as SharedContext).UserService.getUserInfo();
     }
 
     public render() {
 
         let myGroupButton;
-        let disVal = false;
+
 
         const usersGroupId = "groups/" + this.user.groupId;
         console.log("##############################" + this.user.groupId.length)
@@ -64,9 +66,9 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
                                     <div id="button">
                                         <Button.Group size={"large"}>
-                                            <Button ghost disabled={disVal}><Link to={"/"}>Home</Link></Button>
-                                            <Button ghost disabled={disVal}><Link to={"/groups"}>Groups</Link></Button>
-                                            <Button ghost disabled={disVal}><Link to={"/create"}>Create a group</Link></Button>
+                                            <Button ghost><Link to={"/"}>Home</Link></Button>
+                                            <Button ghost><Link to={"/groups"}>Groups</Link></Button>
+                                            <Button ghost><Link to={"/create"}>Create a group</Link></Button>
                                         </Button.Group>
                                     </div>
                                 </div>

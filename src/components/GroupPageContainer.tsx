@@ -4,6 +4,7 @@ import { GroupResponse } from "../services/interfaces";
 import axios from "axios";
 import InviteUrlComponent from "./InviteUrlComponent";
 import GroupList from "./GroupList";
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 // IMatchParams and IProps are used for Route/Routing
 // in order to encapsulate the match data we get from routing groups/:group_id
@@ -15,14 +16,16 @@ interface GroupStates {
   groupId: string,
 }
 */
-
+interface Props {
+  userService: UserServiceCookies
+}
 export default class GroupPageContainer extends React.Component<
   RouteComponentProps<{
     group_id: string;
     invite_id: string;
-  }> /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
+  }> & Props /*RouteComponentProps<IMatchParams>*/ /*IProps*/,
   GroupResponse
-> {
+  > {
   // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
   public async componentDidMount() {
     let result;
@@ -43,7 +46,7 @@ export default class GroupPageContainer extends React.Component<
       );
     }
     return (<div>
-      <GroupList group={this.state} />
+      <GroupList group={this.state} userService={this.props.userService} />
       <InviteUrlComponent invite_id={this.state.invite_id} />
     </div>)
   }

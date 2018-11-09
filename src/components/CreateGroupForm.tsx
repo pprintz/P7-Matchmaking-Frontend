@@ -3,14 +3,17 @@ import * as React from 'react';
 import { Form, Icon, Input, Button, InputNumber, Card, Col, Row } from 'antd'
 import { UserService, GroupService, IGroup, GroupResponse } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
-import { ThemeConsumer } from 'styled-components';
 import { SharedContext } from 'src/models/SharedContext';
 import WSGroupsService from 'src/services/WSGroupsService';
-
+import { GlobalContext } from '../models/SharedContext'
 
 class CreateGroupForm extends React.Component<{ form: any } & RouteComponentProps> {
     private userService: UserService;
     private WSGroupsService: WSGroupsService;
+
+    // DONT DELETE THIS CONTEXTTYPE
+    private static contextType = GlobalContext;
+
     public componentWillMount() {
         this.userService = (this.context as SharedContext).UserService;
         this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
@@ -63,6 +66,7 @@ class CreateGroupForm extends React.Component<{ form: any } & RouteComponentProp
         this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
             if (!validationErrors) {
                 const userId = this.userService.getUserInfo().userId;
+
                 // Add the user creating the group to the list of users
                 formGroup.users = [userId];
                 formGroup.invite_id = "";

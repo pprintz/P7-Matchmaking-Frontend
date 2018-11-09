@@ -100,12 +100,13 @@ class GroupCardComponent extends React.Component<
 
     }
 
-    private async joinGroup(userId : string) {
+    private async joinGroup(userId: string) {
         await this.WSGroupsService.joinGroup(
             this.state.data._id,
             userId,
             this.redir
         );
+
     }
 }
 

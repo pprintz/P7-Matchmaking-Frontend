@@ -58,7 +58,13 @@ class App extends React.Component<{}, SharedContext> {
                                     />
                                 )}
                             />
-                            <Route path="/groups/:group_id" component={GroupPageContainer} />
+                            <Route path="/groups/:group_id"
+                                render={routeComponentProps => (<GroupPageContainer
+                                    userService={this.userServiceCookies}
+                                    {...routeComponentProps}
+                                />
+                                )}
+                            />
                             <Route path="/groups" component={GroupsPageContainer} />
                             <Route
                                 path="/leave"

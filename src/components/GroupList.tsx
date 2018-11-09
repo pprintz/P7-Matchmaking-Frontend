@@ -3,18 +3,43 @@ import { GroupResponse } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 import { Switch } from "antd";
 import WSGroupService from '../services/WSGroupsService';
+import { userInfo } from 'os';
+import NotAllowedHere from '../components/NotAllowedHere'
+import { UserServiceCookies } from 'src/services/userServiceCookies';
+import { Group } from 'antd/lib/radio';
+import { GlobalContext } from 'src/models/SharedContext';
 
-export default class GroupList extends React.Component<{ group: GroupResponse }, GroupResponse> {
+interface Props {
+  userService: UserServiceCookies,
+  group: GroupResponse
+}
+
+export default class GroupList extends React.Component<Props, GroupResponse> {
   private WSGroupService: WSGroupService;
+  private UserService: UserServiceCookies
 
-  public constructor(props: { group: GroupResponse }) {
+  //DONT REMOVE THIS CONTEXTTYPE
+  private static contextType = GlobalContext;
+
+  public constructor(props: Props) {
     super(props)
     this.WSGroupService = new WSGroupService();
+    this.UserService = new UserServiceCookies();
     this.state = this.props.group;
+    console.log("====================>  THE CONS GROUP: " + JSON.stringify(this.props.group));
     this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
+
   }
 
+
   public render() {
+    const user = this.UserService.getUserInfo();
+    console.log("################ THIS IS THE GROUP: " + JSON.stringify(this.props.group));
+    const isUserInGroup = (this.props.group.users.indexOf(user.userId) > -1);
+    if (!isUserInGroup) {
+      return ({ NotAllowedHere })
+    }
+
     return (
       <Div>
         <h1>{this.state.name}</h1>
