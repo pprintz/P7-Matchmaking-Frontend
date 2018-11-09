@@ -6,11 +6,13 @@ import Axios, { AxiosResponse } from "axios";
 import { GroupResponse } from "../services/interfaces";
 import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class GroupCardComponent extends React.Component<
   RouteComponentProps & { group: GroupResponse },
   Response<GroupResponse>
-> {
+  > {
   constructor(props) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);
@@ -51,8 +53,8 @@ class GroupCardComponent extends React.Component<
               ))}
             </ul>
           ) : (
-            <li>No users in this group!</li>
-          )}
+              <li>No users in this group!</li>
+            )}
         </Card>
       </div>
     );
@@ -65,10 +67,10 @@ class GroupCardComponent extends React.Component<
         group_id: groupId,
         user_id: new UserServiceCookies().getUserInfo().userId,
       });
-      console.log("Join Response:", response);
       this.props.history.push(`/groups/${groupId}`);
+
     } catch (error) {
-      console.error(error);
+      toast("Sorry, you can't join this group. Leave your current group");
     }
   }
 }

@@ -6,6 +6,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { User } from 'src/models/User';
 import { __await } from 'tslib';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
+import { toast } from 'react-toastify';
 
 interface GroupProps {
   groupService: GroupServiceApi,
@@ -100,11 +101,12 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     event.preventDefault();
     this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
       if (!validationErrors) {
-        const createdGroup : GroupResponse = await this.createGroup(formGroup);
-
-        console.log("Created Group:", createdGroup);
-
-        this.props.history.push('/groups/' + createdGroup._id)
+        try {
+          const createdGroup : GroupResponse = await this.createGroup(formGroup);
+          this.props.history.push('/groups/' + createdGroup._id)
+        } catch (error) {
+          toast("Sorry, you can't join this group. Leave your current group");
+        }
       };
     })
   }

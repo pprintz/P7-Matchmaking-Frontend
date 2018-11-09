@@ -17,6 +17,8 @@ import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
 import { IGame } from "./services/interfaces";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const { Header } = Layout;
 
@@ -36,7 +38,6 @@ class App extends React.Component<{}, UserState> {
 
   constructor(props: any) {
     super(props);
-    console.log(process.env);
 
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
@@ -62,6 +63,7 @@ class App extends React.Component<{}, UserState> {
         <div className="App">
           <UserContext.Provider value={this.state}>
             <MenuBar />
+            <ToastContainer/>
             <Switch>
               <Route
                 path="/groups/:group_id/:invite_id"
