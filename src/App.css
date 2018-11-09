@@ -35,6 +35,11 @@ body {
   margin-bottom: 40px;
 }
 
+.ant-card,
+.ant-card-bordered h1 {
+  color: white;
+}
+
 .ant-form-item label {
   color: white
 }
@@ -43,6 +48,7 @@ body {
 #wrapper {
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 #wrap {
@@ -51,7 +57,36 @@ body {
   align-items: center;
 }
 
+#findcreate{
+  margin: auto;
+  position: relative;
+}
 
+#containerCenter {
+    display: flex;           /* establish flex container */
+    flex-direction: row;     
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center;     /* center items horizontally, in this case */
+    height: 300px;
+}
+
+.ant-card-actions {
+  background-color: #001826  
+}
+
+.ant-card-actions .anticon {
+  color: white;
+}
+
+#box {
+  order: 1;
+  text-align: center;
+  width: 500px;
+}
+
+#boxItem {
+  order: 1;
+}
 
 #item {
   order: 1;

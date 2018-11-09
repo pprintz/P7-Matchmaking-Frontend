@@ -59,8 +59,6 @@ export class GroupPageContainer extends React.Component<
 
         return (<div>
             <GroupList group={this.state} />
-            <InviteUrlComponent invite_id={this.state.invite_id} />
-            <DiscordUrlComponent />
             <Route render={routeComponentProps => (
                 <LeaveGroup />
             )} />

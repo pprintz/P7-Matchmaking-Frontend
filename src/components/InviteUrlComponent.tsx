@@ -1,47 +1,47 @@
-import { Icon, Popover, Button} from 'antd';
+import { Icon, Popover, Button } from 'antd';
 import * as React from 'react';
 
 export default class InviteUrlComponent extends React.Component<
-    {invite_id : string},
-    {clicked : boolean, hovered : boolean}> {
+    { invite_id: string },
+    { clicked: boolean, hovered: boolean }> {
 
     public state = {
         clicked: false,
         hovered: false,
     };
-    
+
     public render() {
         return (
             <Popover
-              style={{ width: 500 }}
-              content={this.props.invite_id}
-              title="Click to copy invite URL to clipboard"
-              trigger="hover"
-              visible={this.state.hovered}
-              onVisibleChange={this.handleHoverChange}
-            >
-              <Popover
+                style={{ width: 500 }}
                 content={this.props.invite_id}
-                title="Copied to clipboard!"
-                trigger="click"
-                visible={this.state.clicked}
-                onVisibleChange={this.handleClickChange}
-              >
-                <Button type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}>{<Icon type="link" style={{ color: 'rgba(255,255,255)' }} />}</Button>
-              </Popover>
+                title="Click to copy invite URL to clipboard"
+                trigger="hover"
+                visible={this.state.hovered}
+                onVisibleChange={this.handleHoverChange}
+            >
+                <Popover
+                    content={this.props.invite_id}
+                    title="Copied to clipboard!"
+                    trigger="click"
+                    visible={this.state.clicked}
+                    onVisibleChange={this.handleClickChange}
+                >
+                    <Button style={{ marginRight: "5px" }} type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}><p>Press to copy invite link <Icon type="link" style={{ color: 'rgba(255,255,255)' }} /> </p></Button>
+                </Popover>
             </Popover>
-          );
+        );
     }
 
     private copyToClipboard = () => {
-        const hrefmatch = document.location ? document.location.href.match(/.*\/groups\/[0-9a-zA-Z]*\/?/g) : null ;
-        let href : string;
-        if(hrefmatch === null){
+        const hrefmatch = document.location ? document.location.href.match(/.*\/groups\/[0-9a-zA-Z]*\/?/g) : null;
+        let href: string;
+        if (hrefmatch === null) {
             href = "";
         } else {
             href = hrefmatch[0].endsWith("/") ? hrefmatch[0] : hrefmatch[0] + "/";
         }
-        
+
         const el = document.createElement('textarea');
         el.value = href + this.props.invite_id;
         el.setAttribute('readonly', '');
@@ -60,14 +60,14 @@ export default class InviteUrlComponent extends React.Component<
         });
     }
 
-    private handleHoverChange = (visible : boolean) => {
+    private handleHoverChange = (visible: boolean) => {
         this.setState({
             hovered: visible,
             clicked: false,
         });
     }
 
-    private handleClickChange = (visible : boolean) => {
+    private handleClickChange = (visible: boolean) => {
         this.setState({
             clicked: visible,
             hovered: false,

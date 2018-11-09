@@ -1,17 +1,28 @@
 import * as React from "react";
-import { Button } from "antd";
+import { Button, Row, Col } from "antd";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
 export default withRouter(class CreateOrFindGroup extends React.Component<RouteComponentProps> {
   public render() {
     return (
-      <div style={{ "height": "100%" }}>
-        <Button size="large" onClick={this.handleFindGroupClicked}>
-          Find group
-        </Button>
-        <Button size="large" onClick={this.handleCreateGroupClicked}>
-          Create group
-        </Button>
+      <div id="containerCenter">
+        <div id="box">
+          <Row>
+            <Col span={6} />
+            <Col span={12}>
+              <div id="boxItem">
+                <Button type="primary" style={{ marginBottom: "10px", width: "100%", height: "100px" }} size="large" onClick={this.handleFindGroupClicked}>
+                  Find group
+                </Button>
+                <Button type="primary" style={{ marginBottom: "10px", width: "100%", height: "100px" }} size="large" onClick={this.handleCreateGroupClicked}>
+                  Create group
+                </Button>
+              </div>
+
+            </Col>
+            <Col span={6} />
+          </Row>
+        </div>
       </div>
     );
   }
