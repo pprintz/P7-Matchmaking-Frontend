@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as IOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { GroupServiceApi } from "./services/groupServiceApi";
@@ -12,7 +13,6 @@ import MenuBar from "./components/MenuBar";
 import Axios, { AxiosResponse } from "axios";
 import { User } from "./models/User";
 import RegisterUser, { IFormUser } from "./components/RegisterUser";
-import FrontPage from "./components/FrontPage";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
@@ -47,15 +47,9 @@ class App extends React.Component<{}, UserState> {
     this.groupServiceApi.getGameList();
   }
 
-  public async componentDidMount() {
-    const userInfo = this.userServiceCookies.getUserInfo();
-    this.setState({ user: userInfo });
-  }
-
-  // The LeaveGroup Component reads the cookie fields of "group_id" and "user_id"
   public render() {
     let HomePage;
-    if (isLoggedIn(this.state.user)) {
+    if (this.userServiceCookies.isLoggedIn()) {
       HomePage = <CreateOrFindGroup />;
     } else {
       HomePage = <LandingPage />;
@@ -76,13 +70,14 @@ class App extends React.Component<{}, UserState> {
                 )}
               />
               <Route path="/groups/:group_id" render={routeComponentProps => (
-                <GroupPageContainer userService={this.userServiceCookies} 
-                                    groupService={this.groupServiceApi} 
-                                    {...routeComponentProps}  
-                                  />
-               )} /> 
+                <GroupPageContainer 
+                    userService={this.userServiceCookies}
+                    groupService={this.groupServiceApi}
+                    {...routeComponentProps}
+                />
+              )} />
               <Route path="/groups" render={routeComponentProps => (
-                <GroupsPageContainer 
+                <GroupsPageContainer
                   userServiceApi={this.userServiceApi}
                   groupServiceApi={this.groupServiceApi}
                   {...routeComponentProps}
@@ -123,6 +118,8 @@ class App extends React.Component<{}, UserState> {
     );
   }
 
+
+
   public createUserAndSaveInCookie = async (user: IFormUser) => {
     try {
       const response = await Axios.post(
@@ -135,21 +132,18 @@ class App extends React.Component<{}, UserState> {
           createdUser._id,
           createdUser.name,
           createdUser.discordId,
-          "",
-          ""
+          "groupId"
+          , ""
         )
       };
       this.userServiceCookies.setUserInfo(userState.user);
-      this.setState(userState);
     } catch (error) {
       console.error("ERROR:", error);
     }
   };
-}
 
-// Not sure where to put "helper" functions
-export function isLoggedIn(user: User): boolean {
-  return user.userId !== "";
 }
+  // Not sure where to put "helper" functions
 
-export default App;
+
+  export default App;

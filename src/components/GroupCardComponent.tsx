@@ -10,7 +10,7 @@ import UserServiceApi from 'src/services/userServiceApi';
 
 interface Props {
   group: GroupResponse,
-  userServiceApi : IUserServiceApi
+  userServiceApi : IUserServiceApi,
 }
 
 interface State {
@@ -19,8 +19,10 @@ interface State {
 }
 
 class GroupCardComponent extends React.Component<
-  RouteComponentProps & Props, State> {
-  constructor(props : RouteComponentProps & Props) {
+  RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
+}, State> {
+  constructor(props : RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
+}) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);
     this.state = { data: props.group, users: []};

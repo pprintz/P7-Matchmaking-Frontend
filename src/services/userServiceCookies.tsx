@@ -3,16 +3,25 @@ import Cookies from "universal-cookie";
 import { UserService } from './interfaces';
 import { User } from 'src/models/User';
 
-export class UserServiceCookies implements UserService{
-    private cookies : Cookies;
+export class UserServiceCookies implements UserService {
+    private cookies: Cookies;
 
-    
-    constructor(){
+
+    constructor() {
         // Get the information form the existing cookies
         this.cookies = new Cookies();
     }
-    
-    public getUserInfo() : User {
+
+    public isLoggedIn() : boolean {
+        const abc = this.cookies.get("user");
+        if (abc === undefined || abc === "" || abc == null) {
+            return false
+        }
+        
+        return true;
+    }
+
+    public getUserInfo(): User {
         const abc = this.cookies.get("user");
         if (abc === undefined || abc === "" || abc == null) {
             return new User("", "","","", "");
@@ -22,7 +31,7 @@ export class UserServiceCookies implements UserService{
         return user;
     }
 
-    public setUserInfo(user: User) : void {
+    public setUserInfo(user: User): void {
         this.cookies.set("user", user);
     }
 

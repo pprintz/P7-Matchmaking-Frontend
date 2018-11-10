@@ -1,4 +1,7 @@
 import { User } from '../models/User';
+import { RouteComponentProps } from 'react-router-dom';
+import WSGroupService from './WSGroupsService';
+import { UserServiceCookies } from './userServiceCookies';
 
 export interface GroupService {
     leaveGroup(groupId : string, userId : string) : Promise<GroupResponse | boolean>,
@@ -13,11 +16,33 @@ export interface UserService {
     getUserInfo() : User;
     updateGroupIdUserInfo(groupId : string) : User;
     setUserOwnerGroup(groupId : string) : User;
+    isLoggedIn() : boolean;
 }
 
 export interface IUserServiceApi {
     getUserById(userId : string) : Promise<IUser | boolean>;
 }
+
+export interface IWSGroupsService {
+    joinGroup(groupID: string, userID: string, ackFn?: (args: GroupResponse) => void): Promise<void>,
+    leaveGroup(groupId: string, userId: string, ackFn: (error: boolean) => void): Promise<void>,
+    getGroup(groupId: string): GroupResponse,
+    getGroups(): GroupResponse[],
+    updateVisibility(group, ackFn: (args: GroupResponse) => void): any
+    createGroup(group: IGroup, ackFn: (group: GroupResponse) => void): Promise<void>,
+    // verifyInvite()
+    // registerGroupChanged() 
+};
+
+export interface GroupResponse {
+    _id: string,
+    name: string,
+    maxSize: number,
+    game: string,
+    invite_id: string,
+    users: string[],
+    visible: boolean
+};
 
 export interface IUser {
     _id : string,
@@ -26,20 +51,19 @@ export interface IUser {
     discordId: string
 }
 
-export interface GroupResponse {
-    _id : string,
-    name : string,
-    maxSize : number,
-    game : string,
-    invite_id : string,
-    users : string[]
-};
 export interface IGroup {
-    name : string,
-    maxSize : number,
-    game : string,
-    invite_id : string,
-    users : string[]
+    name: string,
+    maxSize: number,
+    game: string,
+    invite_id: string,
+    users: string[],
+    visible: boolean
+}
+
+export interface ISharedContext {
+    UserService: UserServiceCookies,
+    Client: SocketIOClient.Socket,
+    WSGroupsService: IWSGroupsService
 }
 
 export interface IGame {

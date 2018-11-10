@@ -1,127 +1,147 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
-import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
-import {UserService, GroupResponse, IGroup, IGame} from "../services/interfaces";
+import { Form, Icon, Input, Button, InputNumber, Card, Col, Row, Select } from 'antd'
+import { UserService, GroupService, IGroup, GroupResponse, IGame } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
+import { SharedContext, GlobalContext } from 'src/models/SharedContext';
+import WSGroupsService from 'src/services/WSGroupsService';
 import { User } from 'src/models/User';
 import { __await } from 'tslib';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
+import UserServiceApi from 'src/services/userServiceApi';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 interface GroupProps {
-  groupService: GroupServiceApi,
-  userService: UserService,
-  form: any
+    groupService: GroupServiceApi,
+    userService: UserServiceCookies
+    form: any
 }
 
-interface State {
-  gameList : IGame[],
-  game : IGame,
-  gamesLoaded: boolean
+interface State {
+    gameList: IGame[],
+    game: IGame,
+    gamesLoaded: boolean
 }
 
 class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, State> {
+    private userService: UserService;
+    private WSGroupsService: WSGroupsService;
 
-  constructor(props : GroupProps & RouteComponentProps){
-    super(props);
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+    private static contextType = GlobalContext;
 
-    this.state = {
-      gameList: [],
-      game: {name: "12345", maxSize: 0},
-      gamesLoaded: false
+    public componentWillMount() {
+        this.userService = (this.context as SharedContext).UserService;
+        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
     }
-  }
 
-  public async componentDidMount(){
-    const games = await this.props.groupService.getGameList();
-    this.setState({
-      gameList: games,
-      gamesLoaded: true
-    });
-  }
+    constructor(props: GroupProps & RouteComponentProps) {
+        super(props);
 
-  public render() {
-    const FormItem = Form.Item;
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Card style={{
-        margin: '0 auto',
-        maxWidth: 500
-      }}>
-        <Form onSubmit={this.handleSubmit} hideRequiredMark={true}>
-          <FormItem label="Group name">
-            {getFieldDecorator('name', {
-              rules: [{ required: true, message: 'Please input your group name.' }],
-            })(
-              <Input prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Group name" />
-            )}
-          </FormItem>
-          <FormItem label="Game">
-           {getFieldDecorator('game', {
-             rules: [{ required: true, message: 'Please input game.' }],
-            })(
-              <Select placeholder="Choose Game" onChange={this.handleGameChange}>
-                {
-                  this.state.gamesLoaded ? this.state.gameList.map((val : IGame, id : number) => {
-                    return <Select.Option key={id.toString()} value={val.name}>{val.name}</Select.Option>
-                  }) : null
-                }
-              </Select>
-            )}
-          </FormItem>
-          <FormItem label="Group size">
-            {getFieldDecorator('maxSize', {
-              rules: [{ required: true, message: 'Please input group size.' }],
-            })(
-              // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              <InputNumber min={2} max={99} placeholder="Group size" disabled={true} />
-            )}
-          </FormItem>
-          <Button type="primary" htmlType="submit" size="large">
-            Create
-        </Button>
-        </Form>
-      </Card>
-    );
-  }
+        this.state = {
+            gameList: [],
+            game: { name: "12345", maxSize: 0 },
+            gamesLoaded: false
+        }
+    }
 
-  private handleGameChange = (event: string) => {
-    const maybeGame : IGame | undefined = this.state.gameList.find(game => game.name === event) ;
-    const chosenGame : IGame = maybeGame === undefined ? {name: "none", maxSize: 2} : maybeGame;
+    public async componentDidMount() {
+        const games = await this.props.groupService.getGameList();
+        this.setState({
+            gameList: games,
+            gamesLoaded: true
+        });
+    }
 
-    this.setState({game: chosenGame})
+    public render() {
+        const FormItem = Form.Item;
+        const { getFieldDecorator } = this.props.form;
+        return (
+            <Card style={{
+                margin: '0 auto',
+                maxWidth: 500
+            }}>
+                <Form onSubmit={this.handleSubmit} hideRequiredMark={true}>
+                    <FormItem label="Group name">
+                        {getFieldDecorator('name', {
+                            rules: [{ required: true, message: 'Please input your group name.' }],
+                        })(
+                            <Input prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Group name" />
+                        )}
+                    </FormItem>
+                    <FormItem label="Game">
+                        {getFieldDecorator('game', {
+                            rules: [{ required: true, message: 'Please input game.' }],
+                        })(
+                            <Select placeholder="Choose Game" onChange={this.handleGameChange}>
+                                {
+                                    this.state.gamesLoaded ? this.state.gameList.map((val: IGame, id: number) => {
+                                        return <Select.Option key={id.toString()} value={val.name}>{val.name}</Select.Option>
+                                    }) : null
+                                }
+                            </Select>
+                        )}
+                    </FormItem>
+                    <FormItem label="Group size">
+                        {getFieldDecorator('maxSize', {
+                            rules: [{ required: true, message: 'Please input group size.' }],
+                        })(
+                            // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            <InputNumber min={2} max={99} placeholder="Group size" disabled={true} />
+                        )}
+                    </FormItem>
+                    <Button type="primary" htmlType="submit" size="large">
+                        Create
+                     </Button>
+                </Form>
+            </Card>
 
-    this.props.form.setFieldsValue({
-      "maxSize": chosenGame.maxSize 
-    });
-  }
+        );
+    }
 
+    private handleSubmit = async (event: any) => {
+        event.preventDefault();
 
-  private handleSubmit = (event: any) => {
-    event.preventDefault();
-    this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
-      if (!validationErrors) {
-        const createdGroup : GroupResponse = await this.createGroup(formGroup);
+        await this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
+            if (!validationErrors) {
+                const userId = this.userService.getUserInfo().userId;
 
-        console.log("Created Group:", createdGroup);
+                // Add the user creating the group to the list of users
+                formGroup.users = [userId];
+                formGroup.invite_id = "";
+                formGroup.visible = false;
+                formGroup.game = this.state.game.name;
+                const createdGroup = await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
+            };
+        })
 
-        this.props.history.push('/groups/' + createdGroup._id)
-      };
-    })
-  }
+        
+    }
 
-  private async createGroup(formGroup: IGroup) : Promise<GroupResponse>{
-    const userId = this.props.userService.getUserInfo().userId;
-    // Add the user creating the group to the list of users
-    formGroup.users = [userId];
-    formGroup.invite_id = "";
-    const response = await this.props.groupService.createGroup(formGroup);
-    const createdGroup = response.data;
+    private onGroupCreatedCallback = (group: GroupResponse) => {
+        console.log("Succesfully created group " + group.name);
 
-    this.props.userService.updateGroupIdUserInfo(createdGroup._id);
-    this.props.userService.setUserOwnerGroup(createdGroup._id);
+        // Set users groupID
+        const user = this.userService.getUserInfo();
+        user.groupId = group._id;
+        this.userService.setUserInfo(user);
 
-    return createdGroup;
-  }
+        this.props.userService.updateGroupIdUserInfo(group._id);
+        this.props.userService.setUserOwnerGroup(group._id);
+
+        this.props.history.push('/groups/' + group._id)
+    }
+
+    private handleGameChange = (event: string) => {
+        const maybeGame: IGame | undefined = this.state.gameList.find(game => game.name === event);
+        const chosenGame: IGame = maybeGame === undefined ? { name: "none", maxSize: 2 } : maybeGame;
+
+        this.setState({ game: chosenGame });
+
+        this.props.form.setFieldsValue({
+            "maxSize": chosenGame.maxSize
+        });
+    }
 }
 
 export default withRouter(Form.create<any>()(CreateGroupForm));

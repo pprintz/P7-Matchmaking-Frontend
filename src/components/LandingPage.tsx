@@ -8,19 +8,13 @@ import { withRouter } from "react-router-dom";
 class LandingPage extends React.Component<RouteComponentProps> {
   public render() {
     return (
-      <Layout>
-        <Content
-          style={{
-            background: "#fff",
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}>
-          <Button type="primary" onClick={this.handleClicked}>
-            Register
+
+      <div style={{ alignContent: "center" }}>
+        <Button type="primary" onClick={this.handleClicked}>
+          Register
           </Button>
-        </Content>
-      </Layout>
+      </div>
+
     );
   }
 
