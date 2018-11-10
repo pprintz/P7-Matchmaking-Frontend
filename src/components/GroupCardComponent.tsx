@@ -30,8 +30,7 @@ class GroupCardComponent extends React.Component<
         super(props);
 
         this.state = { data: props.group, error: "", statuscode: 0 };
-        console.log("Name: " + props.group.name + " -- State: " + JSON.stringify(this.state) + " -- Props (group): " + JSON.stringify(this.props.group));
-    }
+}
 
     public componentWillMount() {
         this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
@@ -80,8 +79,8 @@ class GroupCardComponent extends React.Component<
     }
 
     private redir = (group: GroupResponse) => {
-
-        this.props.history.push(`/groups/${group._id}`);
+        console.log(group)
+        //this.props.history.push(`/groups/${group._id}`);
     }
 
     private onGroupChanged = (response: { group: GroupResponse, caller: string }) => {

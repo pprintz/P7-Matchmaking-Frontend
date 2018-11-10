@@ -18,6 +18,8 @@ import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
 import { SharedContext, GlobalContext } from './models/SharedContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const { Header } = Layout;
 import { IGame } from "./services/interfaces";
 
@@ -48,6 +50,7 @@ class App extends React.Component<{}, SharedContext> {
                 <div className="App">
                     <GlobalContext.Provider value={this.state}>
                         <MenuBar />
+                        <ToastContainer/>
                         <Switch>
                             <Route // TODO
                                 path="/groups/:group_id/:invite_id"

@@ -15,12 +15,15 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
     }
 
     public createGroup = async (group: IGroup, ackFn: (group: GroupResponse) => void): Promise<any> => {
+        let invalid : boolean = true
         await this.IO.emit('createGroup', group, (res: { error: boolean, newGroup: GroupResponse }) => {
             console.info("Error value: " + res.error + " --- group: " + res.newGroup)
             if (!res.error) {
+                invalid = false
                 ackFn(res.newGroup);
             }
         });
+        if(invalid) throw Error();
     }
 
     public getGroup(groupID: string): GroupResponse {

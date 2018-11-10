@@ -21,7 +21,7 @@ export interface IWSGroupsService {
     getGroup(groupId: string): GroupResponse,
     getGroups(): GroupResponse[],
     updateVisibility(group, ackFn: (args: GroupResponse) => void): any
-    createGroup(group: IGroup, ackFn: (group: GroupResponse) => void): Promise<void>,
+    createGroup(group: IGroup, ackFn: (group: GroupResponse) => void): Promise<any>,
     // verifyInvite()
     // registerGroupChanged() 
 };

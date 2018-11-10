@@ -8,6 +8,7 @@ import WSGroupsService from 'src/services/WSGroupsService';
 import { User } from 'src/models/User';
 import { __await } from 'tslib';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
+import { toast } from 'react-toastify';
 
 interface GroupProps {
     groupService: GroupServiceApi,
@@ -110,7 +111,11 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                 formGroup.users = [userId];
                 formGroup.invite_id = "";
                 formGroup.visible = false;
-                await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
+                try {
+                  await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
+                } catch (error) {
+                  toast.error("Sorry, you can't join this group. Leave your current group");
+                }
             };
         })
     }

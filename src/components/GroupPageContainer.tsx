@@ -10,6 +10,7 @@ import NotAllowedHere from '../components/NotAllowedHere';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import LeaveGroup from './LeaveGroup';
 import DiscordUrlComponent from './DiscordUrlComponent';
+import { toast } from 'react-toastify';
 
 
 export class GroupPageContainer extends React.Component<
@@ -36,7 +37,7 @@ export class GroupPageContainer extends React.Component<
             result = await axios.get(process.env.REACT_APP_API_URL + "/api/groups/" + this.props.match.params.group_id);
             this.setState(result.data);
         } catch (error) {
-            console.error(error);
+            toast.error(error)
         }
     }
 

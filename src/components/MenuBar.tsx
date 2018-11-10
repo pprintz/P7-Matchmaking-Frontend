@@ -17,12 +17,16 @@ export class MenuBar extends React.Component<RouteComponentProps> {
         this.user = (this.context as SharedContext).UserService.getUserInfo();
     }
 
+    private handleMyGroupClicked = () => {
+        const usersGroupId = "groups/" + this.user.groupId;
+        this.props.history.push(usersGroupId);
+      };
+
     public render() {
 
         let myGroupButton;
-        const usersGroupId = "groups/" + this.user.groupId;
         if (this.user.groupId !== "") {
-            myGroupButton = <Button type={"primary"} size={"large"}><Link to={usersGroupId}> My group!</Link></Button >
+            myGroupButton = <Button type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My group! </Button >
         }
 
 
