@@ -16,7 +16,8 @@ import FrontPage from "./components/FrontPage";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
-import { IGame } from "./services/interfaces";
+import { IGame, IUserServiceApi } from "./services/interfaces";
+import UserServiceApi from './services/userServiceApi';
 
 const { Header } = Layout;
 
@@ -25,7 +26,7 @@ interface UserState {
 }
 
 export const UserContext = React.createContext({
-  user: new User("", "", "", "")
+  user: new User("", "", "", "", "")
 });
 
 // The LeaveGroup Component's properties should be set through a "userSettings.xxxx" file, in order for it to be globally updated.
@@ -33,14 +34,16 @@ export const UserContext = React.createContext({
 class App extends React.Component<{}, UserState> {
   private groupServiceApi: GroupServiceApi;
   private userServiceCookies: UserServiceCookies;
+  private userServiceApi: UserServiceApi;
 
   constructor(props: any) {
     super(props);
-    console.log(process.env);
 
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
-    this.state = { user: new User("", "", "", "") };
+    this.userServiceApi = new UserServiceApi();
+
+    this.state = { user: new User("", "", "", "", "") };
     this.groupServiceApi.getGameList();
   }
 
@@ -78,7 +81,13 @@ class App extends React.Component<{}, UserState> {
                                     {...routeComponentProps}  
                                   />
                )} /> 
-              <Route path="/groups" component={GroupsPageContainer} />
+              <Route path="/groups" render={routeComponentProps => (
+                <GroupsPageContainer 
+                  userServiceApi={this.userServiceApi}
+                  groupServiceApi={this.groupServiceApi}
+                  {...routeComponentProps}
+                />
+              )} />
               <Route
                 path="/leave"
                 render={routeComponentProps => (
@@ -126,7 +135,8 @@ class App extends React.Component<{}, UserState> {
           createdUser._id,
           createdUser.name,
           createdUser.discordId,
-          "groupId"
+          "",
+          ""
         )
       };
       this.userServiceCookies.setUserInfo(userState.user);

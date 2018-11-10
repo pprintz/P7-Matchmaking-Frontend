@@ -15,7 +15,7 @@ export class UserServiceCookies implements UserService{
     public getUserInfo() : User {
         const abc = this.cookies.get("user");
         if (abc === undefined || abc === "" || abc == null) {
-            return new User("", "","","");
+            return new User("", "","","", "");
         }
         const user: User = this.cookies.get("user") as unknown as User;
 
@@ -26,16 +26,26 @@ export class UserServiceCookies implements UserService{
         this.cookies.set("user", user);
     }
 
+    public setUserOwnerGroup(groupId : string) : User {
+        const abc = this.cookies.get("user");
+        if (abc === undefined || abc === "" || abc == null) {
+            return new User("", "", "", "", "");
+        }
+        const user: User = this.cookies.get("user") as unknown as User;
+        user.ownerGroupId = groupId;
+        this.cookies.set("user", user);
+
+        return user;
+    }
+
     public updateGroupIdUserInfo(groupId : string) : User {
         const abc = this.cookies.get("user");
         if (abc === undefined || abc === "" || abc == null) {
-            return new User("", "","","");
+            return new User("", "","","", "");
         }
         const user: User = this.cookies.get("user") as unknown as User;
         user.groupId = groupId;
         this.cookies.set("user", user);
-
-        console.log(user);
 
         return user;
     }

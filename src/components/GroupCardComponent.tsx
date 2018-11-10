@@ -3,18 +3,27 @@ import * as React from "react";
 import Response from "../Response/Response";
 import { Button, Card } from "antd";
 import Axios, { AxiosResponse } from "axios";
-import { GroupResponse } from "../services/interfaces";
+import { GroupResponse, IUserServiceApi, IUser } from "../services/interfaces";
 import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
+import UserServiceApi from 'src/services/userServiceApi';
+
+interface Props {
+  group: GroupResponse,
+  userServiceApi : IUserServiceApi
+}
+
+interface State {
+  data: GroupResponse,
+  users: IUser[],
+}
 
 class GroupCardComponent extends React.Component<
-  RouteComponentProps & { group: GroupResponse },
-  Response<GroupResponse>
-> {
-  constructor(props) {
+  RouteComponentProps & Props, State> {
+  constructor(props : RouteComponentProps & Props) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);
-    this.state = { data: props.group, error: "", statuscode: 0 };
+    this.state = { data: props.group, users: []};
   }
 
   public render() {
@@ -40,6 +49,7 @@ class GroupCardComponent extends React.Component<
             </Button>
           }
           style={{ width: "100%" }}>
+          <p>Game: {this.state.data.game}</p>
           <p>Available slots: {availableSlots}</p>
           <p>
             <b>Users in this group:</b>

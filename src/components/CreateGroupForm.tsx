@@ -118,6 +118,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     const createdGroup = response.data;
 
     this.props.userService.updateGroupIdUserInfo(createdGroup._id);
+    this.props.userService.setUserOwnerGroup(createdGroup._id);
 
     return createdGroup;
   }

@@ -6,6 +6,7 @@ import GroupCardComponent from './GroupCardComponent'
 import { Row, Col } from 'antd'
 import {GroupResponse} from "../services/interfaces";
 
+import UserServiceApi from 'src/services/userServiceApi';
 
 export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
 
@@ -38,7 +39,9 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
 
             });
             const groups = sorted.map((element) => {
-                return (<GroupCardComponent key={element._id} group={element} />)
+                return (
+                    <GroupCardComponent userServiceApi={this.props.userServiceApi} key={element._id} group={element} />
+                )
             })
 
 
