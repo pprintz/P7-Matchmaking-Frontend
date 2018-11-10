@@ -115,7 +115,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                 try {
                     await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
                 } catch (error) {
-                    toast.error("Sorry, you can't join this group. Leave your current group");
+                    console.log(error)
                 }
             };
         })
