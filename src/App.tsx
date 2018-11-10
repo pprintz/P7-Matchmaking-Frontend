@@ -91,7 +91,6 @@ class App extends React.Component<{}, UserState> {
                 render={routeComponentProps => (
                   <LeaveGroup
                     groupService={this.groupServiceApi}
-                    userService={this.userServiceCookies}
                     {...routeComponentProps}
                   />
                 )}

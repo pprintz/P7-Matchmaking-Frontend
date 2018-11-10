@@ -59,7 +59,7 @@ export class GroupPageContainer extends React.Component<
         return (<div>
             <GroupList group={this.state} userService={this.props.userService} groupService={this.props.groupService} />
             <Route render={routeComponentProps => (
-                <LeaveGroup />
+                <LeaveGroup groupService={this.props.groupService} {...routeComponentProps}/>
             )} />
 
         </div>)

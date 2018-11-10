@@ -3,6 +3,18 @@ import axios from "axios";
 import { GroupService, IGame, GroupResponse, IGroup } from "./interfaces";
 
 export class GroupServiceApi implements GroupService{
+    public async getGroupById(groupId: string) : Promise<IGroup | boolean> {
+        try {
+            const result = await axios.get(process.env.REACT_APP_API_URL + `/api/groups/` + groupId);
+
+            return result.data;
+        }catch(error){
+            console.log(error);
+        }
+
+        return false;
+    }
+
     public async getAllGroups() : Promise<IGroup[] | boolean>{
         try{
             const result = await axios.get(process.env.REACT_APP_API_URL + "/api/groups");

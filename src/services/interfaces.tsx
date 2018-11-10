@@ -7,8 +7,9 @@ export interface GroupService {
     leaveGroup(groupId : string, userId : string) : Promise<GroupResponse | boolean>,
     createGroup(group : any),
     getGameList() : Promise<IGame[]>,
-    deleteGroup(groupId : string) : Promise<IGroup | boolean>
-    getAllGroups() : Promise<IGroup[] | boolean>;
+    deleteGroup(groupId : string) : Promise<IGroup | boolean>,
+    getAllGroups() : Promise<IGroup[] | boolean>,
+    getGroupById(groupId: string) : Promise<IGroup | boolean>
 }
 
 export interface UserService {
