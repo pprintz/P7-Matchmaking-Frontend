@@ -8,10 +8,13 @@ import WSGroupsService from 'src/services/WSGroupsService';
 import { User } from 'src/models/User';
 import { __await } from 'tslib';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
+import UserServiceApi from 'src/services/userServiceApi';
 import { toast } from 'react-toastify';
+import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 interface GroupProps {
     groupService: GroupServiceApi,
+    userService: UserServiceCookies
     form: any
 }
 
@@ -90,19 +93,16 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                     </FormItem>
                     <Button type="primary" htmlType="submit" size="large">
                         Create
-        </Button>
+                     </Button>
                 </Form>
             </Card>
 
         );
     }
 
-
-
-
-
     private handleSubmit = async (event: any) => {
         event.preventDefault();
+
         await this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
             if (!validationErrors) {
                 const userId = this.userService.getUserInfo().userId;
@@ -111,13 +111,16 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                 formGroup.users = [userId];
                 formGroup.invite_id = "";
                 formGroup.visible = false;
+                formGroup.game = this.state.game.name;
                 try {
-                  await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
+                    await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
                 } catch (error) {
-                  toast.error("Sorry, you can't join this group. Leave your current group");
+                    toast.error("Sorry, you can't join this group. Leave your current group");
                 }
             };
         })
+
+        
     }
 
     private onGroupCreatedCallback = (group: GroupResponse) => {
@@ -128,6 +131,9 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         user.groupId = group._id;
         this.userService.setUserInfo(user);
 
+        this.props.userService.updateGroupIdUserInfo(group._id);
+        this.props.userService.setUserOwnerGroup(group._id);
+
         this.props.history.push('/groups/' + group._id)
     }
 
@@ -135,7 +141,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         const maybeGame: IGame | undefined = this.state.gameList.find(game => game.name === event);
         const chosenGame: IGame = maybeGame === undefined ? { name: "none", maxSize: 2 } : maybeGame;
 
-        this.setState({ game: chosenGame })
+        this.setState({ game: chosenGame });
 
         this.props.form.setFieldsValue({
             "maxSize": chosenGame.maxSize

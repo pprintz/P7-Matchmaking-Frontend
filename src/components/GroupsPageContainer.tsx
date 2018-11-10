@@ -50,7 +50,7 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
             });
 
             const groups = sorted.map((element: GroupResponse) => {
-                return (<GroupCardComponent key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
+                return (<GroupCardComponent userServiceApi={this.props.userServiceApi} key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
             });
             return (
                 <div>

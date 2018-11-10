@@ -87,7 +87,6 @@ class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
         return (
             <div className="LeaveGroupComponent">
                 <LeaveBtn onClick={this.handleOnClick}>Leave group</LeaveBtn>
-
             </div>
         );
     }

@@ -12,23 +12,21 @@ import LeaveGroup from './LeaveGroup';
 import DiscordUrlComponent from './DiscordUrlComponent';
 import { toast } from 'react-toastify';
 
+interface Props {
+    userService: UserServiceCookies,
+    groupService: GroupServiceApi
+}
 
 export class GroupPageContainer extends React.Component<
     RouteComponentProps<{
         group_id: string;
         invite_id: string;
-    }>,
+    }> & Props,
     GroupResponse
     > {
 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-
-    private userService: UserServiceCookies;
-
-    public componentWillMount() {
-        this.userService = (this.context as SharedContext).UserService;
-    }
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public async componentDidMount() {
@@ -50,7 +48,7 @@ export class GroupPageContainer extends React.Component<
             );
         }
 
-        const user = this.userService.getUserInfo();
+        const user = this.props.userService.getUserInfo();
         const userIsInGroup = (this.state.users.indexOf(user.userId) > -1);
         if (!userIsInGroup) {
             return (
@@ -59,7 +57,7 @@ export class GroupPageContainer extends React.Component<
         }
 
         return (<div>
-            <GroupList group={this.state} />
+            <GroupList group={this.state} userService={this.props.userService} groupService={this.props.groupService} />
             <Route render={routeComponentProps => (
                 <LeaveGroup />
             )} />

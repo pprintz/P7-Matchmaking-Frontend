@@ -1,120 +1,88 @@
 import * as React from "react";
-import Response from '../Response/Response';
-import { Button, Card } from 'antd'
-import WSGroupsService from 'src/services/WSGroupsService';
-import { GroupResponse } from 'src/services/interfaces';
-// import { UserServiceCookies } from "src/services/userServiceCookies";
+// import GroupsResponse from './GroupsResponse';
+import Response from "../Response/Response";
+import { Button, Card } from "antd";
+import Axios, { AxiosResponse } from "axios";
+import { GroupResponse, IUserServiceApi, IUser } from "../services/interfaces";
+import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
-import { SharedContext, GlobalContext } from 'src/models/SharedContext';
-import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { ThemeConsumer } from 'styled-components';
+import UserServiceApi from 'src/services/userServiceApi';
 
-class GroupCardComponent extends React.Component<
-    RouteComponentProps & {
-        group: GroupResponse,
-        onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
-    },
-    Response<GroupResponse>
-    >{
-    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
-    private static contextType = GlobalContext;
-
-    private WSGroupsService: WSGroupsService;
-    private UserService: UserServiceCookies;
-
-    constructor(props:
-        RouteComponentProps & {
-            group: GroupResponse,
-            onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
-        }) {
-        super(props);
-
-        this.state = { data: props.group, error: "", statuscode: 0 };
+interface Props {
+  group: GroupResponse,
+  userServiceApi : IUserServiceApi,
 }
 
-    public componentWillMount() {
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
-        this.UserService = (this.context as SharedContext).UserService;
-        this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
+interface State {
+  data: GroupResponse,
+  users: IUser[],
+}
+
+class GroupCardComponent extends React.Component<
+  RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
+}, State> {
+  constructor(props : RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
+}) {
+    super(props);
+    this.joinGroup = this.joinGroup.bind(this);
+    this.state = { data: props.group, users: []};
+  }
+
+  public render() {
+    const disableJoinButton =
+      this.state.data.maxSize > this.state.data.users.length ? false : true;
+    if (disableJoinButton) {
+      // Don't render the card if the group is full
+      return null;
     }
+    const availableSlots =
+      this.state.data.maxSize - this.state.data.users.length;
+    return (
+      <div style={{ paddingTop: 10, paddingBottom: 10 }}>
+        <Card
+          title={"Group name: " + this.state.data.name}
+          extra={
+            <Button
+              disabled={disableJoinButton}
+              type="primary"
+              icon="usergroup-add"
+              onClick={this.joinGroup}>
+              Join
+            </Button>
+          }
+          style={{ width: "100%" }}>
+          <p>Game: {this.state.data.game}</p>
+          <p>Available slots: {availableSlots}</p>
+          <p>
+            <b>Users in this group:</b>
+          </p>
+          {this.state.data.users.length !== 0 ? (
+            <ul>
+              {this.state.data.users.map((userid: string) => (
+                <li key={userid}>{userid}</li>
+              ))}
+            </ul>
+          ) : (
+            <li>No users in this group!</li>
+          )}
+        </Card>
+      </div>
+    );
+  }
 
-    public render() {
-        const disableJoinButton = this.state.data.maxSize > this.state.data.users.length ? false : true;
-        if (disableJoinButton || this.state.data.visible === false) {
-            // Don't render the card if the group is full
-            return null;
-        }
-        const availableSlots = this.state.data.maxSize - this.state.data.users.length;
-        return (
-            <GlobalContext.Consumer>
-                {context => (
-                    <Card
-                        title={'Group name: ' + this.state.data.name}
-                        extra={
-                            <Button
-                                disabled={disableJoinButton}
-                                type='primary'
-                                icon="usergroup-add"
-                                onClick={() => this.joinGroup(context.UserService.getUserInfo().userId)}>
-                                Join
-                        </Button>
-                        }
-                        style={{ width: '100%' }}>
-                        <p>Available slots: {availableSlots}</p>
-                        <p><b>Users in this group:</b></p>
-                        {this.state.data.users.length !== 0 ? (
-                            <ul>
-                                {this.state.data.users.map((userid: string) =>
-                                    <li key={userid}>{userid}</li>
-                                )}
-                            </ul>
-                        ) : (
-                                <li>No users in this group!</li>
-                            )}
-                    </Card>
-                )}
-            </GlobalContext.Consumer>
-
-        );
+  private joinGroup = async () => {
+    try {
+      const groupId = this.state.data._id;
+      const response = await Axios.post(process.env.REACT_APP_API_URL + "/api/groups/join", {
+        group_id: groupId,
+        user_id: new UserServiceCookies().getUserInfo().userId,
+      });
+      console.log("Join Response:", response);
+      this.props.history.push(`/groups/${groupId}`);
+    } catch (error) {
+      console.error(error);
     }
-
-    private redir = (group: GroupResponse) => {
-        console.log(group)
-        //this.props.history.push(`/groups/${group._id}`);
-    }
-
-    private onGroupChanged = (response: { group: GroupResponse, caller: string }) => {
-        // Each time a group is changed, this method is invoked *on all GroupCardComponents*
-        // As such, we need to check the ID of the group being changed and only update the state
-        // if the group being changed is *this* group
-        if (response.group._id !== this.state.data._id) {
-            return;
-        }
-
-        /*
-            TEST FOR ERRORS IN THE REPONSE HERE!
-        */
-
-        // handle the change
-        this.setState({ data: response.group });
-        // 
-
-        // Inform the parent of changes
-        this.props.onGroupChangeCallback(response);
-
-    }
-
-    private async joinGroup(userId: string) {
-        await this.WSGroupsService.joinGroup(
-            this.state.data._id,
-            userId,
-            this.redir
-        );
-        const user = this.UserService.getUserInfo();
-        user.groupId = this.props.group._id;
-        this.UserService.setUserInfo(user);
-
-    }
+  }
 }
 
 export default withRouter(GroupCardComponent);
