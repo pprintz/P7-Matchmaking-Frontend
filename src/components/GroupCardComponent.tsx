@@ -7,6 +7,7 @@ import { GroupResponse, IUserServiceApi, IUser } from "../services/interfaces";
 import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
 import UserServiceApi from 'src/services/userServiceApi';
+import { toast } from 'react-toastify';
 
 interface Props {
   group: GroupResponse,
@@ -80,7 +81,7 @@ class GroupCardComponent extends React.Component<
       console.log("Join Response:", response);
       this.props.history.push(`/groups/${groupId}`);
     } catch (error) {
-      console.error(error);
+      toast.error("Sorry, you can't join this group. Leave your current group");
     }
   }
 }

@@ -6,6 +6,7 @@ import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { string } from 'prop-types';
+import { toast } from 'react-toastify';
 
 
 export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: string, invite_id: string }>, any> {
@@ -69,7 +70,7 @@ export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: s
             this.props.history.push(`/groups/${groupId}`);
             this.UserService.updateGroupIdUserInfo(groupId);
         } catch (error) {
-            console.error(error);
+            toast.error("Sorry, you can't join this group. Leave your current group");
         }
     };
 }
