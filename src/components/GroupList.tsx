@@ -53,7 +53,7 @@ export class GroupList extends React.Component<
     return (
       <div>
         <antd.Button block={true} type="primary" style={{height: 80}} color="green">
-          <a target="_blank" href="http://www.google.dk/">Complete</a>
+          <a target="_blank" href="https://goo.gl/forms/mgfeqcDUE3P8lSsz2">Complete</a>
         </antd.Button>
       </div>
     );
