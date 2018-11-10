@@ -49,7 +49,7 @@ export class MenuBar extends React.Component<RouteComponentProps> {
               </div>
               <div id="menu-item"><Button ghost>GROUPS</Button></div> */}
                             <div id="item">
-                                <h1><Link to="/">F-LAN Matchmaking</Link></h1>
+                                <h1 onClick={() => this.props.history.push("/")}>F-LAN Matchmaking</h1>
                                 <div id="wrap">
                                     <div id="item"><p><b>UserID:</b> {context.UserService.getUserInfo().userId} - </p></div>
                                     <div id="item"><p><b>DiscordID:</b> {context.UserService.getUserInfo().discordId} - </p></div>
@@ -67,9 +67,9 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
                                     <div id="button">
                                         <Button.Group size={"large"}>
-                                            <Button ghost><Link to={"/"}>Home</Link></Button>
-                                            <Button ghost><Link to={"/groups"}>Groups</Link></Button>
-                                            <Button ghost><Link to={"/create"}>Create a group</Link></Button>
+                                            <Button onClick={() => this.props.history.push("/")} ghost>Home</Button>
+                                            <Button onClick={() => this.props.history.push("/groups")} ghost>Groups</Button>
+                                            <Button onClick={() => this.props.history.push("/create")} ghost>Create a group</Button>
                                         </Button.Group>
                                     </div>
                                 </div>

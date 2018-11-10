@@ -60,7 +60,7 @@ class App extends React.Component<{}, UserState> {
       <Router>
         <div className="App">
           <UserContext.Provider value={this.state}>
-            <MenuBar />
+          <Route render={renderProps => <MenuBar  {...renderProps}/>} /> 
             <ToastContainer/>
             <Switch>
               <Route
