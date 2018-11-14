@@ -8,6 +8,7 @@ import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { GroupService, PersistentGroup, IGroup } from "../services/interfaces";
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import { toast } from 'react-toastify';
+import { Button } from 'antd';
 
 
 
@@ -19,8 +20,8 @@ interface GroupStates {
     message: string
 }
 
-interface Props {
-    groupService : GroupServiceApi
+interface Props  {
+    groupService: GroupServiceApi
 }
 
 // interface GroupProps {
@@ -37,7 +38,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
 
-    constructor(props : RouteComponentProps & Props) {
+    constructor(props: RouteComponentProps & Props) {
         super(props);
 
         this.handleOnClick = this.handleOnClick.bind(this);
@@ -60,22 +61,21 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     // When the leave button is clicked
     public handleOnClick = async () => {
         try {
+            console.log(this.groupId, 2, this.userId)
             // Make the leave group request
             await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, async (error: boolean) => {
                 // Update state, if the request was successfull
                 if (!error) {
-                    const response : IGroup | boolean = await this.props.groupService.getGroupById(this.groupId);  
+                    const response: PersistentGroup= await this.props.groupService.getGroupById(this.groupId);
 
-                    if(response !== false){
-                        const group : IGroup = response as IGroup;
-                        
-                        if(group.users.length < 1){
-                            this.props.groupService.deleteGroup(this.groupId);
-                        }
+                    const group: PersistentGroup = response as PersistentGroup;
+
+                    if (group.users.length < 1) {
+                        this.props.groupService.deleteGroup(this.groupId);
                     }
 
                     this.UserService.updateGroupIdUserInfo("");
-                    
+
                     this.setState({ groupId: "" });
                     this.setState({ message: "Succesfully left the group" });
                     this.props.history.push("/");
@@ -97,7 +97,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     public render() {
         return (
             <div className="LeaveGroupComponent">
-                <LeaveBtn onClick={this.handleOnClick}>Leave group</LeaveBtn>
+                <Button onClick={this.handleOnClick}>Leave group</Button>
             </div>
         );
     }

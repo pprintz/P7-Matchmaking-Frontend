@@ -13,8 +13,8 @@ import { toast } from 'react-toastify';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 interface GroupProps {
-    groupService: GroupServiceApi,
-    userService: UserServiceCookies
+    groupService: GroupService,
+    userService: UserService
     form: any
 }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GroupService, PersistentGroup, IGroup} from "../services/interfaces";
+import {GroupService, PersistentGroup, IGroup, UserService} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
 import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
@@ -12,7 +12,7 @@ import { User } from 'src/models/User';
 // The groupId is saved to state
 interface GroupProps {
     groupService: GroupService,
-    userService: UserServiceCookies,
+    userService: UserService,
 }
 
 class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupProps> {

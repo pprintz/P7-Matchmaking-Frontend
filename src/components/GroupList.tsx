@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PersistentGroup } from "../services/interfaces";
+import { PersistentGroup, UserService, GroupService } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 import { Row, Col, Card, Switch, Icon } from "antd";
 import WSGroupsService from '../services/WSGroupsService';
@@ -18,8 +18,8 @@ import DiscordUrlComponent from './DiscordUrlComponent';
 
 interface Props {
     group: PersistentGroup,
-    userService: UserServiceCookies,
-    groupService: GroupServiceApi
+    userService: UserService,
+    groupService: GroupService
 }
 
 export class GroupList extends React.Component<

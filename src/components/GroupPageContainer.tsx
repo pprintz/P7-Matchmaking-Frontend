@@ -13,7 +13,7 @@ import DiscordUrlComponent from './DiscordUrlComponent';
 import { toast } from 'react-toastify';
 
 interface Props {
-    userService: UserServiceCookies,
+    userService: UserService,
     groupService: GroupServiceApi
 }
 
@@ -30,10 +30,11 @@ export class GroupPageContainer extends React.Component<
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public async componentDidMount() {
-        let result;
+        let result : PersistentGroup;
         try {
-            result = await axios.get(process.env.REACT_APP_API_URL + "/api/groups/" + this.props.match.params.group_id);
-            this.setState(result.data);
+
+            result = await this.props.groupService.getGroupById(this.props.match.params.group_id);
+            this.setState(result);
         } catch (error) {
             toast.error(error)
         }

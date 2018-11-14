@@ -9,7 +9,7 @@ export interface GroupService {
     getGameList(): Promise<IGame[]>,
     deleteGroup(groupId: string): Promise<IGroup |  boolean>,
     getAllGroups(): Promise<PersistentGroup[]>,
-    getGroupById(groupId: string): Promise<IGroup | boolean>
+    getGroupById(groupId: string): Promise<PersistentGroup>;
     joinGroup(groupId: string, userId: string): Promise<PersistentGroup>;
 }
 
