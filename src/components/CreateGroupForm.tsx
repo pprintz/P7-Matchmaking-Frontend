@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card, Col, Row, Select } from 'antd'
-import { UserService, GroupService, IGroup, GroupResponse, IGame } from "../services/interfaces";
+import { UserService, GroupService, IGroup, PersistentGroup, IGame } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
 import WSGroupsService from 'src/services/WSGroupsService';
@@ -115,7 +115,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                 try {
                     await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
                 } catch (error) {
-                    console.log(error)
+                    toast.error("Sorry, you are already in a group", error);
                 }
             };
         })
@@ -123,7 +123,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         
     }
 
-    private onGroupCreatedCallback = (group: GroupResponse) => {
+    private onGroupCreatedCallback = (group: PersistentGroup) => {
         console.log("Succesfully created group " + group.name);
 
         // Set users groupID

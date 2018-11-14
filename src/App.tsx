@@ -16,7 +16,7 @@ import RegisterUser, { IFormUser } from "./components/RegisterUser";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
-import { IGame, IUserServiceApi } from "./services/interfaces";
+import { IGame } from "./services/interfaces";
 import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -81,8 +81,8 @@ class App extends React.Component<{}, UserState> {
               )} />
               <Route path="/groups" render={routeComponentProps => (
                 <GroupsPageContainer
-                  userServiceApi={this.userServiceApi}
-                  groupServiceApi={this.groupServiceApi}
+                  userService={this.userServiceApi}
+                  groupService={this.groupServiceApi}
                   {...routeComponentProps}
                 />
               )} />

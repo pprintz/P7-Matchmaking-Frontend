@@ -3,30 +3,34 @@ import * as React from "react";
 import Response from "../Response/Response";
 import { Button, Card } from "antd";
 import Axios, { AxiosResponse } from "axios";
-import { GroupResponse, IUserServiceApi, IUser } from "../services/interfaces";
+import { PersistentGroup, IUser, PersistentUserService, UserService } from "../services/interfaces";
 import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
 import UserServiceApi from 'src/services/userServiceApi';
 import { toast } from 'react-toastify';
+import { GroupService } from '../services/interfaces';
 
 interface Props {
-  group: GroupResponse,
-  userServiceApi : IUserServiceApi,
+  group: PersistentGroup,
+  groupService: GroupService
+  userService: UserService
 }
 
 interface State {
-  data: GroupResponse,
+  data: PersistentGroup,
   users: IUser[],
 }
 
 class GroupCardComponent extends React.Component<
-  RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
-}, State> {
-  constructor(props : RouteComponentProps & Props & {onGroupChangeCallback: (response: { group: GroupResponse, caller: string }) => void
-}) {
+  RouteComponentProps & Props & {
+    onGroupChangeCallback: (response: { group: PersistentGroup, caller: string }) => void
+  }, State> {
+  constructor(props: RouteComponentProps & Props & {
+    onGroupChangeCallback: (response: { group: PersistentGroup, caller: string }) => void
+  }) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);
-    this.state = { data: props.group, users: []};
+    this.state = { data: props.group, users: [] };
   }
 
   public render() {
@@ -64,8 +68,8 @@ class GroupCardComponent extends React.Component<
               ))}
             </ul>
           ) : (
-            <li>No users in this group!</li>
-          )}
+              <li>No users in this group!</li>
+            )}
         </Card>
       </div>
     );
@@ -74,12 +78,8 @@ class GroupCardComponent extends React.Component<
   private joinGroup = async () => {
     try {
       const groupId = this.state.data._id;
-      const response = await Axios.post(process.env.REACT_APP_API_URL + "/api/groups/join", {
-        group_id: groupId,
-        user_id: new UserServiceCookies().getUserInfo().userId,
-      });
-      console.log("Join Response:", response);
-      this.props.history.push(`/groups/${groupId}`);
+      const joinedGroup = await this.props.groupService.joinGroup(groupId, this.props.userService.getUserInfo().userId)
+      this.props.history.push(`/groups/${joinedGroup._id}`);
     } catch (error) {
       toast.error("Sorry, you can't join this group. Leave your current group");
     }

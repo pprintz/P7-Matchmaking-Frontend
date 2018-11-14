@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import WSGroupsService from '../services/WSGroupsService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { GroupService, GroupResponse, IGroup } from "../services/interfaces";
+import { GroupService, PersistentGroup, IGroup } from "../services/interfaces";
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import { toast } from 'react-toastify';
 

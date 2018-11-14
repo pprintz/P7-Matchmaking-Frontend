@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GroupService, GroupResponse, IGroup} from "../services/interfaces";
+import {GroupService, PersistentGroup, IGroup} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
 import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';

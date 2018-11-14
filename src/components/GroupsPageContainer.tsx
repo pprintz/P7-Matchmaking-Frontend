@@ -5,11 +5,18 @@ import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col, Card } from 'antd'
 import WSGroupsService from '../services/WSGroupsService';
-import { GroupResponse } from "../services/interfaces";
+import { PersistentGroup, PersistentUserService, IGroup, GroupService } from "../services/interfaces";
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import img from '../images/cs-header.jpg'
+import { toast } from 'react-toastify';
+import { UserServiceCookies } from '../services/userServiceCookies';
 
-export default class GroupPageContainer extends React.Component<any, Response<GroupResponse[]>>{
+interface Props  {
+    groupService: GroupService
+    userService: PersistentUserService
+}
+
+export default class GroupPageContainer extends React.Component<Props, Response<PersistentGroup[]>>{
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
     private WSGroupsService: WSGroupsService;
@@ -26,11 +33,12 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
     }
 
     public componentDidMount() {
-
-        Axios.get(process.env.REACT_APP_API_URL + "/api/groups")
-            .then((res: AxiosResponse) => {
-                this.setState({ data: res.data });
-            });
+        try {
+            this.props.groupService.getAllGroups().then((grps: PersistentGroup[]) => this.setState({data: grps}))    
+        } catch (error) {
+            console.log(error)
+            toast.error("something went wrong")
+        }
     }
 
     public render() {
@@ -38,19 +46,11 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
             return (<p>Loading</p>);
         }
         else if (this.state.statuscode === 0) {
-            const sorted = this.state.data.sort((x, y): any => {
-                if (x.maxSize - x.users.length < y.maxSize - y.users.length) {
-                    return -1
-                }
-                if (x.maxSize - x.users.length > y.maxSize - y.users.length) {
-                    return 1
-                }
-                return 0
+            const remainingSpots = (g: PersistentGroup) : number => g.maxSize - g.users.length;
+            const sorted = this.state.data.sort((x,y) => (remainingSpots(x)) - (remainingSpots(y)));
 
-            });
-
-            const groups = sorted.map((element: GroupResponse) => {
-                return (<GroupCardComponent userServiceApi={this.props.userServiceApi} key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
+            const groups = sorted.map((element: PersistentGroup) => {
+                return (<GroupCardComponent userService={new UserServiceCookies()} groupService={this.props.groupService} key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
             });
             return (
                 <div>
@@ -77,11 +77,11 @@ export default class GroupPageContainer extends React.Component<any, Response<Gr
         }
     }
 
-    private onGroupChanged = (response: { group: GroupResponse, caller: string }): void => {
+    private onGroupChanged = (response: { group: PersistentGroup, caller: string }): void => {
         if (!this.sortFlag && response.caller !== "createGroup" && response.caller !== "deleteGroup") { return };
 
         const oldData = this.state.data;
-        const groupIndex = oldData.findIndex((value: GroupResponse, index: number, obj: GroupResponse[]) => {
+        const groupIndex = oldData.findIndex((value: PersistentGroup, index: number, obj: PersistentGroup[]) => {
             return value._id === response.group._id;
         });
         if (groupIndex === -1) {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RouteComponentProps, Route, withRouter } from "react-router-dom";
-import { GroupResponse, UserService, GroupService } from "../services/interfaces";
+import { PersistentGroup, UserService, GroupService } from "../services/interfaces";
 import axios from "axios";
 import InviteUrlComponent from "./InviteUrlComponent";
 import GroupList from "./GroupList";
@@ -22,7 +22,7 @@ export class GroupPageContainer extends React.Component<
         group_id: string;
         invite_id: string;
     }> & Props,
-    GroupResponse
+    PersistentGroup
     > {
 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
