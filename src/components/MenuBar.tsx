@@ -12,8 +12,6 @@ export class MenuBar extends React.Component<RouteComponentProps> {
     private static contextType = GlobalContext;
 
     public componentWillMount() {
-        console.log("CONTEXT IS")
-        console.log(this.context)
         this.user = (this.context as SharedContext).UserService.getUserInfo();
     }
 

@@ -30,7 +30,6 @@ interface Props  {
 // }
 
 class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupStates> {
-    // This is the Axios link to the backend, for leave group functionality   and userService  
     private groupId: string;
     private userId: string;
     private WSGroupsService: WSGroupsService;

@@ -1,8 +1,6 @@
 import * as React from "react";
 import { RouteComponentProps, Route, withRouter } from "react-router-dom";
 import { PersistentGroup, UserService, GroupService } from "../services/interfaces";
-import axios from "axios";
-import InviteUrlComponent from "./InviteUrlComponent";
 import GroupList from "./GroupList";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';

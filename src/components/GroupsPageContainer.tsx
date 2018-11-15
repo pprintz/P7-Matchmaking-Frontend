@@ -1,7 +1,6 @@
 import * as React from 'react';
 // import GroupsResponse from './GroupsResponse';
 import Response from '../Response/Response';
-import Axios, { AxiosResponse } from 'axios';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col, Card } from 'antd'
 import WSGroupsService from '../services/WSGroupsService';

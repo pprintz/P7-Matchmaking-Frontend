@@ -1,12 +1,8 @@
 import * as React from "react";
 // import GroupsResponse from './GroupsResponse';
-import Response from "../Response/Response";
 import { Button, Card } from "antd";
-import Axios, { AxiosResponse } from "axios";
 import { PersistentGroup, IUser, PersistentUserService, UserService } from "../services/interfaces";
-import { UserServiceCookies } from "src/services/userServiceCookies";
 import { RouteComponentProps, withRouter } from "react-router";
-import UserServiceApi from 'src/services/userServiceApi';
 import { toast } from 'react-toastify';
 import { GroupService } from '../services/interfaces';
 
