@@ -6,20 +6,19 @@ import { UserService } from '../services/interfaces'
 import { User } from 'src/models/User';
 
 export class MenuBar extends React.Component<RouteComponentProps> {
+    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+
+    private static contextType = GlobalContext;
     private user: User;
 
-    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
-    private static contextType = GlobalContext;
+
+
+
+
 
     public componentWillMount() {
         this.user = (this.context as SharedContext).UserService.getUserInfo();
     }
-
-    private handleMyGroupClicked = () => {
-        const usersGroupId = "groups/" + this.user.groupId;
-        this.props.history.push(usersGroupId);
-      };
-
     public render() {
 
         let myGroupButton;
@@ -65,9 +64,9 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
                                     <div id="button">
                                         <Button.Group size={"large"}>
-                                            <Button onClick={() => this.props.history.push("/")} ghost>Home</Button>
-                                            <Button onClick={() => this.props.history.push("/groups")} ghost>Groups</Button>
-                                            <Button onClick={() => this.props.history.push("/create")} ghost>Create a group</Button>
+                                            <Button onClick={() => this.props.history.push("/")} ghost={true}>Home</Button>
+                                            <Button onClick={() => this.props.history.push("/groups")} ghost={true}>Groups</Button>
+                                            <Button onClick={() => this.props.history.push("/create")} ghost={true}>Create a group</Button>
                                         </Button.Group>
                                     </div>
                                 </div>
@@ -78,6 +77,10 @@ export class MenuBar extends React.Component<RouteComponentProps> {
             </header>
         );
     }
+    private handleMyGroupClicked = () => {
+        const usersGroupId = "groups/" + this.user.groupId;
+        this.props.history.push(usersGroupId);
+    };
 }
 
 export default withRouter(MenuBar);

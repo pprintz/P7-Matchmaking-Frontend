@@ -15,7 +15,7 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
     }
 
     public createGroup = async (group: IGroup, ackFn: (group: PersistentGroup) => void): Promise<any> => {
-        let invalid : boolean = true
+        let invalid: boolean = true
         await this.IO.emit('createGroup', group, (res: { error: boolean, newGroup: PersistentGroup }) => {
             console.info("Error value: " + res.error + " --- group: " + res.newGroup)
             if (!res.error) {
@@ -23,7 +23,7 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
                 ackFn(res.newGroup);
             }
         });
-        if(invalid) throw Error();
+        if (invalid) { throw Error(); }
     }
 
     public getGroup(groupID: string): PersistentGroup {

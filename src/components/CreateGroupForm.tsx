@@ -25,16 +25,10 @@ interface State {
 }
 
 class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, State> {
-    private userService: UserService;
-    private WSGroupsService: WSGroupsService;
-
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-
-    public componentWillMount() {
-        this.userService = (this.context as SharedContext).UserService;
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
-    }
+    private userService: UserService;
+    private WSGroupsService: WSGroupsService;
 
     constructor(props: GroupProps & RouteComponentProps) {
         super(props);
@@ -45,6 +39,16 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
             gamesLoaded: false
         }
     }
+
+    
+
+
+    public componentWillMount() {
+        this.userService = (this.context as SharedContext).UserService;
+        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+    }
+
+    
 
     public async componentDidMount() {
         const games = await this.props.groupService.getGameList();

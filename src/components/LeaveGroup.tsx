@@ -30,12 +30,13 @@ interface Props  {
 // }
 
 class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupStates> {
+    private static contextType = GlobalContext;
     private groupId: string;
     private userId: string;
     private WSGroupsService: WSGroupsService;
     private UserService: UserServiceCookies;
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
-    private static contextType = GlobalContext;
+
 
     constructor(props: RouteComponentProps & Props) {
         super(props);
