@@ -1,6 +1,6 @@
 import { User } from '../models/User';
 import { RouteComponentProps } from 'react-router-dom';
-import WSGroupService from './WSGroupsService';
+import WSGroupService from './WSGroupService';
 import { UserServiceCookies } from './userServiceCookies';
 
 export interface GroupService {
@@ -25,16 +25,24 @@ export interface PersistentUserService {
     getUserById(userId: string): Promise<IUser |  boolean>;
 }
 
-export interface IWSGroupsService {
+export interface SocketService {
+    registerEventHandler(event : string, fn : any) : void
+}
+export interface IWSGroupService extends SocketService {
     joinGroup(groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void>,
     leaveGroup(groupId: string, userId: string, ackFn: (error: boolean) => void): Promise<void>,
     getGroup(groupId: string): PersistedGroup,
     getGroups(): PersistedGroup[],
     updateVisibility(group, ackFn: (args: PersistedGroup) => void): any
-    createGroup(group: Group, ackFn: (group: PersistedGroup) => void): Promise<any>,
+    createGroup(group: Group, ackFn: (res: SocketResponse<PersistedGroup>) => void): Promise<any>,
     // verifyInvite()
     // registerGroupChanged() 
 };
+
+export interface SocketResponse<T> {
+    data: T;
+    error: boolean
+}
 
 interface Persisted {
     _id: string
@@ -59,9 +67,10 @@ export interface Group {
 }
 
 export interface ISharedContext {
-    UserService: UserServiceCookies,
+    UserService: UserService,
     Client: SocketIOClient.Socket,
-    WSGroupsService: IWSGroupsService
+    WSGroupService: IWSGroupService,
+    GroupServiceApi : GroupService
 }
 
 export interface IGame {

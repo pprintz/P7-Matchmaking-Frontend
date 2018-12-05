@@ -1,20 +1,13 @@
 import * as React from 'react';
-// import { FormComponentProps } from 'antd/lib/form/Form';
-import { Form, Icon, Input, Button, InputNumber, Card, Col, Row, Select } from 'antd'
-import { UserService, GroupService, Group, PersistedGroup, IGame } from "../services/interfaces";
+import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
+import { UserService, GroupService, Group, PersistedGroup, IGame, SocketResponse, IWSGroupService } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
-import WSGroupsService from 'src/services/WSGroupsService';
-import { User } from 'src/models/User';
+import WSGroupService from 'src/services/WSGroupService';
 import { __await } from 'tslib';
-import { GroupServiceApi } from 'src/services/groupServiceApi';
-import UserServiceApi from 'src/services/userServiceApi';
 import { toast } from 'react-toastify';
-import { UserServiceCookies } from 'src/services/userServiceCookies';
 
 interface GroupProps {
-    groupService: GroupService,
-    userService: UserService
     form: any
 }
 
@@ -28,7 +21,8 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
     private userService: UserService;
-    private WSGroupsService: WSGroupsService;
+    private WSGroupService: IWSGroupService;
+    private apiGroupService: GroupService
 
     constructor(props: GroupProps & RouteComponentProps) {
         super(props);
@@ -45,13 +39,12 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
 
     public componentWillMount() {
         this.userService = (this.context as SharedContext).UserService;
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.WSGroupService = (this.context as SharedContext).WSGroupService;
+        this.apiGroupService = (this.context as SharedContext).GroupServiceApi;
     }
 
-    
-
     public async componentDidMount() {
-        const games = await this.props.groupService.getGameList();
+        const games = await this.apiGroupService.getGameList();
         this.setState({
             gameList: games,
             gamesLoaded: true
@@ -100,7 +93,6 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                      </Button>
                 </Form>
             </Card>
-
         );
     }
 
@@ -117,9 +109,9 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
                 formGroup.visible = false;
                 formGroup.game = this.state.game.name;
                 try {
-                    await this.WSGroupsService.createGroup(formGroup, this.onGroupCreatedCallback);
+                    await this.WSGroupService.createGroup(formGroup, this.onGroupCreatedCallback);
                 } catch (error) {
-                    toast.error("Sorry, you are already in a group", error);
+                    toast.error("Cannot establish a connection");
                 }
             };
         })
@@ -127,18 +119,26 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         
     }
 
-    private onGroupCreatedCallback = (group: PersistedGroup) => {
-        console.log("Succesfully created group " + group.name);
+
+
+    private onGroupCreatedCallback = (res: SocketResponse<PersistedGroup>) => {
+
+        if(res.error){
+            toast.error("Sorry, you are already in a group");
+            return;
+        }
+        console.log("Succesfully created group " + res.data.name);
 
         // Set users groupID
         const user = this.userService.getUserInfo();
-        user.groupId = group._id;
+        const grpId = res.data._id;
+        user.groupId = grpId;
         this.userService.setUserInfo(user);
 
-        this.props.userService.updateGroupIdUserInfo(group._id);
-        this.props.userService.setUserOwnerGroup(group._id);
+        this.userService.updateGroupIdUserInfo(grpId);
+        this.userService.setUserOwnerGroup(grpId);
 
-        this.props.history.push('/groups/' + group._id)
+        this.props.history.push('/groups/' + grpId)
     }
 
     private handleGameChange = (event: string) => {

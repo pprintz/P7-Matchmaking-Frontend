@@ -8,6 +8,7 @@ import { string } from 'prop-types';
 import { toast } from 'react-toastify';
 import { GroupServiceApi } from '../services/groupServiceApi';
 import Axios from 'axios';
+import { UserService } from 'src/services/interfaces';
 
 interface Props  {
     groupService: GroupServiceApi
@@ -16,7 +17,7 @@ interface Props  {
 export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: string, invite_id: string }>, any> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private UserService: UserServiceCookies;
+    private UserService: UserService;
     constructor(props) {
         super(props);
         this.state = { group: { name: "", users: [] } };

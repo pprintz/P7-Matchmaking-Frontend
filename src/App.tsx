@@ -16,10 +16,10 @@ import RegisterUser, { IFormUser } from "./components/RegisterUser";
 import { Menu, Layout } from "antd";
 import CreateOrFindGroup from "./components/CreateOrFindGroup";
 import LandingPage from "./components/LandingPage";
-import { IGame } from "./services/interfaces";
 import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WSGroupService from './services/WSGroupService';
 
 const { Header } = Layout;
 
@@ -40,11 +40,10 @@ class App extends React.Component<{}, UserState> {
 
   constructor(props: any) {
     super(props);
-
+    
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.userServiceApi = new UserServiceApi();
-
     this.state = { user: new User("", "", "", "", "") };
     this.groupServiceApi.getGameList();
   }
@@ -99,8 +98,6 @@ class App extends React.Component<{}, UserState> {
                 path="/create"
                 render={() => (
                   <CreateGroupForm
-                    groupService={this.groupServiceApi}
-                    userService={this.userServiceCookies}
                   />
                 )}
               />

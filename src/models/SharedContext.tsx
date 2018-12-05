@@ -1,16 +1,19 @@
-import { ISharedContext } from 'src/services/interfaces';
+import { ISharedContext, GroupService, UserService } from 'src/services/interfaces';
 import { User } from './User';
 import * as IOClient from 'socket.io-client';
 import { RouteComponentProps } from 'react-router-dom';
 import * as React from 'react';
-import {IWSGroupsService} from '../services/interfaces';
-import WSGroupsService from '../services/WSGroupsService';
+import {IWSGroupService} from '../services/interfaces';
+import WSGroupService from '../services/WSGroupService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
+import Group from 'antd/lib/input/Group';
+import { GroupServiceApi } from 'src/services/groupServiceApi';
 
 export class SharedContext implements ISharedContext{
-    public UserService: UserServiceCookies = new UserServiceCookies(); 
+    public UserService: UserService = new UserServiceCookies(); 
     public Client : SocketIOClient.Socket = IOClient('http://localhost:3000');
-    public WSGroupsService : WSGroupsService = new WSGroupsService();
+    public WSGroupService : IWSGroupService = new WSGroupService();
+    public GroupServiceApi  : GroupService = new GroupServiceApi();
     // public WSUserService : WSUserService = new WSUserService();
 }
 

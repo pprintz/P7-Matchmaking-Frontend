@@ -3,8 +3,8 @@ import * as React from 'react';
 import Response from '../Response/Response';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col, Card } from 'antd'
-import WSGroupsService from '../services/WSGroupsService';
-import { PersistedGroup, PersistentUserService, Group, GroupService } from "../services/interfaces";
+import WSGroupService from '../services/WSGroupService';
+import { PersistedGroup, PersistentUserService, Group, GroupService, IWSGroupService } from "../services/interfaces";
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import img from '../images/cs-header.jpg'
 import { toast } from 'react-toastify';
@@ -18,7 +18,7 @@ interface Props  {
 export default class GroupPageContainer extends React.Component<Props, Response<PersistedGroup[]>>{
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private WSGroupsService: WSGroupsService;
+    private WSGroupService: IWSGroupService;
     private sortFlag: boolean = false;
 
     constructor(props: any) {
@@ -27,8 +27,8 @@ export default class GroupPageContainer extends React.Component<Props, Response<
     }
 
     public componentWillMount() {
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
-        this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
+        this.WSGroupService = (this.context as SharedContext).WSGroupService;
+        this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
 
     public componentDidMount() {

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PersistedGroup, UserService, GroupService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService, IWSGroupService } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 import { Row, Col, Card, Switch, Icon } from "antd";
-import WSGroupsService from '../services/WSGroupsService';
+import WSGroupService from '../services/WSGroupService';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import { RouteComponentProps, withRouter, Route } from 'react-router';
 import NotAllowedHere from '../components/NotAllowedHere';
@@ -27,8 +27,8 @@ export class GroupList extends React.Component<
     PersistedGroup> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private WSGroupsService: WSGroupsService;
-    private UserServiceCookies: UserServiceCookies;
+    private WSGroupService: IWSGroupService;
+    private UserServiceCookies: UserService;
 
     public constructor(props: RouteComponentProps & Props) {
         super(props)
@@ -38,9 +38,9 @@ export class GroupList extends React.Component<
     }
 
     public componentWillMount() {
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.WSGroupService = (this.context as SharedContext).WSGroupService;
         this.UserServiceCookies = (this.context as SharedContext).UserService;
-        this.WSGroupsService.registerEventHandler('groupChanged', this.onGroupChanged);
+        this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
 
   public renderCompleteButton() {
@@ -117,7 +117,7 @@ export class GroupList extends React.Component<
         );
     }
     private updateVisibility = async () => {
-        await this.WSGroupsService.updateVisibility(this.state, this.onVisibilityChanged)
+        await this.WSGroupService.updateVisibility(this.state, this.onVisibilityChanged)
     }
 
     private onVisibilityChanged = (group: PersistedGroup) => {

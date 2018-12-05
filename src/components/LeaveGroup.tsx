@@ -3,9 +3,9 @@ import { LeaveBtn } from '../UI'
 import { User } from 'src/models/User';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
-import WSGroupsService from '../services/WSGroupsService';
+import WSGroupService from '../services/WSGroupService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { GroupService, PersistedGroup, Group } from "../services/interfaces";
+import { GroupService, PersistedGroup, Group, UserService, IWSGroupService } from "../services/interfaces";
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import { toast } from 'react-toastify';
 import { Button } from 'antd';
@@ -33,8 +33,8 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     private static contextType = GlobalContext;
     private groupId: string;
     private userId: string;
-    private WSGroupsService: WSGroupsService;
-    private UserService: UserServiceCookies;
+    private WSGroupService: IWSGroupService;
+    private UserService: UserService;
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
 
 
@@ -45,7 +45,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     }
 
     public componentWillMount() {
-        this.WSGroupsService = (this.context as SharedContext).WSGroupsService;
+        this.WSGroupService = (this.context as SharedContext).WSGroupService;
         this.UserService = (this.context as SharedContext).UserService;
         // Set properties based on cookies
         this.groupId = this.UserService.getUserInfo().groupId;
@@ -63,7 +63,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
         try {
             console.log(this.groupId, 2, this.userId)
             // Make the leave group request
-            await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, async (error: boolean) => {
+            await this.WSGroupService.leaveGroup(this.state.groupId, this.userId, async (error: boolean) => {
                 // Update state, if the request was successfull
                 if (!error) {
                     const response: PersistedGroup= await this.props.groupService.getGroupById(this.groupId);
