@@ -1,28 +1,28 @@
 import * as React from "react";
 // import GroupsResponse from './GroupsResponse';
 import { Button, Card } from "antd";
-import { PersistentGroup, IUser, PersistentUserService, UserService } from "../services/interfaces";
+import { PersistedGroup, IUser, PersistentUserService, UserService } from "../services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
 import { toast } from 'react-toastify';
 import { GroupService } from '../services/interfaces';
 
 interface Props {
-  group: PersistentGroup,
+  group: PersistedGroup,
   groupService: GroupService
   userService: UserService
 }
 
 interface State {
-  data: PersistentGroup,
+  data: PersistedGroup,
   users: IUser[],
 }
 
 class GroupCardComponent extends React.Component<
   RouteComponentProps & Props & {
-    onGroupChangeCallback: (response: { group: PersistentGroup, caller: string }) => void
+    onGroupChangeCallback: (response: { group: PersistedGroup, caller: string }) => void
   }, State> {
   constructor(props: RouteComponentProps & Props & {
-    onGroupChangeCallback: (response: { group: PersistentGroup, caller: string }) => void
+    onGroupChangeCallback: (response: { group: PersistedGroup, caller: string }) => void
   }) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GroupService, PersistentGroup, IGroup, UserService} from "../services/interfaces";
+import {GroupService, PersistedGroup, Group, UserService} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
 import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
@@ -34,7 +34,7 @@ class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupPr
                 throw new Error("User doesn't own any groups!");
             }
 
-            const request : IGroup | boolean = await this.props.groupService.deleteGroup(user.ownerGroupId);
+            const request : Group | boolean = await this.props.groupService.deleteGroup(user.ownerGroupId);
 
             if(request === false){
                 console.log(request);

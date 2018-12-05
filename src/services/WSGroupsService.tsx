@@ -1,4 +1,4 @@
-import { IWSGroupsService, PersistentGroup, IGroup } from './interfaces';
+import { IWSGroupsService, PersistedGroup, Group } from './interfaces';
 import WSService from './WSService';
 
 export default class WSGroupService extends WSService implements IWSGroupsService {
@@ -6,7 +6,7 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         super('/groups');
     }
 
-    public joinGroup = async (groupID: string, userID: string, ackFn?: (args: PersistentGroup) => void): Promise<void> => {
+    public joinGroup = async (groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void> => {
         await this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 
@@ -14,9 +14,9 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         await this.IO.emit('leaveGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 
-    public createGroup = async (group: IGroup, ackFn: (group: PersistentGroup) => void): Promise<any> => {
+    public createGroup = async (group: Group, ackFn: (group: PersistedGroup) => void): Promise<any> => {
         let invalid: boolean = true
-        await this.IO.emit('createGroup', group, (res: { error: boolean, newGroup: PersistentGroup }) => {
+        await this.IO.emit('createGroup', group, (res: { error: boolean, newGroup: PersistedGroup }) => {
             console.info("Error value: " + res.error + " --- group: " + res.newGroup)
             if (!res.error) {
                 invalid = false
@@ -26,11 +26,11 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         if (invalid) { throw Error(); }
     }
 
-    public getGroup(groupID: string): PersistentGroup {
+    public getGroup(groupID: string): PersistedGroup {
         throw new Error("Method not implemented.");
     }
 
-    public getGroups(): PersistentGroup[] {
+    public getGroups(): PersistedGroup[] {
         throw new Error("Method not implemented.");
     }
 
@@ -43,7 +43,7 @@ export default class WSGroupService extends WSService implements IWSGroupsServic
         this.IO.emit('subscribeToTimer', count);
     }
 
-    public updateVisibility = async (group, ackFn: (args: PersistentGroup) => void): Promise<void> => {
+    public updateVisibility = async (group, ackFn: (args: PersistedGroup) => void): Promise<void> => {
         await this.IO.emit('updateVisibility', group, ackFn);
     }
 

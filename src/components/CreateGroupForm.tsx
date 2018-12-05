@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { FormComponentProps } from 'antd/lib/form/Form';
 import { Form, Icon, Input, Button, InputNumber, Card, Col, Row, Select } from 'antd'
-import { UserService, GroupService, IGroup, PersistentGroup, IGame } from "../services/interfaces";
+import { UserService, GroupService, Group, PersistedGroup, IGame } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
 import WSGroupsService from 'src/services/WSGroupsService';
@@ -107,7 +107,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     private handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        await this.props.form.validateFields(async (validationErrors: boolean, formGroup: IGroup) => {
+        await this.props.form.validateFields(async (validationErrors: boolean, formGroup: Group) => {
             if (!validationErrors) {
                 const userId = this.userService.getUserInfo().userId;
 
@@ -127,7 +127,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         
     }
 
-    private onGroupCreatedCallback = (group: PersistentGroup) => {
+    private onGroupCreatedCallback = (group: PersistedGroup) => {
         console.log("Succesfully created group " + group.name);
 
         // Set users groupID

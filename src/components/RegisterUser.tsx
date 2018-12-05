@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Form, Card, Input, Icon, InputNumber, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
-import { PersistentGroup } from "src/services/interfaces";
+import { PersistedGroup } from "src/services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
 import { User } from 'src/models/User';
 

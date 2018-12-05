@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import WSGroupsService from '../services/WSGroupsService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { GroupService, PersistentGroup, IGroup } from "../services/interfaces";
+import { GroupService, PersistedGroup, Group } from "../services/interfaces";
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import { toast } from 'react-toastify';
 import { Button } from 'antd';
@@ -66,9 +66,9 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
             await this.WSGroupsService.leaveGroup(this.state.groupId, this.userId, async (error: boolean) => {
                 // Update state, if the request was successfull
                 if (!error) {
-                    const response: PersistentGroup= await this.props.groupService.getGroupById(this.groupId);
+                    const response: PersistedGroup= await this.props.groupService.getGroupById(this.groupId);
 
-                    const group: PersistentGroup = response as PersistentGroup;
+                    const group: PersistedGroup = response as PersistedGroup;
 
                     if (group.users.length < 1) {
                         this.props.groupService.deleteGroup(this.groupId);

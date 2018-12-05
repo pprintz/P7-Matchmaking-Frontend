@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PersistentGroup, UserService, GroupService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService } from "../services/interfaces";
 import { Button, Li, OpenLi, Div, Ul } from '../UI'
 import { Row, Col, Card, Switch, Icon } from "antd";
 import WSGroupsService from '../services/WSGroupsService';
@@ -17,14 +17,14 @@ import InviteUrlComponent from './InviteUrlComponent';
 import DiscordUrlComponent from './DiscordUrlComponent';
 
 interface Props {
-    group: PersistentGroup,
+    group: PersistedGroup,
     userService: UserService,
     groupService: GroupService
 }
 
 export class GroupList extends React.Component<
     RouteComponentProps & Props,
-    PersistentGroup> {
+    PersistedGroup> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
     private WSGroupsService: WSGroupsService;
@@ -120,11 +120,11 @@ export class GroupList extends React.Component<
         await this.WSGroupsService.updateVisibility(this.state, this.onVisibilityChanged)
     }
 
-    private onVisibilityChanged = (group: PersistentGroup) => {
+    private onVisibilityChanged = (group: PersistedGroup) => {
         this.setState(group);
     }
 
-    private onGroupChanged = (response: { group: PersistentGroup, caller: string }) => {
+    private onGroupChanged = (response: { group: PersistedGroup, caller: string }) => {
         this.setState(response.group);
     }
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RouteComponentProps, Route, withRouter } from "react-router-dom";
-import { PersistentGroup, UserService, GroupService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService } from "../services/interfaces";
 import GroupList from "./GroupList";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
@@ -20,7 +20,7 @@ export class GroupPageContainer extends React.Component<
         group_id: string;
         invite_id: string;
     }> & Props,
-    PersistentGroup
+    PersistedGroup
     > {
 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
@@ -28,7 +28,7 @@ export class GroupPageContainer extends React.Component<
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public async componentDidMount() {
-        let result : PersistentGroup;
+        let result : PersistedGroup;
         try {
 
             result = await this.props.groupService.getGroupById(this.props.match.params.group_id);

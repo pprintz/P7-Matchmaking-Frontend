@@ -4,13 +4,13 @@ import WSGroupService from './WSGroupsService';
 import { UserServiceCookies } from './userServiceCookies';
 
 export interface GroupService {
-    leaveGroup(groupId: string, userId: string): Promise<PersistentGroup |  boolean>,
+    leaveGroup(groupId: string, userId: string): Promise<PersistedGroup |  boolean>,
     createGroup(group: any),
     getGameList(): Promise<IGame[]>,
-    deleteGroup(groupId: string): Promise<IGroup |  boolean>,
-    getAllGroups(): Promise<PersistentGroup[]>,
-    getGroupById(groupId: string): Promise<PersistentGroup>;
-    joinGroup(groupId: string, userId: string): Promise<PersistentGroup>;
+    deleteGroup(groupId: string): Promise<Group |  boolean>,
+    getAllGroups(): Promise<PersistedGroup[]>,
+    getGroupById(groupId: string): Promise<PersistedGroup>;
+    joinGroup(groupId: string, userId: string): Promise<PersistedGroup>;
 }
 
 export interface UserService {
@@ -26,21 +26,21 @@ export interface PersistentUserService {
 }
 
 export interface IWSGroupsService {
-    joinGroup(groupID: string, userID: string, ackFn?: (args: PersistentGroup) => void): Promise<void>,
+    joinGroup(groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void>,
     leaveGroup(groupId: string, userId: string, ackFn: (error: boolean) => void): Promise<void>,
-    getGroup(groupId: string): PersistentGroup,
-    getGroups(): PersistentGroup[],
-    updateVisibility(group, ackFn: (args: PersistentGroup) => void): any
-    createGroup(group: IGroup, ackFn: (group: PersistentGroup) => void): Promise<any>,
+    getGroup(groupId: string): PersistedGroup,
+    getGroups(): PersistedGroup[],
+    updateVisibility(group, ackFn: (args: PersistedGroup) => void): any
+    createGroup(group: Group, ackFn: (group: PersistedGroup) => void): Promise<any>,
     // verifyInvite()
     // registerGroupChanged() 
 };
 
-interface Persistent {
+interface Persisted {
     _id: string
 }
 
-export interface PersistentGroup extends IGroup, Persistent { };
+export interface PersistedGroup extends Group, Persisted { };
 
 export interface IUser {
     _id: string,
@@ -49,7 +49,7 @@ export interface IUser {
     discordId: string
 }
 
-export interface IGroup {
+export interface Group {
     name: string,
     maxSize: number,
     game: string,
