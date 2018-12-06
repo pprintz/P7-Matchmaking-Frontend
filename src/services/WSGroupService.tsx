@@ -10,7 +10,7 @@ export default class WSGroupService extends WSService implements IWSGroupService
         await this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 
-    public leaveGroup = async (groupID: string, userID: string, ackFn: (error: boolean) => void): Promise<void> => {
+    public leaveGroup = async (groupID: string, userID: string, ackFn: (res: SocketResponse<void>) => void): Promise<void> => {
         await this.IO.emit('leaveGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 

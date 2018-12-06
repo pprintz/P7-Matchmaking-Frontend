@@ -23,7 +23,7 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
         let myGroupButton;
         if (this.user.groupId !== "") {
-            myGroupButton = <Button type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My group! </Button >
+            myGroupButton = <Button type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
         }
 
 
@@ -32,19 +32,6 @@ export class MenuBar extends React.Component<RouteComponentProps> {
                 <GlobalContext.Consumer>
                     {(context: SharedContext) => (
                         <div id="wrap">
-                            {/* <div>
-                <div id="wrap">
-                  <h1>
-                    <Link to="/">F-LAN Matchmaking</Link>
-                  </h1>
-                </div>
-                <div id="wrap">
-                  <div id="left"><p><b>UserID:</b> {context.user.userId} - </p></div>
-                  <div id="left"><p><b>DiscordID:</b> {context.user.discordId} - </p></div>
-                  <div id="left"><p><b>Name:</b> {context.user.name}</p></div>
-                </div>
-              </div>
-              <div id="menu-item"><Button ghost>GROUPS</Button></div> */}
                             <div id="item">
                                 <h1 onClick={() => this.props.history.push("/")}>F-LAN Matchmaking</h1>
                                 <div id="wrap">
@@ -57,8 +44,8 @@ export class MenuBar extends React.Component<RouteComponentProps> {
                                 <div id="wrap">
 
 
-                                    <div id="button">
-                                        {myGroupButton}
+                                    <div id="button">                                    
+                                        <Button hidden={this.user.groupId === ""} type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
                                     </div>
 
 

@@ -30,13 +30,11 @@ export interface SocketService {
 }
 export interface IWSGroupService extends SocketService {
     joinGroup(groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void>,
-    leaveGroup(groupId: string, userId: string, ackFn: (error: boolean) => void): Promise<void>,
+    leaveGroup(groupId: string, userId: string, ackFn: (res: SocketResponse<void>) => void): Promise<void>,
     getGroup(groupId: string): PersistedGroup,
     getGroups(): PersistedGroup[],
     updateVisibility(group, ackFn: (args: PersistedGroup) => void): any
     createGroup(group: Group, ackFn: (res: SocketResponse<PersistedGroup>) => void): Promise<any>,
-    // verifyInvite()
-    // registerGroupChanged() 
 };
 
 export interface SocketResponse<T> {

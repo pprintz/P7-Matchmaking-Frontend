@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import WSGroupService from '../services/WSGroupService';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { GroupService, PersistedGroup, Group, UserService, IWSGroupService } from "../services/interfaces";
+import { GroupService, PersistedGroup, Group, UserService, IWSGroupService, SocketResponse } from "../services/interfaces";
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 import { toast } from 'react-toastify';
 import { Button } from 'antd';
@@ -61,39 +61,14 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     // When the leave button is clicked
     public handleOnClick = async () => {
         try {
-            console.log(this.groupId, 2, this.userId)
             // Make the leave group request
-            await this.WSGroupService.leaveGroup(this.state.groupId, this.userId, async (error: boolean) => {
-                // Update state, if the request was successfull
-                if (!error) {
-                    const response: PersistedGroup= await this.props.groupService.getGroupById(this.groupId);
-
-                    const group: PersistedGroup = response as PersistedGroup;
-
-                    if (group.users.length < 1) {
-                        this.props.groupService.deleteGroup(this.groupId);
-                    }
-
-                    this.UserService.updateGroupIdUserInfo("");
-
-                    this.setState({ groupId: "" });
-                    this.setState({ message: "Succesfully left the group" });
-                    this.props.history.push("/");
-                } else {
-                    this.setState({ groupId: "Error" });
-                    this.setState({ message: "You are not in a group" });
-                }
-            });
+            await this.WSGroupService.leaveGroup(this.state.groupId, this.userId, this.onGroupLeftCallback);
         }
         catch (error) {
-            this.setState({ message: "Group was not changed" })
+            toast.error("Cannot establish connection");
         }
-        const user = this.UserService.getUserInfo();
-        user.groupId = "";
-        this.UserService.setUserInfo(user);
     }
 
-    // Simple Rendering, self explanatory
     public render() {
         return (
             <div className="LeaveGroupComponent">
@@ -101,6 +76,18 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
             </div>
         );
     }
+
+    private onGroupLeftCallback = async (res: SocketResponse<void>) => {
+        // Update state, if the request was successfull
+        if (res.error) {
+            toast.error("Sorry, you cannot leave this group");
+            return;
+        }
+
+        this.UserService.updateGroupIdUserInfo("");
+        this.props.history.push("/");
+    }
+
 }
 
 export default withRouter(LeaveGroup);

@@ -127,14 +127,9 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
             toast.error("Sorry, you are already in a group");
             return;
         }
-        console.log("Succesfully created group " + res.data.name);
 
         // Set users groupID
-        const user = this.userService.getUserInfo();
         const grpId = res.data._id;
-        user.groupId = grpId;
-        this.userService.setUserInfo(user);
-
         this.userService.updateGroupIdUserInfo(grpId);
         this.userService.setUserOwnerGroup(grpId);
 
