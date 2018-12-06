@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GroupService, GroupResponse, IGroup} from "../services/interfaces";
+import {GroupService, PersistedGroup, Group, UserService} from "../services/interfaces";
 import { LeaveBtn } from '../UI'
 import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
@@ -12,7 +12,7 @@ import { User } from 'src/models/User';
 // The groupId is saved to state
 interface GroupProps {
     groupService: GroupService,
-    userService: UserServiceCookies,
+    userService: UserService,
 }
 
 class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupProps> {
@@ -34,7 +34,7 @@ class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupPr
                 throw new Error("User doesn't own any groups!");
             }
 
-            const request : IGroup | boolean = await this.props.groupService.deleteGroup(user.ownerGroupId);
+            const request : Group | boolean = await this.props.groupService.deleteGroup(user.ownerGroupId);
 
             if(request === false){
                 console.log(request);

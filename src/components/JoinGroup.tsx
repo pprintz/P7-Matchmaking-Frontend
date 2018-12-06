@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Axios from 'axios';
 import { notification, Icon, Button, Card } from 'antd';
 import { User } from 'src/models/User';
 import { UserServiceCookies } from 'src/services/userServiceCookies';
@@ -7,12 +6,18 @@ import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { string } from 'prop-types';
 import { toast } from 'react-toastify';
+import { GroupServiceApi } from '../services/groupServiceApi';
+import Axios from 'axios';
+import { UserService } from 'src/services/interfaces';
 
+interface Props  {
+    groupService: GroupServiceApi
+}
 
 export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: string, invite_id: string }>, any> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private UserService: UserServiceCookies;
+    private UserService: UserService;
     constructor(props) {
         super(props);
         this.state = { group: { name: "", users: [] } };

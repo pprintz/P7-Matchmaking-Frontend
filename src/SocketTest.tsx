@@ -1,5 +1,5 @@
 import * as React from 'react';
-import WSGroupService from './services/WSGroupsService';
+import WSGroupService from './services/WSGroupService';
 
 export default class SocketTest extends React.Component<{}, {count : number}> {
     private WSGroupService : WSGroupService;
