@@ -4,22 +4,15 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { GroupServiceApi } from "./services/groupServiceApi";
 import { UserServiceCookies } from "./services/userServiceCookies";
-import JoinGroup from "./components/JoinGroup";
-import GroupPageContainer from "./components/GroupPageContainer";
-import GroupsPageContainer from "./components/GroupsPageContainer";
-import LeaveGroup from "./components/LeaveGroup";
-import CreateGroupForm from "./components/CreateGroupForm";
-import MenuBar from "./components/MenuBar";
+import {GroupPageContainer, GroupsPageContainer, LeaveGroup, CreateGroupForm, MenuBar, CreateOrFindGroup, LandingPage, JoinPage} from "./components"
 import Axios, { AxiosResponse } from "axios";
 import { User } from "./models/User";
 import RegisterUser, { IFormUser } from "./components/RegisterUser";
 import { Menu, Layout } from "antd";
-import CreateOrFindGroup from "./components/CreateOrFindGroup";
-import LandingPage from "./components/LandingPage";
-import { IGame, IUserServiceApi } from "./services/interfaces";
 import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WSGroupService from './services/WSGroupService';
 
 const { Header } = Layout;
 
@@ -40,11 +33,10 @@ class App extends React.Component<{}, UserState> {
 
   constructor(props: any) {
     super(props);
-
+    
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.userServiceApi = new UserServiceApi();
-
     this.state = { user: new User("", "", "", "", "") };
     this.groupServiceApi.getGameList();
   }
@@ -66,7 +58,7 @@ class App extends React.Component<{}, UserState> {
               <Route
                 path="/groups/:group_id/:invite_id"
                 render={routeComponentProps => (
-                  <JoinGroup
+                  <JoinPage
                     userServiceCookies={this.userServiceCookies}
                     {...routeComponentProps}
                   />
@@ -81,8 +73,8 @@ class App extends React.Component<{}, UserState> {
               )} />
               <Route path="/groups" render={routeComponentProps => (
                 <GroupsPageContainer
-                  userServiceApi={this.userServiceApi}
-                  groupServiceApi={this.groupServiceApi}
+                  userService={this.userServiceApi}
+                  groupService={this.groupServiceApi}
                   {...routeComponentProps}
                 />
               )} />
@@ -98,10 +90,7 @@ class App extends React.Component<{}, UserState> {
               <Route
                 path="/create"
                 render={() => (
-                  <CreateGroupForm
-                    groupService={this.groupServiceApi}
-                    userService={this.userServiceCookies}
-                  />
+                  <CreateGroupForm/>
                 )}
               />
               <Route
