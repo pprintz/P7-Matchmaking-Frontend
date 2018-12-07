@@ -48,11 +48,12 @@ export class UserServiceCookies implements UserService {
     }
 
     public updateGroupIdUserInfo(groupId : string) : User {
-        const abc = this.cookies.get("user");
-        if (abc === undefined || abc === "" || abc == null) {
+        const u = this.cookies.get("user");
+        if (u === undefined || u === "" || u == null) {
             return new User("", "","","", "");
         }
         const user: User = this.cookies.get("user") as unknown as User;
+        console.log(user.groupId, groupId);
         user.groupId = groupId;
         this.cookies.set("user", user);
 
