@@ -13,6 +13,7 @@ import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WSGroupService from './services/WSGroupService';
+import { QueueUsers } from "./components/QueueUsers";
 
 const { Header } = Layout;
 
@@ -98,6 +99,14 @@ class App extends React.Component<{}, UserState> {
                 render={() => (
                   <RegisterUser
                     createUserAndSaveInCookie={this.createUserAndSaveInCookie}
+                  />
+                )}
+              />
+              <Route
+                path="/queue"
+                render={routeComponentProps => (
+                  <QueueUsers
+                    {...routeComponentProps}
                   />
                 )}
               />

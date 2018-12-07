@@ -1,0 +1,38 @@
+div.queueUsers {
+    margin: 2% auto;
+    width: 66%;
+    background-color: rgba(30,30,30,.25);
+    color: white;
+    border: 1px solid black;
+
+    div.outer {
+        display: flex;
+        flex: 2;
+        align-items: flex-start;
+    }
+
+    .filterContainer {
+        width: 30%;
+        margin: 5px;
+        color: white;
+        border-right: 2px solid white;
+        min-height: 25%;
+    }
+
+    .queueContainer {
+        display: flex;
+        justify-content: center;
+        margin: 5px;
+        width: 100%
+    }
+
+    #queueButton {
+        margin-bottom: 10px;
+        width: 100%;
+        height: 100px;
+    }
+
+}
+
+
+        
