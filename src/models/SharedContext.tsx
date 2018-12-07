@@ -11,10 +11,11 @@ import { GroupServiceApi } from 'src/services/groupServiceApi';
 
 export class SharedContext implements ISharedContext{
     public UserService: UserService = new UserServiceCookies(); 
-    public Client : SocketIOClient.Socket = IOClient(process.env.REACT_APP_API_URL+"");
+    public Client : SocketIOClient.Socket = IOClient(process.env.REACT_APP_API_URL + "/api");
     public WSGroupService : IWSGroupService = new WSGroupService();
     public GroupServiceApi  : GroupService = new GroupServiceApi();
     // public WSUserService : WSUserService = new WSUserService();
 }
+
 
 export const GlobalContext = React.createContext(new SharedContext());

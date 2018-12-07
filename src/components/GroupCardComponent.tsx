@@ -75,6 +75,7 @@ class GroupCardComponent extends React.Component<
     try {
       const groupId = this.state.data._id;
       const joinedGroup = await this.props.groupService.joinGroup(groupId, this.props.userService.getUserInfo().userId)
+      this.props.userService.updateGroupIdUserInfo(joinedGroup._id);
       this.props.history.push(`/groups/${joinedGroup._id}`);
     } catch (error) {
       toast.error("Sorry, you can't join this group. Leave your current group");
