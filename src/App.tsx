@@ -13,6 +13,7 @@ import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WSGroupService from './services/WSGroupService';
+import { SharedContext, GlobalContext } from './models/SharedContext';
 
 const { Header } = Layout;
 
@@ -37,7 +38,7 @@ class App extends React.Component<{}, UserState> {
     this.groupServiceApi = new GroupServiceApi();
     this.userServiceCookies = new UserServiceCookies();
     this.userServiceApi = new UserServiceApi();
-    this.state = { user: new User("", "", "", "", "") };
+    this.state = { user: this.userServiceCookies.getUserInfo() };
     this.groupServiceApi.getGameList();
   }
 
@@ -51,7 +52,12 @@ class App extends React.Component<{}, UserState> {
     return (
       <Router>
         <div className="App">
-          <UserContext.Provider value={this.state}>
+          <GlobalContext.Provider value={
+            {WSGroupService: new WSGroupService(),
+             GroupServiceApi: new GroupServiceApi(),
+             UserService: new UserServiceCookies(),
+             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io'}),
+             User: this.userServiceCookies.getUserInfo() }}>
           <Route render={renderProps => <MenuBar  {...renderProps}/>} /> 
             <ToastContainer/>
             <Switch>
@@ -59,22 +65,17 @@ class App extends React.Component<{}, UserState> {
                 path="/groups/:group_id/:invite_id"
                 render={routeComponentProps => (
                   <JoinPage
-                    userServiceCookies={this.userServiceCookies}
                     {...routeComponentProps}
                   />
                 )}
               />
               <Route path="/groups/:group_id" render={routeComponentProps => (
                 <GroupPageContainer 
-                    userService={this.userServiceCookies}
-                    groupService={this.groupServiceApi}
                     {...routeComponentProps}
                 />
               )} />
               <Route path="/groups" render={routeComponentProps => (
                 <GroupsPageContainer
-                  userService={this.userServiceApi}
-                  groupService={this.groupServiceApi}
                   {...routeComponentProps}
                 />
               )} />
@@ -82,7 +83,6 @@ class App extends React.Component<{}, UserState> {
                 path="/leave"
                 render={routeComponentProps => (
                   <LeaveGroup
-                    groupService={this.groupServiceApi}
                     {...routeComponentProps}
                   />
                 )}
@@ -103,7 +103,7 @@ class App extends React.Component<{}, UserState> {
               />
               <Route path="/" render={() => HomePage} />
             </Switch>
-          </UserContext.Provider>
+          </GlobalContext.Provider>
         </div>
       </Router>
     );

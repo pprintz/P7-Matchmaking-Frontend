@@ -55,7 +55,7 @@ export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: s
             const response = await Axios.get(`/groups/${group_id}`);
             const groupToJoin = response.data;
 
-            this.UserService.updateGroupIdUserInfo(groupToJoin);
+            this.UserService.updateGroupIdUserInfo(groupToJoin, this.context as SharedContext);
 
             this.setState({ group: groupToJoin });
         }
@@ -73,7 +73,7 @@ export class JoinGroup extends React.Component<RouteComponentProps<{ group_id: s
             });
 
             this.props.history.push(`/groups/${groupId}`);
-            this.UserService.updateGroupIdUserInfo(groupId);
+            this.UserService.updateGroupIdUserInfo(groupId, this.context as SharedContext);
         } catch (error) {
             toast.error("Sorry, you can't join this group. Leave your current group");
         }

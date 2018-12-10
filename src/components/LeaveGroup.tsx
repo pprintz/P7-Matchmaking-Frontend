@@ -20,16 +20,13 @@ interface GroupStates {
     message: string
 }
 
-interface Props  {
-    groupService: GroupServiceApi
-}
 
 // interface GroupProps {
 //     groupService: GroupService,
 //     userService: UserService,
 // }
 
-class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupStates> {
+class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
     private static contextType = GlobalContext;
     private groupId: string;
     private userId: string;
@@ -38,7 +35,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
 
 
-    constructor(props: RouteComponentProps & Props) {
+    constructor(props: RouteComponentProps) {
         super(props);
 
         this.handleOnClick = this.handleOnClick.bind(this);
@@ -84,7 +81,7 @@ class LeaveGroup extends React.Component<RouteComponentProps & Props, GroupState
             return;
         }
 
-        this.UserService.updateGroupIdUserInfo("");
+        this.UserService.updateGroupIdUserInfo("", this.context);
         this.props.history.push("/");
     }
 

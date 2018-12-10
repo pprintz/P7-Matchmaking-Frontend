@@ -35,9 +35,9 @@ export class MenuBar extends React.Component<RouteComponentProps> {
                             <div id="item">
                                 <h1 onClick={() => this.props.history.push("/")}>F-LAN Matchmaking</h1>
                                 <div id="wrap">
-                                    <div id="item"><p><b>UserID:</b> {context.UserService.getUserInfo().userId} - </p></div>
-                                    <div id="item"><p><b>DiscordID:</b> {context.UserService.getUserInfo().discordId} - </p></div>
-                                    <div id="item"><p><b>Name:</b> {context.UserService.getUserInfo().name}</p></div>
+                                    <div id="item"><p><b>UserID:</b> {context.User.userId} - </p></div>
+                                    <div id="item"><p><b>DiscordID:</b> {context.User.discordId} - </p></div>
+                                    <div id="item"><p><b>Name:</b> {context.User.name}</p></div>
                                 </div>
                             </div>
                             <div id="menuitem">
@@ -45,7 +45,7 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
 
                                     <div id="button">                                    
-                                        <Button hidden={this.user.groupId === ""} type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
+                                        <Button hidden={this.context.User.groupId === ""} type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
                                     </div>
 
 
@@ -65,8 +65,7 @@ export class MenuBar extends React.Component<RouteComponentProps> {
         );
     }
     private handleMyGroupClicked = () => {
-        const usersGroupId = "groups/" + this.user.groupId;
-        this.props.history.push(usersGroupId);
+        this.props.history.push('/groups/' + this.context.User.groupId);
     };
 }
 

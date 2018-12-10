@@ -4,52 +4,54 @@ import Response from '../Response/Response';
 import GroupCardComponent from './GroupCardComponent'
 import { Row, Col, Card } from 'antd'
 import WSGroupService from '../services/WSGroupService';
-import { PersistedGroup, PersistentUserService, Group, GroupService, IWSGroupService } from "../services/interfaces";
+import { PersistedGroup, PersistentUserService, Group, GroupService, IWSGroupService, UserService } from "../services/interfaces";
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import img from '../images/cs-header.jpg'
 import { toast } from 'react-toastify';
 import { UserServiceCookies } from '../services/userServiceCookies';
+import { RouteComponentProps } from 'react-router';
 
-interface Props  {
-    groupService: GroupService
-    userService: PersistentUserService
-}
 
-export default class GroupPageContainer extends React.Component<Props, Response<PersistedGroup[]>>{
+export default class GroupPageContainer extends React.Component<RouteComponentProps, Response<PersistedGroup[]>>{
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
     private WSGroupService: IWSGroupService;
+    private groupService : GroupService
+    private userService : UserService
     private sortFlag: boolean = false;
 
     constructor(props: any) {
-        super(props)
+        super(props);
         this.state = { data: [], statuscode: 0, error: "" };
     }
 
     public componentWillMount() {
         this.WSGroupService = (this.context as SharedContext).WSGroupService;
+        this.groupService = (this.context as SharedContext).GroupServiceApi;
+        this.userService = (this.context as SharedContext).UserService;
         this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
 
     public componentDidMount() {
         try {
-            this.props.groupService.getAllGroups().then((grps: PersistedGroup[]) => this.setState({data: grps}))    
+            this.groupService.getAllGroups().then((grps: PersistedGroup[]) => this.setState({data:grps})) 
+            this.setState({statuscode:1});   
         } catch (error) {
-            console.log(error)
+            this.setState({statuscode: 0});
             toast.error("something went wrong")
         }
     }
 
     public render() {
-        if (this.state === null) {
+        if (this.state.statuscode === 0) {
             return (<p>Loading</p>);
         }
-        else if (this.state.statuscode === 0) {
+        else {
             const remainingSpots = (g: PersistedGroup) : number => g.maxSize - g.users.length;
             const sorted = this.state.data.sort((x,y) => (remainingSpots(x)) - (remainingSpots(y)));
 
             const groups = sorted.map((element: PersistedGroup) => {
-                return (<GroupCardComponent userService={new UserServiceCookies()} groupService={this.props.groupService} key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
+                return (<GroupCardComponent key={element._id} group={element} onGroupChangeCallback={this.onGroupChanged} />)
             });
             return (
                 <div>
@@ -71,9 +73,6 @@ export default class GroupPageContainer extends React.Component<Props, Response<
                 </div>
             )
         }
-        else {
-            return (<p>Ooops, no groups!</p>)
-        }
     }
 
     private onGroupChanged = (response: { group: PersistedGroup, caller: string }): void => {
@@ -90,6 +89,6 @@ export default class GroupPageContainer extends React.Component<Props, Response<
             oldData[groupIndex] = response.group;
         }
 
-        this.setState({ data: oldData });
+        this.setState({data: oldData});
     }
 }
