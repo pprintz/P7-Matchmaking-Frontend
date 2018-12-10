@@ -1,46 +1,48 @@
-.ant-card {
-    max-width: 66% !important;
-    margin: 5% auto;
-
-    div.queueUsers {
-        margin: none auto;
-        width: 100%;
-        text-align: center;
-
-        div.outer {
-            display: flex;
-            flex: 2;
-            align-items: flex-start;
-        }
-        .queueContainer {
-            margin: 5px;
+.queueWrapper{
+    .ant-card {
+        max-width: 66% !important;
+        margin: 5% auto;
+        
+        div.queueUsers {
+            margin: none auto;
             width: 100%;
-            height: 100%;
-            align-items: center;
-        }
-        .filterContainer {
-            width: 40%;
-            margin: 5px auto;
-            color: white;
-            border-right: 2px solid white;
-            .filterForm .ant-select {
-                margin: 5px auto;
-                width: 90%;
+            text-align: center;
+            
+            div.outer {
+                display: flex;
+                flex: 2;
+                align-items: flex-start;
             }
-        }
-
-        .queueCardHeader{
-            font-size: 2em;
-            border-bottom: 1px solid white
-        }
-
-        #queueButton {
-            margin: 3%;
-            width: 40%;
-        }
-
-        #counter {
-            font-size: 3em;
+            .queueContainer {
+                margin: 5px;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+            }
+            .filterContainer {
+                width: 40%;
+                margin: 5px auto;
+                color: white;
+                border-right: 2px solid white;
+                .filterForm .ant-select {
+                    margin: 5px auto;
+                    width: 90%;
+                }
+            }
+            
+            .queueCardHeader{
+                font-size: 2em;
+                border-bottom: 1px solid white
+            }
+            
+            #queueButton {
+                margin: 3%;
+                width: 40%;
+            }
+            
+            #counter {
+                font-size: 3em;
+            }
         }
     }
 }

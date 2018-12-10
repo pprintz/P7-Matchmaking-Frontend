@@ -2,6 +2,7 @@ import { User } from '../models/User';
 import { RouteComponentProps } from 'react-router-dom';
 import WSGroupService from './WSGroupService';
 import { UserServiceCookies } from './userServiceCookies';
+import { GameSettings } from 'src/components/QueueUsers';
 
 export interface GroupService {
     leaveGroup(groupId: string, userId: string): Promise<PersistedGroup |  boolean>,
@@ -35,7 +36,12 @@ export interface IWSGroupService extends SocketService {
     getGroups(): PersistedGroup[],
     updateVisibility(group, ackFn: (args: PersistedGroup) => void): any
     createGroup(group: Group, ackFn: (res: SocketResponse<PersistedGroup>) => void): Promise<any>,
-};
+}
+
+export interface IUserWSService extends SocketService {
+    joinQueue(userId: string, gameSettings: GameSettings): Promise<void>,
+    leaveQueue(userId: string): Promise<void>
+}
 
 export interface SocketResponse<T> {
     data: T;

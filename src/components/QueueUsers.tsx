@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PersistedGroup, UserService, GroupService, IWSGroupService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService } from "../services/interfaces";
 import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
 import WSGroupService from '../services/WSGroupService';
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
@@ -15,8 +15,10 @@ import InviteUrlComponent from './InviteUrlComponent';
 import DiscordUrlComponent from './DiscordUrlComponent';
 import FormItem from 'antd/lib/form/FormItem';
 import "../Styles/queueUsersStyle.scss";
+import { toast } from 'react-toastify';
 
-interface GameSettings {
+export interface GameSettings {
+    Level: string,
     Mode: string,
     Rank: string
 }
@@ -29,8 +31,8 @@ interface State {
 
 export class QueueUsers extends React.Component<RouteComponentProps, State> {
     private static contextType = GlobalContext;
-    private WSGroupService: IWSGroupService;
-    private UserServiceCookies: UserService;
+    private userWSService: IUserWSService;
+    private userServiceCookies: UserService;
 
     private interval : NodeJS.Timeout;
 
@@ -39,6 +41,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
         this.state = {
             gameSettings: {
+                Level: "",
                 Mode: "",
                 Rank: ""
             },
@@ -51,6 +54,10 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     }
 
     public componentWillMount() {
+        this.userWSService = (this.context as SharedContext).UserWSService;
+        this.userServiceCookies = (this.context as SharedContext).UserService;
+        this.userWSService.registerEventHandler('joinedQueue', this.queueJoined);
+
         this.interval = setInterval(() => {
             this.setState({timeSpent: (this.state.timeSpent + 1)}) 
         }, 1000);    
@@ -65,12 +72,27 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
         if (!this.state.isQueued) {
             return (
+                <div className="queueWrapper">
                 <Card title="Queue">
                     <div className="queueUsers">
                         <div className="outer">
                             <div className="filterContainer">
                                 <p className="queueCardHeader">Filter</p>
                                 <Form layout="horizontal" className="filterForm">
+                                    <Select placeholder="Enter your rank" onChange={this.editCriteriaJSON}>
+                                        <Select.Option key="1" value="level:silver">
+                                            Silver 1
+                                        </Select.Option>
+                                        <Select.Option key="2" value="level:gold">
+                                            Gold Nova 1
+                                        </Select.Option>
+                                        <Select.Option key="3" value="level:mge">
+                                            Master Guardian Elite
+                                        </Select.Option>
+                                        <Select.Option key="4" value="level:supreme">
+                                            Supreme Master
+                                        </Select.Option>
+                                    </Select>
                                     <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
                                         <Select.Option key="1" value="mode:competitive">
                                             Competitive
@@ -101,9 +123,11 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                         </div>
                     </div>
                 </Card>
+            </div>
             );
         } else {
             return (
+            <div className="queueWrapper">
                 <Card title="Finding Group">
                     <div className="queueUsers">
                         <p className="queueCardHeader">Searching For Group</p>
@@ -113,21 +137,52 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                     </Button>
                     </div>
                 </Card>
+            </div>
             );
         }
     }
 
-    changeQueueState(event) {
-        this.setState({
-            isQueued: !this.state.isQueued,
-        });
+    private queueJoined = (response : any) => {
+        toast.success("Successfully joined the queue!")
+    }
+
+    async changeQueueState(event) {
+        if(this.state.gameSettings.Mode == "" || this.state.gameSettings.Rank == "" || this.state.gameSettings.Level == ""){
+            toast.warn("Please fill the filter");
+            return;
+        }
+
+        if(this.state.isQueued == false){
+            try{
+                await this.userWSService.joinQueue(this.userServiceCookies.getUserInfo().userId, this.state.gameSettings);
+
+                this.setState({
+                    isQueued: !this.state.isQueued,
+                });
+            
+                this.setState({timeSpent: 0});
+            }catch(error){
+                this.setState({isQueued: false});
+
+                toast.error("Failed to join a queue");
+            }
+        }else{
+            try{
+                await this.userWSService.leaveQueue(this.userServiceCookies.getUserInfo().userId);
     
-        this.setState({timeSpent: 0});
+                this.setState({
+                    isQueued: !this.state.isQueued,
+                });
+            
+                this.setState({timeSpent: 0});
+            }catch(error){
+                this.setState({isQueued: false});
+                toast.error("Failed to leave the queue");
+            }
+        }        
     }
 
     editCriteriaJSON(event) {
-        console.log(event);
-
         try {
             const setting: string[] = event.split(":");
 
@@ -137,6 +192,9 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
             const gameSettingsObj = this.state.gameSettings;
 
             switch (prefix) {
+                case "level":
+                    gameSettingsObj.Level = suffix;
+                    break;
                 case "mode":
                     gameSettingsObj.Mode = suffix;
                     break;
@@ -148,10 +206,8 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
             }
 
             this.setState({ gameSettings: gameSettingsObj });
-
-            console.log(this.state.gameSettings);
         } catch (error) {
-            console.log(error);
+            toast.error(error.message);
         }
 
     }
