@@ -16,57 +16,144 @@ import DiscordUrlComponent from './DiscordUrlComponent';
 import FormItem from 'antd/lib/form/FormItem';
 import "../Styles/queueUsersStyle.scss";
 
+interface GameSettings {
+    Mode: string,
+    Rank: string
+}
 
-export class QueueUsers extends React.Component<RouteComponentProps> {
-    // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
+interface State {
+    gameSettings: GameSettings,
+    isQueued: boolean,
+    timeSpent: number
+}
+
+export class QueueUsers extends React.Component<RouteComponentProps, State> {
     private static contextType = GlobalContext;
     private WSGroupService: IWSGroupService;
     private UserServiceCookies: UserService;
 
+    private interval : NodeJS.Timeout;
+
     public constructor(props: RouteComponentProps) {
-        super(props)
+        super(props);
+
+        this.state = {
+            gameSettings: {
+                Mode: "",
+                Rank: ""
+            },
+            isQueued: false,
+            timeSpent: 0
+        };
+
+        this.editCriteriaJSON = this.editCriteriaJSON.bind(this);
+        this.changeQueueState = this.changeQueueState.bind(this);
     }
 
-  public render() {
-    const FormItem = Form.Item;
+    public componentWillMount() {
+        this.interval = setInterval(() => {
+            this.setState({timeSpent: (this.state.timeSpent + 1)}) 
+        }, 1000);    
+    }
 
-    return (
-        <div className="queueUsers">
-            <div className="outer">
-                <div className="filterContainer">
-                    <h2>Filter</h2>
-                    <hr />
-                    <Form layout="horizontal">
-                            <Select placeholder="Mode">
-                                <Select.Option key="1" value="competitive">
-                                    Competitive
-                                </Select.Option>
-                                <Select.Option key="2" value="casual">
-                                    Casual
-                                </Select.Option>
-                            </Select>
-                            <Select placeholder="Ranking">
-                                <Select.Option key="1" value="above">
-                                    Above your rank
-                                </Select.Option>
-                                <Select.Option key="2" value="same">
-                                    Same rank
-                                </Select.Option>
-                                <Select.Option key="3" value="below">
-                                    Below your rank
-                                </Select.Option>
-                            </Select>
-                    </Form>
-                </div>
-                <div className="queueContainer">
-                    <h2>Queue</h2>
-                    <hr />
-                    <Button id="queueButton" type="primary" size="large">
+    public componentWillUnmount(){
+        clearInterval(this.interval);
+    }
+
+    public render() {
+        const FormItem = Form.Item;
+
+        if (!this.state.isQueued) {
+            return (
+                <Card title="Queue">
+                    <div className="queueUsers">
+                        <div className="outer">
+                            <div className="filterContainer">
+                                <p className="queueCardHeader">Filter</p>
+                                <Form layout="horizontal" className="filterForm">
+                                    <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
+                                        <Select.Option key="1" value="mode:competitive">
+                                            Competitive
+                                        </Select.Option>
+                                        <Select.Option key="2" value="mode:casual">
+                                            Casual
+                                        </Select.Option>
+                                    </Select>
+                                    <Select placeholder="Ranking" onChange={this.editCriteriaJSON}>
+                                        <Select.Option key="1" value="rank:above">
+                                            Above your rank
+                                        </Select.Option>
+                                        <Select.Option key="2" value="rank:same">
+                                            Same rank
+                                        </Select.Option>
+                                        <Select.Option key="3" value="rank:below">
+                                            Below your rank
+                                        </Select.Option>
+                                    </Select>
+                                </Form>
+                            </div>
+                            <div className="queueContainer">
+                                <p className="queueCardHeader" style={{marginLeft: "none"}}>Queue</p>
+                                <Button id="queueButton" type="primary" size="large" onClick={this.changeQueueState}>
+                                    Queue
+                            </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+            );
+        } else {
+            return (
+                <Card title="Finding Group">
+                    <div className="queueUsers">
+                        <p className="queueCardHeader">Searching For Group</p>
+                        <p id="counter">{this.state.timeSpent} seconds</p>
+                        <Button id="queueButton" type="danger" size="large" onClick={this.changeQueueState}>
+                            Cancel
                     </Button>
-                </div>
-            </div>
-        </div>
-        );
+                    </div>
+                </Card>
+            );
+        }
+    }
+
+    changeQueueState(event) {
+        this.setState({
+            isQueued: !this.state.isQueued,
+        });
+    
+        this.setState({timeSpent: 0});
+    }
+
+    editCriteriaJSON(event) {
+        console.log(event);
+
+        try {
+            const setting: string[] = event.split(":");
+
+            const prefix: string = setting[0];
+            const suffix: string = setting[1];
+
+            const gameSettingsObj = this.state.gameSettings;
+
+            switch (prefix) {
+                case "mode":
+                    gameSettingsObj.Mode = suffix;
+                    break;
+                case "rank":
+                    gameSettingsObj.Rank = suffix;
+                    break;
+                default:
+                    throw new Error("Prefix setting does not exist!");
+            }
+
+            this.setState({ gameSettings: gameSettingsObj });
+
+            console.log(this.state.gameSettings);
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 }
 
