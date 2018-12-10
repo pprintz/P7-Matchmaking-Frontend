@@ -10,11 +10,11 @@ import Group from 'antd/lib/input/Group';
 import { GroupServiceApi } from 'src/services/groupServiceApi';
 
 export class SharedContext implements ISharedContext{
-    public UserService: UserService = new UserServiceCookies(); 
-    public Client : SocketIOClient.Socket = IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io'});
-    public WSGroupService : IWSGroupService = new WSGroupService();
-    public GroupServiceApi  : GroupService = new GroupServiceApi();
-    // public WSUserService : WSUserService = new WSUserService();
+    public UserService: UserService;
+    public Client : SocketIOClient.Socket;
+    public WSGroupService : IWSGroupService;
+    public GroupServiceApi  : GroupService;
+    public User : User;
 }
 
 
