@@ -1,15 +1,24 @@
 import * as React from "react";
 import { Form, Card, Input, Icon, InputNumber, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
-import { PersistedGroup } from "src/services/interfaces";
+import { PersistedGroup, UserService } from "src/services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
 import { User } from 'src/models/User';
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
+import Axios from 'axios';
 
-interface RegisterUserFormProps extends RouteComponentProps, FormComponentProps {
-  createUserAndSaveInCookie(IFormUser): any
+interface Props {
+  form: any
 }
 
-class RegisterUserForm extends React.Component<RegisterUserFormProps> {
+class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
+
+  private static contextType = GlobalContext;
+  private userService: UserService;
+
+  public componentWillMount(){
+    this.userService = (this.context as SharedContext).UserService;
+  }
   public render() {
     const formItemLayout = {
       labelCol: {
@@ -74,18 +83,42 @@ class RegisterUserForm extends React.Component<RegisterUserFormProps> {
     );
   }
 
+ 
+  public createUserAndSaveInCookie = async (user: IFormUser) => {
+    try {
+      const response = await Axios.post(
+        process.env.REACT_APP_API_URL + "/api/users/create",
+        user
+      );
+      const createdUser = response.data;
+      const userState = {
+        user: new User(
+          createdUser._id,
+          createdUser.name,
+          createdUser.discordId,
+          ""
+          , ""
+        )
+      };
+      this.userService.setUserInfo(userState.user, this.context);
+    } catch (error) {
+      console.error("ERROR:", error);
+    }
+  }
   private handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     this.props.form.validateFields(
       async (validationErrors: boolean, user: IFormUser) => {
         if (!validationErrors) {
-          this.props.createUserAndSaveInCookie(user);
+          this.createUserAndSaveInCookie(user);
           this.props.history.push("/");
         }
       }
     );
-  };
+  }
 }
+
+
 
 export interface IFormUser {
   name: string

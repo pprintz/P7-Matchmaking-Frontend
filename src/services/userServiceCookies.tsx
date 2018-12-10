@@ -31,8 +31,9 @@ export class UserServiceCookies implements UserService {
         return user;
     }
 
-    public setUserInfo(user: User): void {
+    public setUserInfo(user: User, ctx: SharedContext): void {
         this.cookies.set("user", user);
+        ctx.User = user;
     }
 
     public setUserOwnerGroup(groupId : string, ctx: SharedContext) : User {

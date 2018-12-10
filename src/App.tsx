@@ -96,9 +96,7 @@ class App extends React.Component<{}, UserState> {
               <Route
                 path="/register"
                 render={() => (
-                  <RegisterUser
-                    createUserAndSaveInCookie={this.createUserAndSaveInCookie}
-                  />
+                  <RegisterUser/>
                 )}
               />
               <Route path="/" render={() => HomePage} />
@@ -108,33 +106,5 @@ class App extends React.Component<{}, UserState> {
       </Router>
     );
   }
-
-
-
-  public createUserAndSaveInCookie = async (user: IFormUser) => {
-    try {
-      const response = await Axios.post(
-        process.env.REACT_APP_API_URL + "/api/users/create",
-        user
-      );
-      const createdUser = response.data;
-      const userState = {
-        user: new User(
-          createdUser._id,
-          createdUser.name,
-          createdUser.discordId,
-          "groupId"
-          , ""
-        )
-      };
-      this.userServiceCookies.setUserInfo(userState.user);
-    } catch (error) {
-      console.error("ERROR:", error);
-    }
-  };
-
 }
-  // Not sure where to put "helper" functions
-
-
-  export default App;
+export default App;

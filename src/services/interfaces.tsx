@@ -15,7 +15,7 @@ export interface GroupService {
 }
 
 export interface UserService {
-    setUserInfo(user: User): void;
+    setUserInfo(user: User, ctx: SharedContext): void;
     getUserInfo(): User;
     updateGroupIdUserInfo(groupId: string, ctx: SharedContext): User;
     setUserOwnerGroup(groupId: string, ctx: SharedContext): User;
