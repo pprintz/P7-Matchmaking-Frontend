@@ -6,7 +6,8 @@ export default class WSGroupService extends WSService implements IWSGroupService
         super('/groups');
     }
 
-    public joinGroup = async (groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void> => {
+    public joinGroup = async (groupID: string, userID: string, ackFn?: (res: SocketResponse<PersistedGroup>) => void): Promise<void> => {
+
         await this.IO.emit('joinGroup', { "user_id": userID, "group_id": groupID }, ackFn);
     }
 

@@ -5,6 +5,7 @@ import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { RouteComponentProps } from 'react-router';
 import { User } from 'src/models/User';
+import { GlobalContext } from 'src/models/SharedContext';
 
 
 
@@ -16,7 +17,7 @@ interface GroupProps {
 }
 
 class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupProps> {
-
+    private static contextType = GlobalContext;
     constructor(props : GroupProps & RouteComponentProps){
         super(props);
 
@@ -41,7 +42,8 @@ class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupPr
                 this.setState({message: "Group was not deleted"});
             }else{  
                 // Update the cookie
-                this.props.userService.setUserOwnerGroup("");
+                this.props.userService.setUserOwnerGroup("", this.context);
+                this.props.userService.updateGroupIdUserInfo("", this.context)
 
                 this.setState({message: "Succesfully deleted the group"});
                 console.log("All good");

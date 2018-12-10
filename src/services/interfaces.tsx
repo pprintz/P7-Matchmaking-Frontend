@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import WSGroupService from './WSGroupService';
 import { UserServiceCookies } from './userServiceCookies';
 import { GameSettings } from 'src/components/QueueUsers';
+import { SharedContext } from 'src/models/SharedContext';
 
 export interface GroupService {
     leaveGroup(groupId: string, userId: string): Promise<PersistedGroup |  boolean>,
@@ -17,8 +18,8 @@ export interface GroupService {
 export interface UserService {
     setUserInfo(user: User): void;
     getUserInfo(): User;
-    updateGroupIdUserInfo(groupId: string): User;
-    setUserOwnerGroup(groupId: string): User;
+    updateGroupIdUserInfo(groupId: string, ctx: SharedContext): User;
+    setUserOwnerGroup(groupId: string, ctx: SharedContext): User;
     isLoggedIn(): boolean;
 }
 
@@ -30,7 +31,7 @@ export interface SocketService {
     registerEventHandler(event : string, fn : any) : void
 }
 export interface IWSGroupService extends SocketService {
-    joinGroup(groupID: string, userID: string, ackFn?: (args: PersistedGroup) => void): Promise<void>,
+    joinGroup(groupID: string, userID: string, ackFn?: (res: SocketResponse<PersistedGroup>) => void): Promise<void>,
     leaveGroup(groupId: string, userId: string, ackFn: (res: SocketResponse<void>) => void): Promise<void>,
     getGroup(groupId: string): PersistedGroup,
     getGroups(): PersistedGroup[],
@@ -74,7 +75,7 @@ export interface ISharedContext {
     UserService: UserService,
     Client: SocketIOClient.Socket,
     WSGroupService: IWSGroupService,
-    GroupServiceApi : GroupService
+    GroupServiceApi : GroupService,
 }
 
 export interface IGame {

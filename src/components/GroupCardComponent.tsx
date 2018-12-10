@@ -1,15 +1,14 @@
 import * as React from "react";
 // import GroupsResponse from './GroupsResponse';
 import { Button, Card } from "antd";
-import { PersistedGroup, IUser, PersistentUserService, UserService } from "../services/interfaces";
+import { PersistedGroup, IUser, PersistentUserService, UserService, IWSGroupService, SocketResponse } from "../services/interfaces";
 import { RouteComponentProps, withRouter } from "react-router";
 import { toast } from 'react-toastify';
 import { GroupService } from '../services/interfaces';
+import { SharedContext, GlobalContext } from 'src/models/SharedContext';
 
 interface Props {
   group: PersistedGroup,
-  groupService: GroupService
-  userService: UserService
 }
 
 interface State {
@@ -18,15 +17,23 @@ interface State {
 }
 
 class GroupCardComponent extends React.Component<
-  RouteComponentProps & Props & {
-    onGroupChangeCallback: (response: { group: PersistedGroup, caller: string }) => void
-  }, State> {
+  RouteComponentProps & Props & { onGroupChangeCallback: (response: { group: PersistedGroup, caller: string }) => void}, State>
+  {
+  private static contextType = GlobalContext;
+  private WSGroupService: IWSGroupService
+  private userService: UserService;
+
   constructor(props: RouteComponentProps & Props & {
     onGroupChangeCallback: (response: { group: PersistedGroup, caller: string }) => void
   }) {
     super(props);
     this.joinGroup = this.joinGroup.bind(this);
     this.state = { data: props.group, users: [] };
+  }
+
+  public componentWillMount(){
+    this.WSGroupService = (this.context as SharedContext).WSGroupService;
+    this.userService = (this.context as SharedContext).UserService;
   }
 
   public render() {
@@ -74,12 +81,23 @@ class GroupCardComponent extends React.Component<
   private joinGroup = async () => {
     try {
       const groupId = this.state.data._id;
-      const joinedGroup = await this.props.groupService.joinGroup(groupId, this.props.userService.getUserInfo().userId)
-      this.props.history.push(`/groups/${joinedGroup._id}`);
+      console.log(this.context);
+      await this.context.WSGroupService.joinGroup(groupId, this.userService.getUserInfo().userId, this.onGroupJoinedCallback)
     } catch (error) {
-      toast.error("Sorry, you can't join this group. Leave your current group");
+      toast.error("Can not establish a connection");
+      console.log(error)
     }
   }
+  private onGroupJoinedCallback = async (res: SocketResponse<PersistedGroup>) => {
+    // Update state, if the request was successfull
+    if (res.error) {
+        toast.error("Sorry, you can't join this group. Leave your current group");
+        return;
+    }
+
+    this.userService.updateGroupIdUserInfo(res.data._id, this.context);
+    this.props.history.push(`/groups/${res.data._id}`);
+}
 }
 
 export default withRouter(GroupCardComponent);
