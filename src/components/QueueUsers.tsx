@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService, SocketResponse } from "../services/interfaces";
 import { Form, Button, Card, Select } from 'antd'
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import { RouteComponentProps, withRouter } from 'react-router';
 import "../Styles/queueUsersStyle.scss";
 import { toast } from 'react-toastify';
-import { Level } from "../services/userWSService";
+import { Level } from "../models/LevelEnums";
 
 
 export interface GameSettings {
@@ -176,26 +176,41 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     }
 
     // This is called if a group is found for the user
-    private joinedGroup = (response: any) => {
+    private joinedGroup = (response: SocketResponse<PersistedGroup>) : void => {
+        // Redirect to group id
+        if(response.error){
+            toast.error("A group could not be found");
+            this.setState({isQueued: false});
+
+            return;
+        }
+
         toast.success("Redirecting to group");
 
-        // Redirect to group id
-        const groupId = "";
+        const groupId = response.data._id;
 
         this.props.history.push("/groups/" + groupId);
     }
 
     // This is called when the user joins a queue
-    private queueJoined = (response: any) => {
+    private queueJoined = (response: SocketResponse<void>) => {
         toast.success("Joined the queue")
+
+        if(response.error){
+            // If reject => Set the state to false, so the page will be redirected to the first page again.
+            this.setState({isQueued: false});
+
+            toast.error("The queue could not be joined");
+
+            return;
+        }
 
         // If success => Set an interval to count up the timer
         this.interval = setInterval(() => {
             this.setState({ timeSpent: (this.state.timeSpent + 1) })
         }, 1000);
 
-        // If reject => Set the state to false, so the page will be redirected to the first page again.
-        this.setState({})
+        
     }
 
     async changeQueueState(event) {
@@ -218,8 +233,6 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
                 // Reset the timer
                 this.setState({ timeSpent: 0 });
-
-                this.queueJoined("jel");
             } catch (error) {
                 // If there is an error, we are not queued
                 this.setState({ isQueued: false });
