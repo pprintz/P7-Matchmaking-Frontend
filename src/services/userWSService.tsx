@@ -1,23 +1,17 @@
-import { IUserWSService, SocketResponse } from './interfaces';
+import { IUserWSService, SocketResponse, PersistedGroup, QueueEntry, PersistedQueueEntry } from './interfaces';
 import WSService from './WSService';
 import {GameSettings} from "../components/QueueUsers";
 
 export default class UserWSService extends WSService implements IUserWSService {
     constructor() {
         super('/queues'); 
-        console.log("Works!");
     }
 
-    public joinQueue = async (userId: string, gameSettings: GameSettings): Promise<void> => {
-        let requestObj = new Object({
-            "userId": userId,
-            "gameSettings": gameSettings
-        });
-
-        console.log(requestObj);    
+    public joinQueue = async (queueEntry : QueueEntry, ackFn : (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void> => {
+        console.log(queueEntry);    
                 
 
-        await this.IO.emit("joinQueue", requestObj);
+        await this.IO.emit("enqueue", queueEntry, ackFn);
     }
 
     public leaveQueue = async (userId: string): Promise<void> =>{

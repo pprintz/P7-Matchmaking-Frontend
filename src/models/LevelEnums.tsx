@@ -19,3 +19,9 @@ export enum Level {
     SUPREMEMASTERFIRSTCLASS = 16,
     GLOBALELITE = 17
 }
+
+export enum Mode {
+    UNSET = 0,
+    COMPETITIVE = 1,
+    CASUAL = 2
+}

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService, SocketResponse } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService, SocketResponse, PersistedQueueEntry } from "../services/interfaces";
 import { Form, Button, Card, Select } from 'antd'
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 import { RouteComponentProps, withRouter } from 'react-router';
 import "../Styles/queueUsersStyle.scss";
 import { toast } from 'react-toastify';
-import { Level } from "../models/LevelEnums";
+import { Level, Mode } from "../models/LevelEnums";
 
 
 export interface GameSettings {
     level: Level,
-    mode: string,
+    mode: Mode,
     rank: number
 }
 
@@ -33,7 +33,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         this.state = {
             gameSettings: {
                 level: Level.UNSET,
-                mode: "",
+                mode: Mode.UNSET,
                 rank: -1
             },
             isQueued: false,
@@ -126,10 +126,10 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                                             {levelOptions}
                                         </Select>
                                         <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
-                                            <Select.Option key="1" value="mode:competitive">
+                                            <Select.Option key="1" value="mode:1">
                                                 Competitive
                                         </Select.Option>
-                                            <Select.Option key="2" value="mode:casual">
+                                            <Select.Option key="2" value="mode:2">
                                                 Casual
                                         </Select.Option>
                                         </Select>
@@ -193,9 +193,9 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     }
 
     // This is called when the user joins a queue
-    private queueJoined = (response: SocketResponse<void>) => {
+    private queueJoined = (response: SocketResponse<PersistedQueueEntry>) : void => {
         toast.success("Joined the queue")
-
+        console.log("Response: " + response);
         if(response.error){
             // If reject => Set the state to false, so the page will be redirected to the first page again.
             this.setState({isQueued: false});
@@ -208,14 +208,12 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         // If success => Set an interval to count up the timer
         this.interval = setInterval(() => {
             this.setState({ timeSpent: (this.state.timeSpent + 1) })
-        }, 1000);
-
-        
+        }, 1000);   
     }
 
     async changeQueueState(event) {
         // Is the filter set?
-        if (this.state.gameSettings.mode == "" || this.state.gameSettings.rank == -1 || this.state.gameSettings.level == Level.UNSET) {
+        if (this.state.gameSettings.mode == Mode.UNSET || this.state.gameSettings.rank == -1 || this.state.gameSettings.level == Level.UNSET) {
             toast.warn("Please fill the filter");
             return;
         }
@@ -224,7 +222,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         if (this.state.isQueued == false) {
             try {
                 // Emit joinQueue request to the backend using WS
-                await this.userWSService.joinQueue(this.userServiceCookies.getUserInfo().userId, this.state.gameSettings);
+                await this.userWSService.joinQueue({users: [this.userServiceCookies.getUserInfo().userId], gameSettings: this.state.gameSettings}, this.queueJoined);
 
                 // Success => Change state to isQueued
                 this.setState({
@@ -274,7 +272,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                     gameSettingsObj.level = parseInt(suffix);
                     break;
                 case "mode":
-                    gameSettingsObj.mode = suffix;
+                    gameSettingsObj.mode = parseInt(suffix);
                     break;
                 case "rank":
                     gameSettingsObj.rank = parseInt(suffix);
@@ -282,8 +280,8 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                 default:
                     throw new Error("Prefix setting does not exist!");
             }
-
             this.setState({ gameSettings: gameSettingsObj });
+            console.log(this.state.gameSettings);
         } catch (error) {
             toast.error(error.message);
         }
