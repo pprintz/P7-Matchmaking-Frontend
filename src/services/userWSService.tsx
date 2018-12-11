@@ -3,8 +3,8 @@ import WSService from './WSService';
 import {GameSettings} from "../components/QueueUsers";
 
 export default class UserWSService extends WSService implements IUserWSService {
-    constructor() {
-        super('/queues'); 
+    constructor(id: string) {
+        super('/queues', id); 
     }
 
     public joinQueue = async (queueEntry : QueueEntry, ackFn : (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void> => {

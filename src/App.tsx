@@ -55,12 +55,12 @@ class App extends React.Component<{}, UserState> {
       <Router>
         <div className="App">
           <GlobalContext.Provider value={
-            {WSGroupService: new WSGroupService(),
+            {WSGroupService: new WSGroupService(this.userServiceCookies.getUserInfo().userId),
              GroupServiceApi: new GroupServiceApi(),
              UserService: new UserServiceCookies(),
-             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io', query: "id=" + this.userServiceCookies.getUserInfo().userId}),
+             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io', query: {token: this.userServiceCookies.getUserInfo().userId}}),
              User: this.userServiceCookies.getUserInfo(),
-             UserWSService: new UserWSService() }}>
+             UserWSService: new UserWSService(this.userServiceCookies.getUserInfo().userId) }}>
           <Route render={renderProps => <MenuBar  {...renderProps}/>} /> 
             <ToastContainer/>
             <Switch>

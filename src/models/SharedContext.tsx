@@ -16,7 +16,7 @@ export class SharedContext implements ISharedContext{
     public WSGroupService : IWSGroupService;
     public GroupServiceApi  : GroupService;
     public User : User;
-    public UserWSService : IUserWSService = new UserWSService();
+    public UserWSService : IUserWSService;
 }
 
 

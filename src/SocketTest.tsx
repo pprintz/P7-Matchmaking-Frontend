@@ -6,7 +6,7 @@ export default class SocketTest extends React.Component<{}, {count : number}> {
     constructor(props : {}){
         super(props);
         this.state = {"count" : 1};
-        this.WSGroupService = new WSGroupService();
+        this.WSGroupService = new WSGroupService("");
         this.WSGroupService.registerEventHandler('timer', this.onTimerCallback);
         this.onButtonHit = this.onButtonHit.bind(this);
         // this.WSGroupService.subscribeToTimer(this.state.count);

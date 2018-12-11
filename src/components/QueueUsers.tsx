@@ -175,7 +175,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     }
 
     // This is called if a group is found for the user
-    private joinedGroup = (group: PersistedGroup, caller: string) : void => {
+    private joinedGroup = (group: any, caller: string) : void => {
         // Redirect to group id
         if(group === null){
             toast.error("A group could not be found");
@@ -184,9 +184,11 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
             return;
         }
 
+        console.log(group);
         toast.success("Redirecting to group");
 
-        const groupId = group._id;
+        const groupId = group.group._id;
+        this.userServiceCookies.updateGroupIdUserInfo(groupId, this.context);
 
         this.props.history.push("/groups/" + groupId);
     }
