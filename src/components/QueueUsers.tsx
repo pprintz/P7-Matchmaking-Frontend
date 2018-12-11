@@ -1,27 +1,17 @@
 import * as React from 'react';
 import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService } from "../services/interfaces";
-import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
-import WSGroupService from '../services/WSGroupService';
+import { Form, Button, Card, Select } from 'antd'
 import { GlobalContext, SharedContext } from 'src/models/SharedContext';
-import { RouteComponentProps, withRouter, Route } from 'react-router';
-import NotAllowedHere from './NotAllowedHere';
-import LeaveGroup from './LeaveGroup';
-import { UserServiceCookies } from 'src/services/userServiceCookies';
-import { GroupServiceApi } from 'src/services/groupServiceApi';
-import { User } from 'src/models/User';
-import RemoveGroupComponent from './RemoveGroupComponent';
-import ActionButton from 'antd/lib/modal/ActionButton';
-import InviteUrlComponent from './InviteUrlComponent';
-import DiscordUrlComponent from './DiscordUrlComponent';
-import FormItem from 'antd/lib/form/FormItem';
+import { RouteComponentProps, withRouter } from 'react-router';
 import "../Styles/queueUsersStyle.scss";
 import { toast } from 'react-toastify';
 import { Level } from "../services/userWSService";
 
+
 export interface GameSettings {
-    level: string,
+    level: Level,
     mode: string,
-    rank: string
+    rank: number
 }
 
 interface State {
@@ -42,37 +32,86 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
         this.state = {
             gameSettings: {
-                level: "",
+                level: Level.UNSET,
                 mode: "",
-                rank: ""
+                rank: -1
             },
             isQueued: false,
             timeSpent: 0
         };
 
+
+        // bind functions for render events
         this.editCriteriaJSON = this.editCriteriaJSON.bind(this);
         this.changeQueueState = this.changeQueueState.bind(this);
     }
 
     public componentWillMount() {
+        // Retrieve SharedContext services
         this.userWSService = (this.context as SharedContext).UserWSService;
         this.userServiceCookies = (this.context as SharedContext).UserService;
 
+        // Register Socket Event Handlers
         this.userWSService.registerEventHandler("joinedQueue", this.queueJoined);
         this.userWSService.registerEventHandler("joinedGroup", this.joinedGroup);
-
-        this.interval = setInterval(() => {
-            this.setState({ timeSpent: (this.state.timeSpent + 1) })
-        }, 1000);
     }
 
     public componentWillUnmount() {
         clearInterval(this.interval);
     }
+                        /*
+                        <Select.Option key={index.toString()} value={"level:" + value}>
+                            Hello World!
+                        </Select.Option>
+                        */
+    public renderLevelSelect(){
+        // A mapping function from a Level Enum to a string that makes sense for the user.
+        const LevelNames = new Map<number, string>([
+            [Level.SILVER1, "Silver 1"],
+            [Level.SILVER2, "Silver 2"],
+            [Level.SILVER3, "Silver 3"],
+            [Level.SILVER4, "Silver 4"],
+            [Level.SILVERELITE, "Silver Elite"],
+            [Level.SILVERELITEMASTER, "Silver Elite Master"],
+            [Level.GOLDNOVA1, "Gold Nova 1"],
+            [Level.GOLDNOVA2, "Gold Nova 2"],
+            [Level.GOLDNOVA3, "Gold Nova 3"],
+            [Level.GOLDNOVAMASTER, "Gold Nova Master"],
+            [Level.MASTERGUARDIAN1, "Master Guardian 1"],
+            [Level.MASTERGUARDIAN2, "Master Guardian 2"],
+            [Level.MASTERGUARDIANELITE, "Master Guardian Elite"],
+            [Level.DESTINGUISHEDMASTERGUARDIAN, "Destiniguished Master Guardian"],
+            [Level.LEGENDARYEAGLE, "Legendary Eagle"],
+            [Level.LEGENDARYEAGLEMASTER, "Legendary Eagle Master"],
+            [Level.SUPREMEMASTERFIRSTCLASS, "Supreme Master First Class"],
+            [Level.GLOBALELITE, "Global Elite"]
+        ]);
+
+        // Map each level into a Select.Option selector
+        const renderObj = (Object.keys(Level).map(key => {
+            // Check if the key can be parsed
+            if(!Number.isNaN(parseInt(key))){
+                // Make an Option Selector
+                return (
+                    <Select.Option key={key} value={"level:" + key} >
+                        {LevelNames.get(parseInt(key))} 
+                    </Select.Option>
+                )
+            }else{
+                return;
+            }
+        })
+        )
+
+        return renderObj;
+    }
 
     public render() {
         const FormItem = Form.Item;
 
+        const levelOptions = this.renderLevelSelect();
+
+        // If the user is not queued yet
         if (!this.state.isQueued) {
             return (
                 <div className="queueWrapper">
@@ -82,19 +121,9 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                                 <div className="filterContainer">
                                     <p className="queueCardHeader">Filter</p>
                                     <Form layout="horizontal" className="filterForm">
+
                                         <Select placeholder="Enter your rank" onChange={this.editCriteriaJSON}>
-                                            <Select.Option key="1" value="level:silver">
-                                                Silver 1
-                                        </Select.Option>
-                                            <Select.Option key="2" value="level:gold">
-                                                Gold Nova 1
-                                        </Select.Option>
-                                            <Select.Option key="3" value="level:mge">
-                                                Master Guardian Elite
-                                        </Select.Option>
-                                            <Select.Option key="4" value="level:supreme">
-                                                Supreme Master
-                                        </Select.Option>
+                                            {levelOptions}
                                         </Select>
                                         <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
                                             <Select.Option key="1" value="mode:competitive">
@@ -129,6 +158,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                 </div>
             );
         } else {
+            // If the user is queued
             return (
                 <div className="queueWrapper">
                     <Card title="Finding Group">
@@ -137,7 +167,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                             <p id="counter">{this.state.timeSpent} seconds</p>
                             <Button id="queueButton" type="danger" size="large" onClick={this.changeQueueState}>
                                 Cancel
-                    </Button>
+                            </Button>
                         </div>
                     </Card>
                 </div>
@@ -145,50 +175,68 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         }
     }
 
+    // This is called if a group is found for the user
     private joinedGroup = (response: any) => {
         toast.success("Redirecting to group");
 
+        // Redirect to group id
         const groupId = "";
 
         this.props.history.push("/groups/" + groupId);
     }
 
+    // This is called when the user joins a queue
     private queueJoined = (response: any) => {
         toast.success("Joined the queue")
 
-        // If success
+        // If success => Set an interval to count up the timer
+        this.interval = setInterval(() => {
+            this.setState({ timeSpent: (this.state.timeSpent + 1) })
+        }, 1000);
 
-        // If reject
+        // If reject => Set the state to false, so the page will be redirected to the first page again.
         this.setState({})
     }
 
     async changeQueueState(event) {
-        if (this.state.gameSettings.mode == "" || this.state.gameSettings.rank == "" || this.state.gameSettings.level == "") {
+        // Is the filter set?
+        if (this.state.gameSettings.mode == "" || this.state.gameSettings.rank == -1 || this.state.gameSettings.level == Level.UNSET) {
             toast.warn("Please fill the filter");
             return;
         }
 
+        // Are we already queued?
         if (this.state.isQueued == false) {
             try {
+                // Emit joinQueue request to the backend using WS
                 await this.userWSService.joinQueue(this.userServiceCookies.getUserInfo().userId, this.state.gameSettings);
 
+                // Success => Change state to isQueued
                 this.setState({
                     isQueued: !this.state.isQueued,
                 });
 
+                // Reset the timer
                 this.setState({ timeSpent: 0 });
+
+                this.queueJoined("jel");
             } catch (error) {
+                // If there is an error, we are not queued
                 this.setState({ isQueued: false });
 
                 toast.error("Failed to join a queue");
             }
         } else {
+            // We are already in a queue and cancel
             try {
+                // Call leaveQueue request using WS
                 await this.userWSService.leaveQueue(this.userServiceCookies.getUserInfo().userId);
 
+                // Reset state and interval
                 this.setState({
                     isQueued: !this.state.isQueued,
                 });
+                clearInterval(this.interval);
 
                 this.setState({ timeSpent: 0 });
             } catch (error) {
@@ -198,6 +246,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         }
     }
 
+    // Changes the GameSettings of the queue
     editCriteriaJSON(event) {
         try {
             const setting: string[] = event.split(":");
@@ -209,13 +258,13 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
             switch (prefix) {
                 case "level":
-                    gameSettingsObj.level = suffix;
+                    gameSettingsObj.level = parseInt(suffix);
                     break;
                 case "mode":
                     gameSettingsObj.mode = suffix;
                     break;
                 case "rank":
-                    gameSettingsObj.rank = suffix;
+                    gameSettingsObj.rank = parseInt(suffix);
                     break;
                 default:
                     throw new Error("Prefix setting does not exist!");
