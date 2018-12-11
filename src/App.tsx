@@ -58,7 +58,7 @@ class App extends React.Component<{}, UserState> {
             {WSGroupService: new WSGroupService(),
              GroupServiceApi: new GroupServiceApi(),
              UserService: new UserServiceCookies(),
-             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io'}),
+             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io', query: this.userServiceCookies.getUserInfo().userId}),
              User: this.userServiceCookies.getUserInfo(),
              UserWSService: new UserWSService() }}>
           <Route render={renderProps => <MenuBar  {...renderProps}/>} /> 

@@ -52,7 +52,6 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         this.userServiceCookies = (this.context as SharedContext).UserService;
 
         // Register Socket Event Handlers
-        this.userWSService.registerEventHandler("joinedQueue", this.queueJoined);
         this.userWSService.registerEventHandler("joinedGroup", this.joinedGroup);
     }
 
@@ -176,9 +175,9 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     }
 
     // This is called if a group is found for the user
-    private joinedGroup = (response: SocketResponse<PersistedGroup>) : void => {
+    private joinedGroup = (group: PersistedGroup, caller: string) : void => {
         // Redirect to group id
-        if(response.error){
+        if(group === null){
             toast.error("A group could not be found");
             this.setState({isQueued: false});
 
@@ -187,7 +186,7 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
         toast.success("Redirecting to group");
 
-        const groupId = response.data._id;
+        const groupId = group._id;
 
         this.props.history.push("/groups/" + groupId);
     }
