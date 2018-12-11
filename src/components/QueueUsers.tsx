@@ -16,11 +16,12 @@ import DiscordUrlComponent from './DiscordUrlComponent';
 import FormItem from 'antd/lib/form/FormItem';
 import "../Styles/queueUsersStyle.scss";
 import { toast } from 'react-toastify';
+import { Level } from "../services/userWSService";
 
 export interface GameSettings {
-    Level: string,
-    Mode: string,
-    Rank: string
+    level: string,
+    mode: string,
+    rank: string
 }
 
 interface State {
@@ -34,16 +35,16 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
     private userWSService: IUserWSService;
     private userServiceCookies: UserService;
 
-    private interval : NodeJS.Timeout;
+    private interval: NodeJS.Timeout;
 
     public constructor(props: RouteComponentProps) {
         super(props);
 
         this.state = {
             gameSettings: {
-                Level: "",
-                Mode: "",
-                Rank: ""
+                level: "",
+                mode: "",
+                rank: ""
             },
             isQueued: false,
             timeSpent: 0
@@ -53,17 +54,19 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         this.changeQueueState = this.changeQueueState.bind(this);
     }
 
-    public componentWillMount() {
+    public componentWillMount() {
         this.userWSService = (this.context as SharedContext).UserWSService;
         this.userServiceCookies = (this.context as SharedContext).UserService;
-        this.userWSService.registerEventHandler('joinedQueue', this.queueJoined);
+
+        this.userWSService.registerEventHandler("joinedQueue", this.queueJoined);
+        this.userWSService.registerEventHandler("joinedGroup", this.joinedGroup);
 
         this.interval = setInterval(() => {
-            this.setState({timeSpent: (this.state.timeSpent + 1)}) 
-        }, 1000);    
+            this.setState({ timeSpent: (this.state.timeSpent + 1) })
+        }, 1000);
     }
 
-    public componentWillUnmount(){
+    public componentWillUnmount() {
         clearInterval(this.interval);
     }
 
@@ -73,113 +76,126 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         if (!this.state.isQueued) {
             return (
                 <div className="queueWrapper">
-                <Card title="Queue">
-                    <div className="queueUsers">
-                        <div className="outer">
-                            <div className="filterContainer">
-                                <p className="queueCardHeader">Filter</p>
-                                <Form layout="horizontal" className="filterForm">
-                                    <Select placeholder="Enter your rank" onChange={this.editCriteriaJSON}>
-                                        <Select.Option key="1" value="level:silver">
-                                            Silver 1
+                    <Card title="Queue">
+                        <div className="queueUsers">
+                            <div className="outer">
+                                <div className="filterContainer">
+                                    <p className="queueCardHeader">Filter</p>
+                                    <Form layout="horizontal" className="filterForm">
+                                        <Select placeholder="Enter your rank" onChange={this.editCriteriaJSON}>
+                                            <Select.Option key="1" value="level:silver">
+                                                Silver 1
                                         </Select.Option>
-                                        <Select.Option key="2" value="level:gold">
-                                            Gold Nova 1
+                                            <Select.Option key="2" value="level:gold">
+                                                Gold Nova 1
                                         </Select.Option>
-                                        <Select.Option key="3" value="level:mge">
-                                            Master Guardian Elite
+                                            <Select.Option key="3" value="level:mge">
+                                                Master Guardian Elite
                                         </Select.Option>
-                                        <Select.Option key="4" value="level:supreme">
-                                            Supreme Master
+                                            <Select.Option key="4" value="level:supreme">
+                                                Supreme Master
                                         </Select.Option>
-                                    </Select>
-                                    <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
-                                        <Select.Option key="1" value="mode:competitive">
-                                            Competitive
+                                        </Select>
+                                        <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
+                                            <Select.Option key="1" value="mode:competitive">
+                                                Competitive
                                         </Select.Option>
-                                        <Select.Option key="2" value="mode:casual">
-                                            Casual
+                                            <Select.Option key="2" value="mode:casual">
+                                                Casual
                                         </Select.Option>
-                                    </Select>
-                                    <Select placeholder="Ranking" onChange={this.editCriteriaJSON}>
-                                        <Select.Option key="1" value="rank:above">
-                                            Above your rank
+                                        </Select>
+                                        <Select placeholder="Ranking" onChange={this.editCriteriaJSON}>
+                                            <Select.Option key="1" value="rank:2">
+                                                Above your rank
                                         </Select.Option>
-                                        <Select.Option key="2" value="rank:same">
-                                            Same rank
+                                            <Select.Option key="2" value="rank:1">
+                                                Same rank
                                         </Select.Option>
-                                        <Select.Option key="3" value="rank:below">
-                                            Below your rank
+                                            <Select.Option key="3" value="rank:0">
+                                                Below your rank
                                         </Select.Option>
-                                    </Select>
-                                </Form>
-                            </div>
-                            <div className="queueContainer">
-                                <p className="queueCardHeader" style={{marginLeft: "none"}}>Queue</p>
-                                <Button id="queueButton" type="primary" size="large" onClick={this.changeQueueState}>
-                                    Queue
-                            </Button>
+                                        </Select>
+                                    </Form>
+                                </div>
+                                <div className="queueContainer">
+                                    <p className="queueCardHeader" style={{ marginLeft: "none" }}>Queue</p>
+                                    <Button id="queueButton" type="primary" size="large" onClick={this.changeQueueState}>
+                                        Queue
+                                    </Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Card>
-            </div>
+                    </Card>
+                </div>
             );
         } else {
             return (
-            <div className="queueWrapper">
-                <Card title="Finding Group">
-                    <div className="queueUsers">
-                        <p className="queueCardHeader">Searching For Group</p>
-                        <p id="counter">{this.state.timeSpent} seconds</p>
-                        <Button id="queueButton" type="danger" size="large" onClick={this.changeQueueState}>
-                            Cancel
+                <div className="queueWrapper">
+                    <Card title="Finding Group">
+                        <div className="queueUsers">
+                            <p className="queueCardHeader">Searching For Group</p>
+                            <p id="counter">{this.state.timeSpent} seconds</p>
+                            <Button id="queueButton" type="danger" size="large" onClick={this.changeQueueState}>
+                                Cancel
                     </Button>
-                    </div>
-                </Card>
-            </div>
+                        </div>
+                    </Card>
+                </div>
             );
         }
     }
 
-    private queueJoined = (response : any) => {
-        toast.success("Successfully joined the queue!")
+    private joinedGroup = (response: any) => {
+        toast.success("Redirecting to group");
+
+        const groupId = "";
+
+        this.props.history.push("/groups/" + groupId);
+    }
+
+    private queueJoined = (response: any) => {
+        toast.success("Joined the queue")
+
+        // If success
+
+        // If reject
+        this.setState({})
     }
 
     async changeQueueState(event) {
-        if(this.state.gameSettings.Mode == "" || this.state.gameSettings.Rank == "" || this.state.gameSettings.Level == ""){
+        if (this.state.gameSettings.mode == "" || this.state.gameSettings.rank == "" || this.state.gameSettings.level == "") {
             toast.warn("Please fill the filter");
             return;
         }
 
-        if(this.state.isQueued == false){
-            try{
+        if (this.state.isQueued == false) {
+            try {
                 await this.userWSService.joinQueue(this.userServiceCookies.getUserInfo().userId, this.state.gameSettings);
 
                 this.setState({
                     isQueued: !this.state.isQueued,
                 });
-            
-                this.setState({timeSpent: 0});
-            }catch(error){
-                this.setState({isQueued: false});
+
+                this.setState({ timeSpent: 0 });
+            } catch (error) {
+                this.setState({ isQueued: false });
 
                 toast.error("Failed to join a queue");
             }
-        }else{
-            try{
+        } else {
+            try {
                 await this.userWSService.leaveQueue(this.userServiceCookies.getUserInfo().userId);
-    
+
                 this.setState({
                     isQueued: !this.state.isQueued,
                 });
-            
-                this.setState({timeSpent: 0});
-            }catch(error){
-                this.setState({isQueued: false});
+
+                this.setState({ timeSpent: 0 });
+            } catch (error) {
+                this.setState({ isQueued: false });
                 toast.error("Failed to leave the queue");
             }
-        }        
+        }
     }
 
     editCriteriaJSON(event) {
@@ -193,13 +209,13 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
 
             switch (prefix) {
                 case "level":
-                    gameSettingsObj.Level = suffix;
+                    gameSettingsObj.level = suffix;
                     break;
                 case "mode":
-                    gameSettingsObj.Mode = suffix;
+                    gameSettingsObj.mode = suffix;
                     break;
                 case "rank":
-                    gameSettingsObj.Rank = suffix;
+                    gameSettingsObj.rank = suffix;
                     break;
                 default:
                     throw new Error("Prefix setting does not exist!");
