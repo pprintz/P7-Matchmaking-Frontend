@@ -3,8 +3,9 @@ import * as IOClient from 'socket.io-client';
 export default class WSService {
     protected IO : SocketIOClient.Socket;
 
-    public constructor(namespace : string = "/"){
-        this.IO = IOClient(process.env.REACT_APP_API_URL + (namespace.startsWith('/') ? namespace : ('/' + namespace)), {path: '/api/socket.io'});
+    public constructor(namespace : string = "/", id: string = ""){
+        this.IO = IOClient(process.env.REACT_APP_API_URL + (namespace.startsWith('/') ? namespace : ('/' + namespace)), {path: '/api/socket.io', query: {id: id}});
+        // localhost:3000/api/socket.io/queues
     }
 
     public registerEventHandler(event : string, fn : any) : void {

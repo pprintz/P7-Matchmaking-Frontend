@@ -13,7 +13,9 @@ import UserServiceApi from './services/userServiceApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WSGroupService from './services/WSGroupService';
+import { QueueUsers } from "./components/QueueUsers";
 import { SharedContext, GlobalContext } from './models/SharedContext';
+import UserWSService from './services/userWSService';
 
 const { Header } = Layout;
 
@@ -53,11 +55,12 @@ class App extends React.Component<{}, UserState> {
       <Router>
         <div className="App">
           <GlobalContext.Provider value={
-            {WSGroupService: new WSGroupService(),
+            {WSGroupService: new WSGroupService(this.userServiceCookies.getUserInfo().userId),
              GroupServiceApi: new GroupServiceApi(),
              UserService: new UserServiceCookies(),
-             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io'}),
-             User: this.userServiceCookies.getUserInfo() }}>
+             Client: IOClient(process.env.REACT_APP_API_URL + "", {path: '/api/socket.io', query: {token: this.userServiceCookies.getUserInfo().userId}}),
+             User: this.userServiceCookies.getUserInfo(),
+             UserWSService: new UserWSService(this.userServiceCookies.getUserInfo().userId) }}>
           <Route render={renderProps => <MenuBar  {...renderProps}/>} /> 
             <ToastContainer/>
             <Switch>
@@ -97,6 +100,14 @@ class App extends React.Component<{}, UserState> {
                 path="/register"
                 render={() => (
                   <RegisterUser/>
+                )}
+              />
+              <Route
+                path="/queue"
+                render={routeComponentProps => (
+                  <QueueUsers
+                    {...routeComponentProps}
+                  />
                 )}
               />
               <Route path="/" render={() => HomePage} />
