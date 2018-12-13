@@ -22,7 +22,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
     private static contextType = GlobalContext;
     private userService: UserService;
     private WSGroupService: IWSGroupService;
-    private apiGroupService: GroupService
+    private apiGroupService: GroupService;
 
     constructor(props: GroupProps & RouteComponentProps) {
         super(props);

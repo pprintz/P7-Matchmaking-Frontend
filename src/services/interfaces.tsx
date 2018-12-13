@@ -18,7 +18,7 @@ export interface GroupService {
 }
 
 export interface UserService {
-    setUserInfo(user: User): void;
+    setUserInfo(user: User, ctx: SharedContext): void;
     getUserInfo(): User;
     updateGroupIdUserInfo(groupId: string, ctx: SharedContext): User;
     setUserOwnerGroup(groupId: string, ctx: SharedContext): User;
@@ -56,7 +56,7 @@ export interface QueueEntry {
 
 export interface IUserWSService extends SocketService {
     joinQueue(queueEntry : QueueEntry, ackFn : (response : SocketResponse<PersistedQueueEntry>) => void) : Promise<void>;
-    leaveQueue(userId: string): Promise<void>
+    leaveQueue(queueEntry : PersistedQueueEntry, ackFn : (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void>
 }
 
 export interface SocketResponse<T> {
