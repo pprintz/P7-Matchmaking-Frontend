@@ -15,6 +15,8 @@ import RemoveGroupComponent from './RemoveGroupComponent';
 import ActionButton from 'antd/lib/modal/ActionButton';
 import InviteUrlComponent from './InviteUrlComponent';
 import DiscordUrlComponent from './DiscordUrlComponent';
+import { string } from 'prop-types';
+import { toast } from 'react-toastify';
 
 interface Props {
     group: PersistedGroup,
@@ -43,77 +45,62 @@ export class GroupList extends React.Component<
         this.WSGroupService.registerEventHandler('groupChanged', this.onGroupChanged);
     }
 
-  public renderCompleteButton() {
-    // Check if the group is not full => return
-    if(this.props.group.maxSize > this.props.group.users.length){
-      return (<div />);
+    public renderDeleteButton() {
+        const user: User = this.props.userService.getUserInfo();
+
+        if (user.ownerGroupId === this.props.group._id) {
+            return (
+                <Route render={routeComponentProps => (
+                    <RemoveGroupComponent userService={this.props.userService}
+                        groupService={this.props.groupService}
+                        {...routeComponentProps}
+                    />
+                )} />
+            )
+        } else {
+            return (<Route render={routeComponentProps => (
+                <LeaveGroup {...routeComponentProps} />
+            )} />)
+        }
     }
 
-    // Else return the button, because the group is full.
-    return (
-      <div>
-        <antd.Button block={true} type="primary" style={{height: 80}} color="green">
-          <a target="_blank" href="https://goo.gl/forms/mgfeqcDUE3P8lSsz2">Complete</a>
-        </antd.Button>
-      </div>
-    );
-  }
-
-  public renderDeleteButton() {
-    const user : User = this.props.userService.getUserInfo(); 
-
-    if(user.ownerGroupId === this.props.group._id){
-      return (
-        <Route render={routeComponentProps => (
-          <RemoveGroupComponent userService={this.props.userService} 
-                                groupService={this.props.groupService}
-                                {...routeComponentProps}                      
-          />
-        )} />
-      )
-    }
-    
-    return (<div />);
-  }
-
-  public render() {
-    return (
-        <div>
-        <Row>
-            <Col span={5} />
-            <Col span={14}>
-                <Card title={"Group name: " + this.state.name}  >
-                    <h1><b>Game:</b> {this.state.game}</h1>
-                    {this.renderCompleteButton()}
-                    <p><b>Users in this group:</b></p>
-                    <ul>
-                        {this.state.users.map((member) => {
-                            return <li key={member}>{member}</li>
-                        })}
-                        {
-                            Array.from({ length: (this.state.maxSize - this.state.users.length) }, (v: {}, k: number) =>
-                                <li key={k}>This spot i still open - invite a friend!</li>)
-                        }
-                    </ul>
-                    <div id="wrapper">
-                        <div id="left">
-                            <InviteUrlComponent invite_id={this.state.invite_id} />
-                            <DiscordUrlComponent />
-                        </div>
-                        </div>
-                        <div id="wrapper">
-                            <div id="left">
-                                <p>Make group visible to others: <p>&#32;&#32;</p> </p>
+    public render() {
+        return (
+            <div>
+                <Row>
+                    <Col span={5} />
+                    <Col span={14}>
+                        <Card title={"Group name: " + this.state.name}  >
+                            <h1><b>Game:</b> {this.state.game}</h1>
+                            <p><b>Users in this group:</b></p>
+                            <ul>
+                                {this.state.userList.map((member) => {
+                                    return <li key={member._id}>{member.name}</li>
+                                })}
+                                {
+                                    Array.from({ length: (this.state.maxSize - this.state.users.length) }, (v: {}, k: number) =>
+                                        <li key={k}>This spot i still open - invite a friend!</li>)
+                                }
+                            </ul>
+                            <div id="wrapper">
+                                <div id="left">
+                                    <InviteUrlComponent invite_id={this.state.invite_id} />
+                                    <DiscordUrlComponent />
+                                </div>
                             </div>
-                            <div id="right"><Switch onChange={this.updateVisibility} defaultChecked={this.state.visible} /></div>
-                        </div>
-                    </Card>
-                    {this.renderDeleteButton()}
-                </Col>
-                <Col span={5} />
-            </Row>
+                            {/* <div id="wrapper">
+                                <div id="left">
+                                    <p>Make group visible to others: <p>&#32;&#32;</p> </p>
+                                </div>
+                                <div id="right"><Switch onChange={this.updateVisibility} defaultChecked={this.state.visible} /></div>
+                            </div> */}
+                            {this.renderDeleteButton()}
+                        </Card>
+                    </Col>
+                    <Col span={5} />
+                </Row>
 
-        </div>
+            </div>
         );
     }
     private updateVisibility = async () => {
@@ -125,7 +112,22 @@ export class GroupList extends React.Component<
     }
 
     private onGroupChanged = (response: { group: PersistedGroup, caller: string }) => {
+        this.getUserChange(response.group)
         this.setState(response.group);
+    }
+
+    private getUserChange = (group: PersistedGroup): void => {
+        const self = this.UserServiceCookies.getUserInfo()
+        const change: string = this.state.userList.length > group.userList.length ? "Left" : "Joined";
+        const toaster = change == "Joined" ? toast.success : toast.warn;
+
+        const largest = this.state.userList.length > group.userList.length ? this.state.userList : group.userList;
+        const smallest = this.state.userList.length > group.userList.length ? group.userList : this.state.userList;
+        const diff = largest.filter(user => smallest.find(userobj => userobj._id == user._id) == undefined)
+
+        for (const user of diff) {
+            toaster((user.name == self.name ? "You" : user.name) + " " + change.toLowerCase() + " the group!")
+        }
     }
 }
 

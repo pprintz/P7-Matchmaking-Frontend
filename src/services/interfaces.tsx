@@ -8,10 +8,10 @@ import { number } from 'prop-types';
 import { Mode } from 'src/models/LevelEnums';
 
 export interface GroupService {
-    leaveGroup(groupId: string, userId: string): Promise<PersistedGroup |  boolean>,
+    leaveGroup(groupId: string, userId: string): Promise<PersistedGroup | boolean>,
     createGroup(group: any),
     getGameList(): Promise<IGame[]>,
-    deleteGroup(groupId: string): Promise<Group |  boolean>,
+    deleteGroup(groupId: string): Promise<Group | boolean>,
     getAllGroups(): Promise<PersistedGroup[]>,
     getGroupById(groupId: string): Promise<PersistedGroup>;
     joinGroup(groupId: string, userId: string): Promise<PersistedGroup>;
@@ -26,22 +26,22 @@ export interface UserService {
 }
 
 export interface PersistentUserService {
-    getUserById(userId: string): Promise<IUser |  boolean>;
+    getUserById(userId: string): Promise<IUser | boolean>;
 }
 
 export interface SocketService {
-    registerEventHandler(event : string, fn : any) : void
+    registerEventHandler(event: string, fn: any): void
 }
 export interface IWSGroupService extends SocketService {
     joinGroup(groupID: string, userID: string, ackFn?: (res: SocketResponse<PersistedGroup>) => void): Promise<void>,
     leaveGroup(groupId: string, userId: string, ackFn: (res: SocketResponse<void>) => void): Promise<void>,
-    getGroup(groupId: string): PersistedGroup, 
+    getGroup(groupId: string): PersistedGroup,
     getGroups(): PersistedGroup[],
     updateVisibility(group, ackFn: (args: PersistedGroup) => void): any
     createGroup(group: Group, ackFn: (res: SocketResponse<PersistedGroup>) => void): Promise<any>,
 }
 
-export interface PersistedQueueEntry extends QueueEntry{
+export interface PersistedQueueEntry extends QueueEntry {
     _id: string
 }
 
@@ -55,7 +55,7 @@ export interface QueueEntry {
 }
 
 export interface IUserWSService extends SocketService {
-    joinQueue(queueEntry : QueueEntry, ackFn : (response : SocketResponse<PersistedQueueEntry>) => void) : Promise<void>;
+    joinQueue(queueEntry: QueueEntry, ackFn: (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void>;
     leaveQueue(userId: string): Promise<void>
 }
 
@@ -68,7 +68,11 @@ interface Persisted {
     _id: string
 }
 
-export interface PersistedGroup extends Group, Persisted { };
+export interface IUserList {
+    userList: IUser[]
+}
+
+export interface PersistedGroup extends Group, Persisted, IUserList { };
 
 export interface IUser {
     _id: string,
@@ -90,7 +94,7 @@ export interface ISharedContext {
     UserService: UserService,
     Client: SocketIOClient.Socket,
     WSGroupService: IWSGroupService,
-    GroupServiceApi : GroupService,
+    GroupServiceApi: GroupService,
 }
 
 export interface IGame {

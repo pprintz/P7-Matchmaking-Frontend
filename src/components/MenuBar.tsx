@@ -4,6 +4,7 @@ import { GlobalContext, SharedContext } from "../models/SharedContext";
 import { Button } from 'antd';
 import { UserService } from '../services/interfaces'
 import { User } from 'src/models/User';
+import { runInThisContext } from 'vm';
 
 export class MenuBar extends React.Component<RouteComponentProps> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
@@ -14,7 +15,16 @@ export class MenuBar extends React.Component<RouteComponentProps> {
 
 
 
-
+    private renderTop() {
+        if (this.user.name !== "") {
+            return (<div id="wrap">
+                <div id="item"><p><b>Name:</b> {this.user.name}</p></div>
+                <div id="item"><p><b>DiscordID:</b> {this.user.discordId}</p></div>
+            </div>);
+        } else {
+            return (<div></div>);
+        }
+    }
 
     public componentWillMount() {
         this.user = (this.context as SharedContext).UserService.getUserInfo();
@@ -33,18 +43,14 @@ export class MenuBar extends React.Component<RouteComponentProps> {
                     {(context: SharedContext) => (
                         <div id="wrap">
                             <div id="item">
-                                <h1 onClick={() => this.props.history.push("/")}>F-LAN Matchmaking</h1>
-                                <div id="wrap">
-                                    <div id="item"><p><b>UserID:</b> {context.User.userId} - </p></div>
-                                    <div id="item"><p><b>DiscordID:</b> {context.User.discordId} - </p></div>
-                                    <div id="item"><p><b>Name:</b> {context.User.name}</p></div>
-                                </div>
+                                <h1 onClick={() => this.props.history.push("/")}>queuewith.me</h1>
+                                {this.renderTop()}
                             </div>
                             <div id="menuitem">
                                 <div id="wrap">
 
 
-                                    <div id="button">                                    
+                                    <div id="button">
                                         <Button hidden={this.context.User.groupId === ""} type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
                                     </div>
 

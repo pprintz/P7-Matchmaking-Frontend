@@ -11,27 +11,30 @@ import DiscordUrlComponent from './DiscordUrlComponent';
 import { toast } from 'react-toastify';
 
 
-export class GroupPageContainer extends React.Component<RouteComponentProps<{group_id: string;invite_id: string;}>,PersistedGroup> {
+export class GroupPageContainer extends React.Component<RouteComponentProps<{ group_id: string; invite_id: string; }>, PersistedGroup> {
 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private groupService : GroupService
-    private userService : UserService
+    private groupService: GroupService
+    private userService: UserService
 
 
     constructor(props: any) {
         super(props);
 
     }
-    public async componentWillMount(){
+    public async componentWillMount() {
         this.groupService = (this.context as SharedContext).GroupServiceApi;
         this.userService = (this.context as SharedContext).UserService;
     }
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
     public async componentDidMount() {
-        let result : PersistedGroup;
+        let result: PersistedGroup;
         try {
+            result = await this.groupService.getGroupById(this.props.match.params.group_id);
+
+            console.error(result)
 
             result = await this.groupService.getGroupById(this.props.match.params.group_id);
             this.setState(result);
@@ -59,10 +62,6 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
 
         return (<div>
             <GroupList group={this.state} userService={this.userService} groupService={this.groupService} />
-            <Route render={routeComponentProps => (
-                <LeaveGroup {...routeComponentProps}/>
-            )} />
-
         </div>)
     }
 }
