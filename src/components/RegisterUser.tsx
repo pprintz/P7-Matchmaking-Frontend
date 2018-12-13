@@ -96,8 +96,8 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
           createdUser._id,
           createdUser.name,
           createdUser.discordId,
+          "",
           ""
-          , ""
         )
       };
       this.userService.setUserInfo(userState.user, this.context);
@@ -105,13 +105,13 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
       console.error("ERROR:", error);
     }
   }
-  private handleSubmit = (event: React.FormEvent) => {
+  private handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     this.props.form.validateFields(
       async (validationErrors: boolean, user: IFormUser) => {
         if (!validationErrors) {
-          this.createUserAndSaveInCookie(user);
-          this.props.history.push("/");
+          await this.createUserAndSaveInCookie(user);
+          this.props.history.push('/');
         }
       }
     );

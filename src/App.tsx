@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { GroupServiceApi } from "./services/groupServiceApi";
 import { UserServiceCookies } from "./services/userServiceCookies";
-import {GroupPageContainer, GroupsPageContainer, LeaveGroup, CreateGroupForm, MenuBar, CreateOrFindGroup, LandingPage, JoinPage} from "./components"
+import {GroupPageContainer, GroupsPageContainer, LeaveGroup, CreateGroupForm, MenuBar, CreateOrFindGroup, LandingPage, JoinPage, HomePage} from "./components"
 import Axios, { AxiosResponse } from "axios";
 import { User } from "./models/User";
 import RegisterUser, { IFormUser } from "./components/RegisterUser";
@@ -45,12 +45,7 @@ class App extends React.Component<{}, UserState> {
   }
 
   public render() {
-    let HomePage;
-    if (this.userServiceCookies.isLoggedIn()) {
-      HomePage = <CreateOrFindGroup />;
-    } else {
-      HomePage = <LandingPage />;
-    }
+  
     return (
       <Router>
         <div className="App">
@@ -110,7 +105,12 @@ class App extends React.Component<{}, UserState> {
                   />
                 )}
               />
-              <Route path="/" render={() => HomePage} />
+              <Route
+                path="/"
+                render={() => (
+                  <HomePage/>
+                )}
+              />
             </Switch>
           </GlobalContext.Provider>
         </div>

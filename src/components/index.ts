@@ -7,3 +7,4 @@ export { default as CreateOrFindGroup } from "./CreateOrFindGroup";
 export { default as JoinPage} from "./JoinGroup"
 export { default as LandingPage } from "./LandingPage";
 export { default as QueueUsers } from "./QueueUsers";
+export { default as HomePage } from "./HomePage";
