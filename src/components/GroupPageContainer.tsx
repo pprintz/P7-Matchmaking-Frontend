@@ -78,7 +78,7 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
                     <LeaveGroup {...routeComponentProps}/>
                 )} />
 
-                <QueueUsers users={this.state.users} />    
+                {this.user.ownerGroupId == "" ? <div /> : <QueueUsers users={this.state.users} />}
             </div>
         )
     }
