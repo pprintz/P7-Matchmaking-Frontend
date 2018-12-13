@@ -33,6 +33,7 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
             queueUsers: []
         });
 
+        this.handleQueueClick = this.handleQueueClick.bind(this);
     }
     public async componentWillMount(){
         this.groupService = (this.context as SharedContext).GroupServiceApi;
@@ -52,6 +53,10 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
         }
     }
 
+    public handleQueueClick() {
+        this.renderQueueUsers();
+    }
+
     public render() {
         if (this.state === null) {
             return (
@@ -68,8 +73,6 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
                 <NotAllowedHere />
             )
         }
-        
-        this.renderQueueUsers();
 
         return (
             <div>
@@ -78,7 +81,7 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
                     <LeaveGroup {...routeComponentProps}/>
                 )} />
 
-                {this.user.ownerGroupId == "" ? <div /> : <QueueUsers users={this.state.users} />}
+                {this.user.ownerGroupId == "" ? <div /> : <QueueUsers users={this.state.users} callback={this.handleQueueClick} />}
             </div>
         )
     }
@@ -87,7 +90,7 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{gro
         if(this.user.ownerGroupId != ""){
             try{
                 const persistedGroup = await this.groupService.getGroupById(this.user.ownerGroupId);
-                console.log(persistedGroup.users);
+
                 this.setState({queueUsers: persistedGroup.users});
             }catch(error){
                 toast.error("This group could not be queued");

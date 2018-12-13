@@ -14,7 +14,8 @@ export interface GameSettings {
 }
 
 interface Props {
-    users? : Array<string>
+    users? : Array<string>,
+    callback? : () => void
 }
 
 interface State {
@@ -240,6 +241,10 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     }
 
     async changeQueueState(event) {
+        if(this.props.callback != undefined){
+            this.props.callback();
+        }
+
         // Is the filter set?
         if (this.state.gameSettings.mode == Mode.UNSET || this.state.gameSettings.rank == -1 || this.state.gameSettings.level == Level.UNSET) {
             toast.warn("Please fill the filter");
@@ -280,6 +285,10 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
 
     // Changes the GameSettings of the queue
     editCriteriaJSON(event) {
+        if(this.props.callback != undefined){
+            this.props.callback();
+        }
+
         try {
             const setting: string[] = event.split(":");
 
@@ -302,7 +311,6 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
                     throw new Error("Prefix setting does not exist!");
             }
             this.setState({ gameSettings: gameSettingsObj });
-            console.log(this.state.gameSettings);
         } catch (error) {
             toast.error(error.message);
         }
