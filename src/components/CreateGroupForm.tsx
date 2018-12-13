@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Icon, Input, Button, InputNumber, Card, Select } from 'antd'
+import { Form, Icon, Input, Button, InputNumber, Card, Select, Col, Row } from 'antd'
 import { UserService, GroupService, Group, PersistedGroup, IGame, SocketResponse, IWSGroupService } from "../services/interfaces";
 import { withRouter, RouteComponentProps } from 'react-router';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
@@ -34,7 +34,7 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         }
     }
 
-    
+
 
 
     public componentWillMount() {
@@ -55,44 +55,48 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
         const FormItem = Form.Item;
         const { getFieldDecorator } = this.props.form;
         return (
-            <Card style={{
-                margin: '0 auto',
-                maxWidth: 500
-            }}>
-                <Form onSubmit={this.handleSubmit} hideRequiredMark={true}>
-                    <FormItem label="Group name">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Please input your group name.' }],
-                        })(
-                            <Input prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Group name" />
-                        )}
-                    </FormItem>
-                    <FormItem label="Game">
-                        {getFieldDecorator('game', {
-                            rules: [{ required: true, message: 'Please input game.' }],
-                        })(
-                            <Select placeholder="Choose Game" onChange={this.handleGameChange}>
-                                {
-                                    this.state.gamesLoaded ? this.state.gameList.map((val: IGame, id: number) => {
-                                        return <Select.Option key={id.toString()} value={val.name}>{val.name}</Select.Option>
-                                    }) : null
-                                }
-                            </Select>
-                        )}
-                    </FormItem>
-                    <FormItem label="Group size">
-                        {getFieldDecorator('maxSize', {
-                            rules: [{ required: true, message: 'Please input group size.' }],
-                        })(
-                            // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            <InputNumber min={2} max={99} placeholder="Group size" disabled={true} />
-                        )}
-                    </FormItem>
-                    <Button type="primary" htmlType="submit" size="large">
-                        Create
+            <Row>
+                <Col span={8} />
+                <Col span={8}>
+                    <Card title="Create group">
+                        <Form onSubmit={this.handleSubmit} hideRequiredMark={true}>
+                            <FormItem label="Group name">
+                                {getFieldDecorator('name', {
+                                    rules: [{ required: true, message: 'Please input your group name.' }],
+                                })(
+                                    <Input prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Group name" />
+                                )}
+                            </FormItem>
+                            <FormItem label="Game">
+                                {getFieldDecorator('game', {
+                                    rules: [{ required: true, message: 'Please input game.' }],
+                                })(
+                                    <Select placeholder="Choose Game" onChange={this.handleGameChange}>
+                                        {
+                                            this.state.gamesLoaded ? this.state.gameList.map((val: IGame, id: number) => {
+                                                return <Select.Option key={id.toString()} value={val.name}>{val.name}</Select.Option>
+                                            }) : null
+                                        }
+                                    </Select>
+                                )}
+                            </FormItem>
+                            <FormItem label="Group size">
+                                {getFieldDecorator('maxSize', {
+                                    rules: [{ required: true, message: 'Please input group size.' }],
+                                })(
+                                    // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                    <InputNumber min={2} max={99} placeholder="Group size" disabled={true} />
+                                )}
+                            </FormItem>
+                            <Button type="primary" htmlType="submit" size="large">
+                                Create
                      </Button>
-                </Form>
-            </Card>
+                        </Form>
+                    </Card>
+                </Col>
+                <Col span={8} />
+            </Row>
+
         );
     }
 
@@ -116,14 +120,14 @@ class CreateGroupForm extends React.Component<GroupProps & RouteComponentProps, 
             };
         })
 
-        
+
     }
 
 
 
     private onGroupCreatedCallback = (res: SocketResponse<PersistedGroup>) => {
 
-        if(res.error){
+        if (res.error) {
             toast.error("Sorry, you are already in a group");
             return;
         }

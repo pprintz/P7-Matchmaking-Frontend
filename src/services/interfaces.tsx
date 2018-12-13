@@ -56,7 +56,7 @@ export interface QueueEntry {
 
 export interface IUserWSService extends SocketService {
     joinQueue(queueEntry: QueueEntry, ackFn: (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void>;
-    leaveQueue(userId: string): Promise<void>
+    leaveQueue(queueEntry: PersistedQueueEntry, ackFn: (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void>
 }
 
 export interface SocketResponse<T> {

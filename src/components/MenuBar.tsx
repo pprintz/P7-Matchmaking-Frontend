@@ -8,35 +8,9 @@ import { runInThisContext } from 'vm';
 
 export class MenuBar extends React.Component<RouteComponentProps> {
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
-
     private static contextType = GlobalContext;
-    private user: User;
 
-
-
-
-    private renderTop() {
-        if (this.user.name !== "") {
-            return (<div id="wrap">
-                <div id="item"><p><b>Name:</b> {this.user.name}</p></div>
-                <div id="item"><p><b>DiscordID:</b> {this.user.discordId}</p></div>
-            </div>);
-        } else {
-            return (<div></div>);
-        }
-    }
-
-    public componentWillMount() {
-        this.user = (this.context as SharedContext).UserService.getUserInfo();
-    }
     public render() {
-
-        let myGroupButton;
-        if (this.user.groupId !== "") {
-            myGroupButton = <Button type={"primary"} size={"large"} onClick={this.handleMyGroupClicked}> My Group </Button >
-        }
-
-
         return (
             <header className="App-header">
                 <GlobalContext.Consumer>
@@ -44,7 +18,14 @@ export class MenuBar extends React.Component<RouteComponentProps> {
                         <div id="wrap">
                             <div id="item">
                                 <h1 onClick={() => this.props.history.push("/")}>queuewith.me</h1>
-                                {this.renderTop()}
+                                {this.context.User.name !== "" ?
+                                    (<div id="wrap">
+                                        <div id="item"><p><b>Name:</b> {this.context.User.name}</p></div>
+                                        <div id="item"><p><b>DiscordID:</b> {this.context.User.discordId}</p></div>
+                                    </div>)
+                                    :
+                                    (<div></div>)
+                                }
                             </div>
                             <div id="menuitem">
                                 <div id="wrap">

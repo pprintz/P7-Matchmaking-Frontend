@@ -20,6 +20,10 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
         this.userService = (this.context as SharedContext).UserService;
     }
     public render() {
+        // if (this.userService.isLoggedIn) {
+        //     this.props.history.push("/");
+        // }
+
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -81,10 +85,8 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
                 <Col span={8} />
             </Row>
 
-
         );
     }
-
 
     public createUserAndSaveInCookie = async (user: IFormUser) => {
         try {
@@ -98,29 +100,28 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
                     createdUser._id,
                     createdUser.name,
                     createdUser.discordId,
+                    "",
                     ""
-                    , ""
                 )
             };
-            this.userService.setUserInfo(userState.user, this.context);
+            await this.userService.setUserInfo(userState.user, this.context);
         } catch (error) {
             console.error("ERROR:", error);
         }
     }
+
     private handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         this.props.form.validateFields(
             async (validationErrors: boolean, user: IFormUser) => {
                 if (!validationErrors) {
-                    this.createUserAndSaveInCookie(user);
+                    await this.createUserAndSaveInCookie(user);
                     this.props.history.push("/");
                 }
             }
         );
     }
 }
-
-
 
 export interface IFormUser {
     name: string

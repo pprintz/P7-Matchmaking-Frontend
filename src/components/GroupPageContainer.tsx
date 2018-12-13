@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RouteComponentProps, Route, withRouter } from "react-router-dom";
-import { PersistedGroup, UserService, GroupService, IWSGroupService } from "../services/interfaces";
+import { PersistedGroup, UserService, GroupService, IWSGroupService, IUserWSService, IUser } from "../services/interfaces";
 import GroupList from "./GroupList";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { SharedContext, GlobalContext } from 'src/models/SharedContext';
@@ -9,23 +9,37 @@ import { GroupServiceApi } from 'src/services/groupServiceApi';
 import LeaveGroup from './LeaveGroup';
 import DiscordUrlComponent from './DiscordUrlComponent';
 import { toast } from 'react-toastify';
+import UserWSService from 'src/services/userWSService';
+import { User } from 'src/models/User';
+import QueueUsers from "../components/QueueUsers";
 
+interface State {
+    queueUsers: Array<string>
+}
 
-export class GroupPageContainer extends React.Component<RouteComponentProps<{ group_id: string; invite_id: string; }>, PersistedGroup> {
+export class GroupPageContainer extends React.Component<RouteComponentProps<{ group_id: string; invite_id: string; }>, PersistedGroup & State> {
 
     // THIS VARIABLE *IS* IN FACT USED! DO NOT REMOVE!!!
     private static contextType = GlobalContext;
-    private groupService: GroupService
-    private userService: UserService
-
+    private groupService: GroupService;
+    private userService: UserService;
+    private queueService: IUserWSService;
+    private user: User
 
     constructor(props: any) {
         super(props);
 
+        this.setState({
+            queueUsers: []
+        });
+
+        this.handleQueueClick = this.handleQueueClick.bind(this);
     }
     public async componentWillMount() {
         this.groupService = (this.context as SharedContext).GroupServiceApi;
         this.userService = (this.context as SharedContext).UserService;
+        this.queueService = (this.context as SharedContext).UserWSService;
+        this.user = (this.context as SharedContext).User;
     }
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
@@ -33,14 +47,14 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
         let result: PersistedGroup;
         try {
             result = await this.groupService.getGroupById(this.props.match.params.group_id);
-
-            console.error(result)
-
-            result = await this.groupService.getGroupById(this.props.match.params.group_id);
             this.setState(result);
         } catch (error) {
             toast.error(error)
         }
+    }
+
+    public handleQueueClick() {
+        this.renderQueueUsers();
     }
 
     public render() {
@@ -60,9 +74,25 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
             )
         }
 
-        return (<div>
-            <GroupList group={this.state} userService={this.userService} groupService={this.groupService} />
-        </div>)
+        return (
+            <div>
+                <GroupList group={this.state} userService={this.userService} groupService={this.groupService} />
+
+                {this.user.ownerGroupId == "" ? <div /> : <QueueUsers users={this.state.users} callback={this.handleQueueClick} />}
+            </div>
+        )
+    }
+
+    private async renderQueueUsers() {
+        if (this.user.ownerGroupId != "") {
+            try {
+                const persistedGroup = await this.groupService.getGroupById(this.user.ownerGroupId);
+
+                this.setState({ queueUsers: persistedGroup.users });
+            } catch (error) {
+                toast.error("This group could not be queued");
+            }
+        }
     }
 }
 
