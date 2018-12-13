@@ -7,11 +7,14 @@ import "../Styles/queueUsersStyle.scss";
 import { toast } from 'react-toastify';
 import { Level, Mode } from "../models/LevelEnums";
 
-
 export interface GameSettings {
     level: Level,
     mode: Mode,
     rank: number
+}
+
+interface Props {
+    users? : Array<string>
 }
 
 interface State {
@@ -20,14 +23,14 @@ interface State {
     timeSpent: number
 }
 
-export class QueueUsers extends React.Component<RouteComponentProps, State> {
+export class QueueUsers extends React.Component<RouteComponentProps & Props, State> {
     private static contextType = GlobalContext;
     private userWSService: IUserWSService;
     private userServiceCookies: UserService;
 
     private interval: NodeJS.Timeout;
 
-    public constructor(props: RouteComponentProps) {
+    public constructor(props: RouteComponentProps & Props) {
         super(props);
 
         this.state = {
@@ -223,7 +226,10 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         if (this.state.isQueued == false) {
             try {
                 // Emit joinQueue request to the backend using WS
-                await this.userWSService.joinQueue({users: [this.userServiceCookies.getUserInfo().userId], gameSettings: this.state.gameSettings}, this.queueJoined);
+                    await this.userWSService.joinQueue({
+                        users: this.props.users == undefined ? [this.userServiceCookies.getUserInfo().userId] : this.props.users,
+                        gameSettings: this.state.gameSettings}, this.queueJoined);
+                
 
                 // Success => Change state to isQueued
                 this.setState({
