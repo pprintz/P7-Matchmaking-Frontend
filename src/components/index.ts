@@ -6,3 +6,4 @@ export { default as MenuBar } from "./MenuBar";
 export { default as CreateOrFindGroup } from "./CreateOrFindGroup";
 export { default as JoinPage} from "./JoinGroup"
 export { default as LandingPage } from "./LandingPage";
+export { default as QueueUsers } from "./QueueUsers";

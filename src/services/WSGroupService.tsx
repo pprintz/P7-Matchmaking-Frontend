@@ -2,8 +2,8 @@ import { IWSGroupService, PersistedGroup, Group, SocketResponse } from './interf
 import WSService from './WSService';
 
 export default class WSGroupService extends WSService implements IWSGroupService {
-    constructor() {
-        super('/groups');
+    constructor(id: string) {
+        super('/groups', id);
     }
 
     public joinGroup = async (groupID: string, userID: string, ackFn?: (res: SocketResponse<PersistedGroup>) => void): Promise<void> => {
