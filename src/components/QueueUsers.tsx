@@ -199,17 +199,41 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
         console.log("Response: " + response);
         if(response.error){
             // If reject => Set the state to false, so the page will be redirected to the first page again.
-            this.setState({isQueued: false});
+            this.setState({
+                isQueued: !this.state.isQueued,
+            });
+
+            // Reset the timer
+            this.setState({ timeSpent: 0 });
 
             toast.error("The queue could not be joined");
 
             return;
         }
+        this.setState({
+            isQueued: !this.state.isQueued,
+        });
+        // Reset the timer
+        this.setState({ timeSpent: 0 });
 
+        this.queueEntry = response.data;
         // If success => Set an interval to count up the timer
         this.interval = setInterval(() => {
             this.setState({ timeSpent: (this.state.timeSpent + 1) })
         }, 1000);   
+    }
+
+    private queueEntry : PersistedQueueEntry;
+    private queueLeft = (response: SocketResponse<PersistedQueueEntry>): void => {
+        if(response.error){
+           
+        }
+        this.setState({
+            isQueued: !this.state.isQueued,
+        });
+        clearInterval(this.interval);
+
+        this.setState({ timeSpent: 0 });
     }
 
     async changeQueueState(event) {
@@ -225,13 +249,10 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
                 // Emit joinQueue request to the backend using WS
                 await this.userWSService.joinQueue({users: [this.userServiceCookies.getUserInfo().userId], gameSettings: this.state.gameSettings}, this.queueJoined);
 
-                // Success => Change state to isQueued
-                this.setState({
-                    isQueued: !this.state.isQueued,
-                });
+                                // Success => Change state to isQueued
+                
 
-                // Reset the timer
-                this.setState({ timeSpent: 0 });
+                
             } catch (error) {
                 // If there is an error, we are not queued
                 this.setState({ isQueued: false });
@@ -242,15 +263,8 @@ export class QueueUsers extends React.Component<RouteComponentProps, State> {
             // We are already in a queue and cancel
             try {
                 // Call leaveQueue request using WS
-                await this.userWSService.leaveQueue(this.userServiceCookies.getUserInfo().userId);
-
-                // Reset state and interval
-                this.setState({
-                    isQueued: !this.state.isQueued,
-                });
-                clearInterval(this.interval);
-
-                this.setState({ timeSpent: 0 });
+                await this.userWSService.leaveQueue(this.queueEntry,this.queueLeft);
+                
             } catch (error) {
                 this.setState({ isQueued: false });
                 toast.error("Failed to leave the queue");

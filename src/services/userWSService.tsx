@@ -14,7 +14,7 @@ export default class UserWSService extends WSService implements IUserWSService {
         await this.IO.emit("enqueue", queueEntry, ackFn);
     }
 
-    public leaveQueue = async (userId: string): Promise<void> =>{
-        await this.IO.emit("leaveQueue", {"userId": userId});
+    public leaveQueue = async (queueEntry : PersistedQueueEntry, ackFn : (response: SocketResponse<PersistedQueueEntry>) => void): Promise<void> => {
+        await this.IO.emit("dequeue", queueEntry, ackFn);
     }
 }
