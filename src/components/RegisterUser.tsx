@@ -116,7 +116,9 @@ class RegisterUserForm extends React.Component<RouteComponentProps & Props> {
             async (validationErrors: boolean, user: IFormUser) => {
                 if (!validationErrors) {
                     await this.createUserAndSaveInCookie(user);
+                    
                     this.props.history.push("/");
+                    window.location.reload();
                 }
             }
         );
