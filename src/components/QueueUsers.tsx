@@ -184,6 +184,9 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     // This is called if a group is found for the user
     private joinedGroup = (group: any, caller: string): void => {
         // Redirect to group id
+        console.log("INSIDE JOINED GROUP")
+        console.log(JSON.stringify(group))
+        console.log(caller)
         if (group === null) {
             toast.error("A group could not be found");
             this.setState({ isQueued: false });
@@ -203,7 +206,7 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     // This is called when the user joins a queue
     private queueJoined = (response: SocketResponse<PersistedQueueEntry>): void => {
 
-        console.log("Response: " + response);
+        console.log("Response: " + JSON.stringify(response));
         if (response.error) {
             // If reject => Set the state to false, so the page will be redirected to the first page again.
             this.setState({
