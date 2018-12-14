@@ -124,10 +124,11 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
                                 <div className="filterContainer">
                                     <p className="queueCardHeader">Filter</p>
                                     <Form layout="horizontal" className="filterForm">
-
+                                        <p className="queueSelectorField">Choose your rank</p>
                                         <Select placeholder="Enter your rank" onChange={this.editCriteriaJSON}>
                                             {levelOptions}
                                         </Select>
+                                        <p className="queueSelectorField">Choose gamemode</p>
                                         <Select placeholder="Mode" onChange={this.editCriteriaJSON}>
                                             <Select.Option key="1" value="mode:1">
                                                 Competitive
@@ -136,6 +137,7 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
                                                 Casual
                                         </Select.Option>
                                         </Select>
+                                        <p className="queueSelectorField">Choose teammates</p>
                                         <Select placeholder="Ranking" onChange={this.editCriteriaJSON}>
                                             <Select.Option key="1" value="rank:2">
                                                 Above your rank
@@ -166,7 +168,6 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
                 <div className="queueWrapper">
                     <Card title="Finding Group">
                         <div className="queueUsers">
-                            <p className="queueCardHeader">Searching For Group</p>
                             <p id="counter">{this.state.timeSpent} seconds</p>
                             <Button id="queueButton" type="danger" size="large" onClick={this.changeQueueState}>
                                 Cancel
