@@ -5,7 +5,7 @@ import { Button } from "antd";
 import { UserServiceCookies } from 'src/services/userServiceCookies';
 import { RouteComponentProps } from 'react-router';
 import { User } from 'src/models/User';
-import { GlobalContext } from 'src/models/SharedContext';
+import { GlobalContext, SharedContext } from 'src/models/SharedContext';
 
 
 
@@ -18,10 +18,17 @@ interface GroupProps {
 
 class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupProps> {
     private static contextType = GlobalContext;
+    private UserService : UserService;
     constructor(props : GroupProps & RouteComponentProps){
         super(props);
 
         this.handleOnClick = this.handleOnClick.bind(this);
+    }
+
+
+    public componentWillMount() {
+        this.UserService = (this.context as SharedContext).UserService;
+        // Set properties based on cookies
     }
 
     // When the Remove button is clicked
@@ -42,8 +49,8 @@ class RemoveGroupComponent extends React.Component<RouteComponentProps & GroupPr
                 this.setState({message: "Group was not deleted"});
             }else{  
                 // Update the cookie
-                this.props.userService.setUserOwnerGroup("", this.context);
-                this.props.userService.updateGroupIdUserInfo("", this.context)
+                this.UserService.updateGroupIdUserInfo("", this.context)
+                this.UserService.setUserOwnerGroup("", this.context);
 
                 this.setState({message: "Succesfully deleted the group"});
                 console.log("All good");

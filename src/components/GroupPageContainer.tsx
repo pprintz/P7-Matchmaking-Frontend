@@ -40,6 +40,8 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
         this.userService = (this.context as SharedContext).UserService;
         this.queueService = (this.context as SharedContext).UserWSService;
         this.user = (this.context as SharedContext).User;
+        this.queueService.registerEventHandler("groupEnqueued", this.groupJoinedQueue);
+        this.queueService.registerEventHandler("groupDequeued", this.groupLeftQueue);
     }
 
     // Each time the component is loaded we check the backend for a group with grouo_id == :group_id
@@ -52,6 +54,28 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
             toast.error(error)
         }
     }
+
+    private groupJoinedQueue = (group: any, caller: string) : void => {
+        if(group == null){
+            return;
+        }
+    
+        if(this.user.ownerGroupId === ""){
+            toast.success("You joined the queue...")
+        }
+        
+    }
+
+    private groupLeftQueue = (group: any, caller: string) : void => {
+        if(group == null){
+            return;
+        }
+        console.log("asdasdasd");
+        
+        if(this.user.ownerGroupId === ""){
+            toast.success("You left the queue...")
+        }
+}
 
     public async handleQueueClick() : Promise<Array<string>> {
         const users = await this.renderQueueUsers();

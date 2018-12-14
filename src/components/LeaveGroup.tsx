@@ -82,6 +82,7 @@ class LeaveGroup extends React.Component<RouteComponentProps, GroupStates> {
         }
 
         this.UserService.updateGroupIdUserInfo("", this.context);
+        this.UserService.setUserOwnerGroup("", this.context);
         this.props.history.push("/");
     }
 
