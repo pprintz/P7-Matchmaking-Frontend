@@ -30,7 +30,7 @@ export default class DiscordUrlComponent extends React.Component<any, State> {
                     visible={this.state.clicked}
                     onVisibleChange={this.handleClickChange}
                 >
-                    <Button style={{ marginLeft: "5px" }} type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}><p>Press to copy discord link <Icon type="message" style={{ color: 'rgba(255,255,255)' }} /> </p></Button>
+                    <Button style={{ marginLeft: "5px" }} type="primary" onMouseLeave={this.hide} onClick={this.copyToClipboard}><p>Press to copy Discord link <Icon type="message" style={{ color: 'rgba(255,255,255)' }} /> </p></Button>
                 </Popover>
             </Popover>
         );
