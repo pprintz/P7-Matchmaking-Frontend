@@ -216,7 +216,7 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
 
             toast.error("The queue could not be joined");
 
-            return;
+            // return;
         }
 
         toast.success("Joined the queue")
