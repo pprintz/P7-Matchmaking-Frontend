@@ -14,8 +14,8 @@ export interface GameSettings {
 }
 
 interface Props {
-    users? : Array<string>,
-    callback? : () => Promise<Array<string>>
+    users?: Array<string>,
+    callback?: () => Promise<Array<string>>
 }
 
 interface State {
@@ -64,12 +64,12 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     public componentWillUnmount() {
         clearInterval(this.interval);
     }
-                        /*
-                        <Select.Option key={index.toString()} value={"level:" + value}>
-                            Hello World!
-                        </Select.Option>
-                        */
-    public renderLevelSelect(){
+    /*
+    <Select.Option key={index.toString()} value={"level:" + value}>
+        Hello World!
+    </Select.Option>
+    */
+    public renderLevelSelect() {
         // A mapping function from a Level Enum to a string that makes sense for the user.
         const LevelNames = new Map<number, string>([
             [Level.SILVER1, "Silver 1"],
@@ -95,14 +95,14 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
         // Map each level into a Select.Option selector
         const renderObj = (Object.keys(Level).map(key => {
             // Check if the key can be parsed
-            if(!Number.isNaN(parseInt(key))){
+            if (!Number.isNaN(parseInt(key))) {
                 // Make an Option Selector
                 return (
                     <Select.Option key={key} value={"level:" + key} >
-                        {LevelNames.get(parseInt(key))} 
+                        {LevelNames.get(parseInt(key))}
                     </Select.Option>
                 )
-            }else{
+            } else {
                 return;
             }
         })
@@ -182,11 +182,11 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     }
 
     // This is called if a group is found for the user
-    private joinedGroup = (group: any, caller: string) : void => {
+    private joinedGroup = (group: any, caller: string): void => {
         // Redirect to group id
-        if(group === null){
+        if (group === null) {
             toast.error("A group could not be found");
-            this.setState({isQueued: false});
+            this.setState({ isQueued: false });
 
             return;
         }
@@ -201,51 +201,49 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
     }
 
     // This is called when the user joins a queue
-    private queueJoined = (response: SocketResponse<PersistedQueueEntry>) : void => {
-        toast.success("Joined the queue")
+    private queueJoined = (response: SocketResponse<PersistedQueueEntry>): void => {
+
         console.log("Response: " + response);
-        if(response.error){
+        if (response.error) {
             // If reject => Set the state to false, so the page will be redirected to the first page again.
             this.setState({
-                isQueued: !this.state.isQueued,
+                isQueued: false,
+                timeSpent: 0,       // Reset the timer
             });
-
-            // Reset the timer
-            this.setState({ timeSpent: 0 });
 
             toast.error("The queue could not be joined");
 
             return;
         }
+
+        toast.success("Joined the queue")
         this.setState({
-            isQueued: !this.state.isQueued,
+            isQueued: true,
+            timeSpent: 0,       // Reset the timer
         });
-        // Reset the timer
-        this.setState({ timeSpent: 0 });
 
         this.queueEntry = response.data;
         // If success => Set an interval to count up the timer
         this.interval = setInterval(() => {
             this.setState({ timeSpent: (this.state.timeSpent + 1) })
-        }, 1000);   
+        }, 1000);
     }
 
-    private queueEntry : PersistedQueueEntry;
+    private queueEntry: PersistedQueueEntry;
     private queueLeft = (response: SocketResponse<PersistedQueueEntry>): void => {
-        if(response.error){
-           
+        if (response.error) {
+
         }
         this.setState({
-            isQueued: !this.state.isQueued,
+            isQueued: false,
+            timeSpent: 0,
         });
         clearInterval(this.interval);
-
-        this.setState({ timeSpent: 0 });
     }
 
     async changeQueueState(event) {
-        if(this.props.callback != undefined){
-            this.setState({queueUsers: await this.props.callback()});
+        if (this.props.callback != undefined) {
+            this.setState({ queueUsers: await this.props.callback() });
         }
 
         // Is the filter set?
@@ -259,11 +257,12 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
             try {
                 // Emit joinQueue request to the backend using WS
                 console.log("QueueUsers:", this.state.queueUsers);
-                    await this.userWSService.joinQueue({
-                        users: this.state.queueUsers.length > 0 ? this.state.queueUsers : (this.props.users == undefined ? [this.userServiceCookies.getUserInfo().userId] : this.props.users),
-                        gameSettings: this.state.gameSettings}, this.queueJoined);
+                await this.userWSService.joinQueue({
+                    users: this.state.queueUsers.length > 0 ? this.state.queueUsers : (this.props.users == undefined ? [this.userServiceCookies.getUserInfo().userId] : this.props.users),
+                    gameSettings: this.state.gameSettings
+                }, this.queueJoined);
 
-                
+
             } catch (error) {
                 // If there is an error, we are not queued
                 this.setState({ isQueued: false });
@@ -274,12 +273,12 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
             // We are already in a queue and cancel
             try {
                 // Call leaveQueue request using WS
-                if(this.state.queueUsers.length > 0){
+                if (this.state.queueUsers.length > 0) {
                     this.queueEntry.users = this.state.queueUsers;
                 }
 
-                await this.userWSService.leaveQueue(this.queueEntry,this.queueLeft);
-                
+                await this.userWSService.leaveQueue(this.queueEntry, this.queueLeft);
+
             } catch (error) {
                 this.setState({ isQueued: false });
                 toast.error("Failed to leave the queue");
@@ -289,7 +288,7 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
 
     // Changes the GameSettings of the queue
     editCriteriaJSON(event) {
-        if(this.props.callback != undefined){
+        if (this.props.callback != undefined) {
             this.props.callback();
         }
 
