@@ -112,6 +112,10 @@ export class GroupList extends React.Component<
     }
 
     private onGroupChanged = (response: { group: PersistedGroup, caller: string }) => {
+        if (response.group._id !== this.state._id) {
+            return;
+        }
+
         this.getUserChange(response.group)
         this.setState(response.group);
     }
