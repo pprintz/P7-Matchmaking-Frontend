@@ -15,13 +15,14 @@ export interface GameSettings {
 
 interface Props {
     users? : Array<string>,
-    callback? : () => void
+    callback? : () => Promise<Array<string>>
 }
 
 interface State {
     gameSettings: GameSettings,
     isQueued: boolean,
-    timeSpent: number
+    timeSpent: number,
+    queueUsers: Array<string>
 }
 
 export class QueueUsers extends React.Component<RouteComponentProps & Props, State> {
@@ -41,7 +42,8 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
                 rank: -1
             },
             isQueued: false,
-            timeSpent: 0
+            timeSpent: 0,
+            queueUsers: []
         };
 
 
@@ -243,7 +245,7 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
 
     async changeQueueState(event) {
         if(this.props.callback != undefined){
-            this.props.callback();
+            this.setState({queueUsers: await this.props.callback()});
         }
 
         // Is the filter set?
@@ -256,13 +258,10 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
         if (this.state.isQueued == false) {
             try {
                 // Emit joinQueue request to the backend using WS
+                console.log("QueueUsers:", this.state.queueUsers);
                     await this.userWSService.joinQueue({
-                        users: this.props.users == undefined ? [this.userServiceCookies.getUserInfo().userId] : this.props.users,
+                        users: this.state.queueUsers.length > 0 ? this.state.queueUsers : (this.props.users == undefined ? [this.userServiceCookies.getUserInfo().userId] : this.props.users),
                         gameSettings: this.state.gameSettings}, this.queueJoined);
-                
-
-                                // Success => Change state to isQueued
-                
 
                 
             } catch (error) {
@@ -275,6 +274,10 @@ export class QueueUsers extends React.Component<RouteComponentProps & Props, Sta
             // We are already in a queue and cancel
             try {
                 // Call leaveQueue request using WS
+                if(this.state.queueUsers.length > 0){
+                    this.queueEntry.users = this.state.queueUsers;
+                }
+
                 await this.userWSService.leaveQueue(this.queueEntry,this.queueLeft);
                 
             } catch (error) {

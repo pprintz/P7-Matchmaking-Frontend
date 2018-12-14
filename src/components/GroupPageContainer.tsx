@@ -53,8 +53,9 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
         }
     }
 
-    public handleQueueClick() {
-        this.renderQueueUsers();
+    public async handleQueueClick() : Promise<Array<string>> {
+        const users = await this.renderQueueUsers();
+        return users === undefined ? [] : users;
     }
 
     public render() {
@@ -83,15 +84,20 @@ export class GroupPageContainer extends React.Component<RouteComponentProps<{ gr
         )
     }
 
-    private async renderQueueUsers() {
+    private async renderQueueUsers() : Promise<Array<string>> {
         if (this.user.ownerGroupId != "") {
             try {
                 const persistedGroup = await this.groupService.getGroupById(this.user.ownerGroupId);
 
                 this.setState({ queueUsers: persistedGroup.users });
+
+                return persistedGroup.users;
             } catch (error) {
                 toast.error("This group could not be queued");
+                return [];
             }
+        }else{
+            return [];
         }
     }
 }
