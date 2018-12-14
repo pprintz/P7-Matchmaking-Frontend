@@ -8,6 +8,14 @@ interface State {
 
 export default class DiscordUrlComponent extends React.Component<any, State> {
 
+    private discordURL : string;
+
+    constructor(props) {
+        super(props);
+
+        this.discordURL = "https://discord.gg/GqppYB7";
+    }
+
     public state = {
         clicked: false,
         hovered: false,
@@ -17,14 +25,14 @@ export default class DiscordUrlComponent extends React.Component<any, State> {
         return (
             <Popover
                 style={{ width: 500 }}
-                content="https://discord.gg/mBGts6b"
+                content={this.discordURL}
                 title="Click to copy Discord Server URL to clipboard"
                 trigger="hover"
                 visible={this.state.hovered}
                 onVisibleChange={this.handleHoverChange}
             >
                 <Popover
-                    content="https://discord.gg/mBGts6b"
+                    content={this.discordURL}
                     title="Copied to clipboard!"
                     trigger="click"
                     visible={this.state.clicked}
@@ -38,7 +46,7 @@ export default class DiscordUrlComponent extends React.Component<any, State> {
 
     private copyToClipboard = () => {
         const el = document.createElement('textarea');
-        el.value = "https://discord.gg/mBGts6b";
+        el.value = this.discordURL;
         el.setAttribute('readonly', '');
         el.style.position = 'absolute';
         el.style.left = '-9999px';
