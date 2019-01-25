@@ -13,7 +13,7 @@ export default class DiscordUrlComponent extends React.Component<any, State> {
     constructor(props) {
         super(props);
 
-        this.discordURL = "https://discord.gg/QXBgDxd";
+        this.discordURL = "https://discord.gg/E56b3fk";
     }
 
     public state = {
