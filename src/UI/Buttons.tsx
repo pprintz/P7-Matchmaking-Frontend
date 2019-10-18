@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+// styling for buttons
 export const Button = styled.button`
     background-color: white;
     border-style: hidden;

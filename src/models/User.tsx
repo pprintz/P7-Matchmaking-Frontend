@@ -1,3 +1,4 @@
+// User class
 export class User {
   public groupId: string;
   public userId: string;

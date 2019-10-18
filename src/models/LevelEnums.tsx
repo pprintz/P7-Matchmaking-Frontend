@@ -1,3 +1,4 @@
+// level in CS/GO
 export enum Level {
     UNSET = -1,
     SILVER1 = 0,
@@ -19,7 +20,7 @@ export enum Level {
     SUPREMEMASTERFIRSTCLASS = 16,
     GLOBALELITE = 17
 }
-
+// The different modes that are available
 export enum Mode {
     UNSET = 0,
     COMPETITIVE = 1,
