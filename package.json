@@ -5,7 +5,7 @@
     "dependencies": {
         "@types/socket.io-client": "^1.4.32",
         "antd": "^3.10.4",
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "node-sass": "^4.10.0",
         "npm": "^6.4.1",
         "prop-types": "^15.6.2",
